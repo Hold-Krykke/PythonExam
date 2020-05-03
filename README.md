@@ -15,13 +15,12 @@ Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af fø
 
 ### 
 * Web scraping af Twitter, baseret på hashtag.
-  * Brugeren giver et hashtag med og der scrapes et (forudbestemt?) antal tweets.
-    * Forhindringer:
-      * Hvordan håndterer Twitter web scrapers? Skal vi gøre brug af API? Rate limits?
-    * Teknologier:
-      * Web scraping med BeautifulSoup4, evt. Scrapy
-    * Kan evt. udvides til at kunne tilbyde som service med en Flask server. 
-      * Hertil kunne man gøre brug af Twitters avancerede søgefunktioner, som at sortere efter popularitet, seneste, med/uden billeder. Eller søgning med/uden diverse ord, engagement, timeframes mm.
+  * Forhindringer:
+    * Hvordan håndterer Twitter web scrapers? Skal vi gøre brug af API? Rate limits?
+  * Teknologier:
+    * Web scraping med BeautifulSoup4, evt. Scrapy
+  * Kan evt. udvides til at kunne tilbyde som service med en Flask server. 
+    * Hertil kunne man gøre brug af Twitters avancerede søgefunktioner, som at sortere efter popularitet, seneste, med/uden billeder. Eller søgning med/uden diverse ord, engagement, timeframes mm.
 * Preprocessing af Twitter-dataen (clean-up, fjerne stop words)
   * Teknologier:
     * Regex
