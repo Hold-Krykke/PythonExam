@@ -29,7 +29,7 @@
   * Teknologier:
     * Natural Language Toolkit (NLTK)
     * evt sklearn
-* Præsentation af analysen (grafer/plots ??)
+* Præsentation af analysen (grafer/plots)
   * Teknologier:
     * matplotlib
 
