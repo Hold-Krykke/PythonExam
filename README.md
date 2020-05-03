@@ -34,3 +34,5 @@
     * matplotlib
 
 
+### Links til tutorials, libraries og lignende:
+[scrapy](https://scrapy.org/)
