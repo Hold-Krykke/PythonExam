@@ -7,29 +7,29 @@
 
 
 ### Følgende er det vi overordnet har indtil videre (skal nok udvides med teknologier og grundigere beskrivelser):
-*__Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af følgende tweets med hashtags er overvejende positive eller negative:__*
+Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af følgende tweets med hashtags er overvejende positive eller negative:
 * __#Trump, #Trump2020__
 * __#Biden, #Biden2020__
 * __#Election2020__  
 
 
 ### 
-* Web scraping af Twitter, baseret på hashtag.
+* __Web scraping af Twitter, baseret på hashtag.__
   * Forhindringer:
     * Hvordan håndterer Twitter web scrapers? Skal vi gøre brug af API? Rate limits?
   * Teknologier:
     * Web scraping med BeautifulSoup4, evt. Scrapy
   * Kan evt. udvides til at kunne tilbyde som service med en Flask server. 
     * Hertil kunne man gøre brug af Twitters avancerede søgefunktioner, som at sortere efter popularitet, seneste, med/uden billeder. Eller søgning med/uden diverse ord, engagement, timeframes mm.
-* Preprocessing af Twitter-dataen (clean-up, fjerne stop words)
+* __Preprocessing af Twitter-dataen (clean-up, fjerne stop words)__
   * Teknologier:
     * Regex
     * Natural Language Toolkit (NLTK) 
-* Sentiment analysis / evt topic analysis hvis tid (swear words, hate speech eller lignende)
+* __Sentiment analysis / evt topic analysis hvis tid (swear words, hate speech eller lignende)__
   * Teknologier:
     * Natural Language Toolkit (NLTK)
     * evt sklearn
-* Præsentation af analysen (grafer/plots)
+* __Præsentation af analysen (grafer/plots)__
   * Teknologier:
     * matplotlib
 
