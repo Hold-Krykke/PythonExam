@@ -1,4 +1,4 @@
-# 4. semester python eksamens projekt
+# 4. Semester Python Eksamens Projekt
 #### Lavet af:
 * Cph-mh748 - Malte Hviid-Magnussen 
 * Cph-rn118 - Rúni Vedel Niclasen 
