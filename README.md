@@ -6,4 +6,10 @@
 * Cph-cs340 - Camilla Staunstrup 
 
 
+### Følgende er det vi overordnet har indtil videre (skal nok udvides med teknologier og grundigere beskrivelser):
+Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af følgende tweets med hashtags:
+* #Trump, #Trump2020
+* #Biden, #Biden2020
+* #Election2020
+er overvejende positive eller negative. 
 
