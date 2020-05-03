@@ -42,3 +42,4 @@ Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af fø
 * [Sentiment Analysis with Scikit-Learn](https://stackabuse.com/python-for-nlp-sentiment-analysis-with-scikit-learn//)
 * [Sentiment Analysis with NLTK](https://www.digitalocean.com/community/tutorials/how-to-perform-sentiment-analysis-in-python-3-using-the-natural-language-toolkit-nltk)
 * [Web Scraping & Sentiment Analysis Youtube Tutorial](https://www.youtube.com/watch?v=e6xZAISu-5E) and [Reporitory](https://github.com/jg-fisher/redditSentiment)
+* [Video om Natural Language Processing fra Slack](https://www.youtube.com/watch?v=xvqsFTUsOmc)
