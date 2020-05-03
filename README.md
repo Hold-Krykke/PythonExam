@@ -29,7 +29,7 @@ Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af fø
   * Teknologier:
     * Natural Language Toolkit (NLTK)
     * evt sklearn
-* __Præsentation af analysen (grafer/plots)__
+* __Presentation (grafphs/plots)__
   * Teknologier:
     * matplotlib
 
