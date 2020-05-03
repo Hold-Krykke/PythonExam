@@ -10,6 +10,6 @@
 Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af følgende tweets med hashtags:
 * #Trump, #Trump2020
 * #Biden, #Biden2020
-* #Election2020
+* #Election2020  
 er overvejende positive eller negative. 
 
