@@ -7,10 +7,10 @@
 
 
 ### Følgende er det vi overordnet har indtil videre (skal nok udvides med teknologier og grundigere beskrivelser):
-*Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af følgende tweets med hashtags er overvejende positive eller negative:*
-* #Trump, #Trump2020
-* #Biden, #Biden2020
-* #Election2020  
+*__Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af følgende tweets med hashtags er overvejende positive eller negative:__*
+* __#Trump, #Trump2020__
+* __#Biden, #Biden2020__
+* __#Election2020__  
 
 
 ### 
