@@ -35,4 +35,10 @@
 
 
 ### Links til tutorials, libraries og lignende:
-[scrapy](https://scrapy.org/)
+* [Scrapy](https://scrapy.org/)
+* [Removing stop words with NLTK](https://www.geeksforgeeks.org/removing-stop-words-nltk-python/)
+* [Sentiment Dictionary](https://provalisresearch.com/products/content-analysis-software/wordstat-dictionary/sentiment-dictionaries/)
+* [Twitter api](https://developer.twitter.com/en/docs)
+* [Sentiment Analysis with Scikit-Learn](https://stackabuse.com/python-for-nlp-sentiment-analysis-with-scikit-learn//)
+* [Sentiment Analysis with NLTK](https://www.digitalocean.com/community/tutorials/how-to-perform-sentiment-analysis-in-python-3-using-the-natural-language-toolkit-nltk)
+* [Web Scraping & Sentiment Analysis Youtube Tutorial](https://www.youtube.com/watch?v=e6xZAISu-5E) and [Reporitory](https://github.com/jg-fisher/redditSentiment)
