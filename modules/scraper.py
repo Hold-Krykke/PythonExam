@@ -50,7 +50,8 @@ def get_tweets(hashtag: str, tweet_count: int):
     """
     This is the MOTHER FUNCTION of this module. Use this function to get tweets.\n
     Omit the # when providing the search parameter. If you want to search for "#trump", provide "trump".\n
-    The amount of tweets searched for will always be at least 20 and will be floored to 20. Providing 39 will result in 20 tweets. Providing 41 will result in 40 tweets.
+    The amount of tweets searched for will always be at least 20 and will be rounded down to the nearest number that can be divided by 20. 
+    Providing 39 will result in 20 tweets. Providing 41 will result in 40 tweets.
     Returns an array of string - each string containing a single tweet.
     This is the prototype function. It uses utf-8 encoding which is not very well suited for emojis. 
     The strings will contain a lot of confusing characters if the original tweet had emojis in it.
