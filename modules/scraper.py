@@ -76,7 +76,7 @@ def get_tweets(hashtag: str, tweet_count: int):
     
     return tweets
 
-tweets = get_tweets("trump", 40)
-print(tweets)
-print("\n")
-print(len(tweets))
+# tweets = get_tweets("trump", 40)
+# print(tweets)
+# print("\n")
+# print(len(tweets))
