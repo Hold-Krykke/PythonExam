@@ -54,14 +54,16 @@ test_data = get_data_from_csv(test_data_path)
 print(test_data.head())
 
 
-def number_of_tweets_test(dataframe):
-    # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
+def plot_settings():
     plot_size = plt.rcParams["figure.figsize"]
-    print(plot_size[0])
-    print(plot_size[1])
     plot_size[0] = 8
     plot_size[1] = 6
     plt.rcParams["figure.figsize"] = plot_size
+
+
+def number_of_tweets_test(dataframe):
+    # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
+    plot_settings()
     # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     dataframe.airline.value_counts().plot(kind='pie', autopct='%1.0f%%')
     plt.show()
@@ -71,12 +73,7 @@ def number_of_tweets_test(dataframe):
 
 
 def sentiment_tweets_test(dataframe):
-    plot_size = plt.rcParams["figure.figsize"]
-    print(plot_size[0])
-    print(plot_size[1])
-    plot_size[0] = 8
-    plot_size[1] = 6
-    plt.rcParams["figure.figsize"] = plot_size
+    plot_settings()
     dataframe.airline_sentiment.value_counts().plot(
         kind='pie', autopct='%1.0f%%', colors=["red", "yellow", "green"])
     plt.show()
@@ -85,12 +82,7 @@ def sentiment_tweets_test(dataframe):
 # sentiment_tweets_test(test_data)
 
 def bar_plot_test(dataframe):
-    plot_size = plt.rcParams["figure.figsize"]
-    print(plot_size[0])
-    print(plot_size[1])
-    plot_size[0] = 8
-    plot_size[1] = 6
-    plt.rcParams["figure.figsize"] = plot_size
+    plot_settings()
     airline_sentiment = dataframe.groupby(
         ['airline', 'airline_sentiment']).airline_sentiment.count().unstack()
     airline_sentiment.plot(kind='bar')
