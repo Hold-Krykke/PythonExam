@@ -45,7 +45,7 @@ def get_next_page_link(soup: bs4.BeautifulSoup):
     url_part = "https://mobile.twitter.com"
     return url_part + next_page_link
 
-def get_tweets(tweet_count: int, *hashtags: str):
+def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     """
     This is the MOTHER FUNCTION of this module. Use this function to get tweets.\n
     Omit the # when providing the search parameter. If you want to search for "#trump", provide "trump".\n
@@ -57,8 +57,13 @@ def get_tweets(tweet_count: int, *hashtags: str):
     """
     # Creating initial URL
     URL = base_URL
-    for hashtag in hashtags:
+    file_name = ""
+    for index, hashtag in enumerate(hashtags):
         URL += ("%23" + hashtag + "+")
+        if ((len(hashtags) - index) == 1):
+            file_name += hashtag
+        else:
+            file_name += (hashtag + "_")
     URL += end_URL_part
 
     # Result array with all the tweets
@@ -78,10 +83,17 @@ def get_tweets(tweet_count: int, *hashtags: str):
             tweets.append(element)
         URL = get_next_page_link(soup)
     
+    # Saving tweets in file
+    with open("../tweets/" + file_name, 'w', encoding="utf-8") as f:
+        for element in tweets:
+            f.write(str(element))
+            # Adding newline so it's easier to read one tweet at a time later on by using .readlines() (I don't even know if that's a usecase)
+            f.write("\n")
+    
     return tweets
 
-# Usage example
-# tweets = get_tweets(20, "trump", "biden")
-# print(tweets)
-# print("\n")
-# print(len(tweets))
+# Usage example: 20: number of tweets, False: fresh search? (right now it doesn't change anything), anything after this == search parameters (hashtags)
+tweets = get_tweets(20, False, "trump", "biden")
+print(tweets)
+print("\n")
+print(len(tweets))
