@@ -1,3 +1,7 @@
 {
-  "python.autoComplete.extraPaths": ["./modules", "./modules/Presentation"]
+  "python.autoComplete.extraPaths": [
+    "./modules",
+    "./modules/Presentation"
+  ],
+  "python.pythonPath": "C:\\Users\\Malte\\Anaconda3\\python.exe"
 }
