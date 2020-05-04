@@ -16,7 +16,7 @@ Example of data structure for the real data:
 [
   1: {
        words: [
-                
+
        ],
        sentiment: ...,
        date: ...,
@@ -33,10 +33,10 @@ Example of data structure for the real data:
 
 def get_data_from_csv(test_data_path):
     """
-    Importing CSV data as pandas DataFrame. 
+    Importing CSV data as pandas DataFrame.
 
     Parameters:
-    test_data_path (string): Path to the CSV data you want to import. 
+    test_data_path (string): Path to the CSV data you want to import.
 
     Returns:
     Pandas DataFrame
@@ -97,4 +97,4 @@ def bar_plot_test(dataframe):
     plt.show()
 
 
-# bar_plot_test(dataframe=test_data)
+bar_plot_test(dataframe=test_data)
