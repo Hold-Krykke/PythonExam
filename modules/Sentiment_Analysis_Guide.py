@@ -85,7 +85,7 @@ all_pos_words = get_all_words(positive_cleaned_tokens_list)
 freq_dist_pos = FreqDist(all_pos_words)
 
 
-# Preparing Data for the Model - should be redone once Rúnis part is done
+# Preparing Data and Building and Testing the Model - should be redone once Rúnis part is done
 def get_tweets_for_model(cleaned_tokens_list):
     for tweet_tokens in cleaned_tokens_list:
         yield dict([token, True] for token in tweet_tokens)
