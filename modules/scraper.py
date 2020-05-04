@@ -1,9 +1,8 @@
 import bs4
 import requests as req
 
-base_URL = "https://mobile.twitter.com/search?q=%23"
+base_URL = "https://mobile.twitter.com/search?q="
 end_URL_part = "&s=typd&x=0&y=0"
-example_URL_part = "trump&s=typd&x=0&y=0"
 
 def get_soup(URL: str):
     """
@@ -46,7 +45,7 @@ def get_next_page_link(soup: bs4.BeautifulSoup):
     url_part = "https://mobile.twitter.com"
     return url_part + next_page_link
 
-def get_tweets(hashtag: str, tweet_count: int):
+def get_tweets(tweet_count: int, *hashtags: str):
     """
     This is the MOTHER FUNCTION of this module. Use this function to get tweets.\n
     Omit the # when providing the search parameter. If you want to search for "#trump", provide "trump".\n
@@ -54,10 +53,14 @@ def get_tweets(hashtag: str, tweet_count: int):
     Providing 39 will result in 20 tweets. Providing 41 will result in 40 tweets.
     Returns an array of string - each string containing a single tweet.
     This is the prototype function. It uses utf-8 encoding which is not very well suited for emojis. 
-    The strings will contain a lot of confusing characters if the original tweet had emojis in it.
+    Provide multiple strings as parameters after the tweet_count parameter to search for tweets that contain multiple hashtags
     """
     # Creating initial URL
-    URL = base_URL + hashtag + end_URL_part
+    URL = base_URL
+    for hashtag in hashtags:
+        URL += ("%23" + hashtag + "+")
+    URL += end_URL_part
+
     # Result array with all the tweets
     tweets = []
 
@@ -77,7 +80,8 @@ def get_tweets(hashtag: str, tweet_count: int):
     
     return tweets
 
-# tweets = get_tweets("trump", 40)
+# Usage example
+# tweets = get_tweets(20, "trump", "biden")
 # print(tweets)
 # print("\n")
 # print(len(tweets))
