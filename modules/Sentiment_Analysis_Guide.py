@@ -5,7 +5,11 @@ import re
 import string
 from nltk.corpus import stopwords
 from nltk import FreqDist
+# All above i think is just for the dummy preprocessing
 import random
+from nltk import classify
+from nltk import NaiveBayesClassifier
+from nltk.tokenize import word_tokenize
 
 # Basic Preprocessing, will be replaced by Rúnis work - Tokenizing the Data
 positive_tweets = twitter_samples.strings('positive_tweets.json')
@@ -103,3 +107,14 @@ random.shuffle(dataset)
 
 train_data = dataset[:7000]
 test_data = dataset[7000:]
+
+
+classifier = NaiveBayesClassifier.train(train_data)
+
+print("Accuracy is:", classify.accuracy(classifier, test_data))
+print(classifier.show_most_informative_features(10))
+
+# Single Tweet test
+# custom_tweet = "this is not a positive tweet"
+# custom_tokens = remove_noise(word_tokenize(custom_tweet))
+# print(classifier.classify(dict([token, True] for token in custom_tokens)))
