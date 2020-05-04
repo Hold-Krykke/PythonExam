@@ -33,3 +33,18 @@ def get_data_from_csv(test_data_path):
 test_data = get_data_from_csv(test_data_path)
 # Manually testing if we got it how we want it.
 print(test_data.head())
+
+
+def test_pie_chart(dataframe):
+    plot_size = plt.rcParams["figure.figsize"]
+    print(plot_size[0])
+    print(plot_size[1])
+
+    plot_size[0] = 8
+    plot_size[1] = 6
+    plt.rcParams["figure.figsize"] = plot_size
+    dataframe.airline.value_counts().plot(kind='pie', autopct='%1.0f%%')
+
+
+test_pie_chart(test_data)
+plt.show()
