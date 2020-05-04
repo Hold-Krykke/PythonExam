@@ -11,6 +11,25 @@ import nltk
 # Test Data Path
 test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
 
+'''
+Example of data structure for the real data:
+[
+  1: {
+       words: [
+                
+       ],
+       sentiment: ...,
+       date: ...,
+       originalPoster:...,
+       sentiment: true or false,
+       other...
+     },
+  2: {
+     },
+  ...
+]
+'''
+
 
 def get_data_from_csv(test_data_path):
     """
@@ -36,6 +55,7 @@ print(test_data.head())
 
 
 def test_pie_chart(dataframe):
+    # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
     plot_size = plt.rcParams["figure.figsize"]
     print(plot_size[0])
     print(plot_size[1])
@@ -43,6 +63,7 @@ def test_pie_chart(dataframe):
     plot_size[0] = 8
     plot_size[1] = 6
     plt.rcParams["figure.figsize"] = plot_size
+    # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     dataframe.airline.value_counts().plot(kind='pie', autopct='%1.0f%%')
 
 
