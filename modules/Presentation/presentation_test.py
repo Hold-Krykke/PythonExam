@@ -54,7 +54,7 @@ test_data = get_data_from_csv(test_data_path)
 print(test_data.head())
 
 
-def test_pie_chart(dataframe):
+def number_of_tweets_test(dataframe):
     # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
     plot_size = plt.rcParams["figure.figsize"]
     print(plot_size[0])
@@ -67,5 +67,20 @@ def test_pie_chart(dataframe):
     dataframe.airline.value_counts().plot(kind='pie', autopct='%1.0f%%')
 
 
-test_pie_chart(test_data)
+# number_of_tweets_test(test_data)
+# plt.show()
+
+
+def sentiment_tweets_test(dataframe):
+    plot_size = plt.rcParams["figure.figsize"]
+    print(plot_size[0])
+    print(plot_size[1])
+    plot_size[0] = 8
+    plot_size[1] = 6
+    plt.rcParams["figure.figsize"] = plot_size
+    dataframe.airline_sentiment.value_counts().plot(
+        kind='pie', autopct='%1.0f%%', colors=["red", "yellow", "green"])
+
+
+sentiment_tweets_test(test_data)
 plt.show()
