@@ -29,7 +29,7 @@ def save_plot(fig, name):
         print("Name has to be a string.")
 
 
-def get_data_from_csv(test_data_path):
+def get_data_from_csv(data_path):
     """
     Importing CSV data as pandas DataFrame.
 
@@ -40,7 +40,7 @@ def get_data_from_csv(test_data_path):
     Pandas DataFrame
     """
 
-    test_tweets = pd.read_csv(test_data_path)
+    test_tweets = pd.read_csv(data_path)
     pd.set_option('display.max_columns', 500)
     pd.set_option('display.width', 1000)
     return test_tweets

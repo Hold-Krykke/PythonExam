@@ -3,5 +3,6 @@
     "./modules",
     "./modules/Presentation"
   ],
-  "python.pythonPath": "C:\\Users\\Malte\\Anaconda3\\python.exe"
+  "python.pythonPath": "C:\\Users\\Malte\\Anaconda3\\python.exe",
+  "python.formatting.provider": "black"
 }
