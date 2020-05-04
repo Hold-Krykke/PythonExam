@@ -91,10 +91,10 @@ def bar_plot_test(dataframe):
     plot_size[0] = 8
     plot_size[1] = 6
     plt.rcParams["figure.figsize"] = plot_size
-    airline_sentiment = airline_tweets.groupby(
+    airline_sentiment = dataframe.groupby(
         ['airline', 'airline_sentiment']).airline_sentiment.count().unstack()
     airline_sentiment.plot(kind='bar')
     plt.show()
 
 
-bar_plot_test(dataframe=test_data)
+# bar_plot_test(dataframe=test_data)
