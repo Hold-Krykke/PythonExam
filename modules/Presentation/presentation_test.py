@@ -38,7 +38,6 @@ test_data = get_data_from_csv(test_data_path)
 # print(test_data.head())
 
 
-
 def number_of_tweets_test(dataframe):
     # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
     plot_settings()
