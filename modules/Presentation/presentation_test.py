@@ -48,10 +48,23 @@ def get_data_from_csv(test_data_path):
     return test_tweets
 
 
+def save_plot(fig, name):
+    if (isinstance(name, str)):
+        from pathlib import Path
+        # https://stackoverflow.com/a/273227/11255140
+        # if plots folder doesn't exist, create it.
+        Path("./plots").mkdir(parents=True, exist_ok=True)
+        # bbox_inces="tight" ensures less white space in the image.
+        fig.savefig("./plots/"+name+".png", bbox_inces='tight')
+        print("Successfully saved Plot to ./plots/"+name+".png")
+    else:
+        print("Name has to be a string.")
+
+
 # Getting the test_data.
 test_data = get_data_from_csv(test_data_path)
 # Manually testing if we got it how we want it.
-print(test_data.head())
+# print(test_data.head())
 
 
 def plot_settings():
@@ -90,6 +103,7 @@ def bar_plot_test(dataframe):
     airline_sentiment = dataframe.groupby(
         ['airline', 'airline_sentiment']).airline_sentiment.count().unstack()
     airline_sentiment.plot(kind='bar')
+    save_plot(plt.gcf(), "test")
     plt.show()
 
 
