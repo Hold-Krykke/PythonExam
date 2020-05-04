@@ -1,5 +1,6 @@
 import bs4
 import requests as req
+import os
 
 base_URL = "https://mobile.twitter.com/search?q="
 end_URL_part = "&s=typd&x=0&y=0"
@@ -53,7 +54,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     Providing 39 will result in 20 tweets. Providing 41 will result in 40 tweets.
     Returns an array of string - each string containing a single tweet.
     This is the prototype function. It uses utf-8 encoding which is not very well suited for emojis. 
-    Provide multiple strings as parameters after the tweet_count parameter to search for tweets that contain multiple hashtags
+    Provide multiple strings as parameters after the tweet_count parameter to search for tweets that contain multiple hashtags.
+    Pass True as the fresh_search parameter if you want to make sure you get the newest results from Twitter.
     """
     # Creating initial URL
     URL = base_URL
@@ -65,6 +67,14 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
         else:
             file_name += (hashtag + "_")
     URL += end_URL_part
+
+    # If we don't want to do a fresh search and if the file corresponding to the hashtag(s) exists then return the file content
+    if not (fresh_search):
+        if os.path.isfile("../tweets/" + file_name):
+            with open("../tweets/" + file_name, 'r', encoding="utf-8") as f:
+                # print("Reading from file...")
+                return f.readlines()
+
 
     # Result array with all the tweets
     tweets = []
@@ -87,13 +97,13 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     with open("../tweets/" + file_name, 'w', encoding="utf-8") as f:
         for element in tweets:
             f.write(str(element))
-            # Adding newline so it's easier to read one tweet at a time later on by using .readlines() (I don't even know if that's a usecase)
+            # Adding newline so it's easier to read one tweet at a time later on by using .readlines()
             f.write("\n")
     
     return tweets
 
-# Usage example: 20: number of tweets, False: fresh search? (right now it doesn't change anything), anything after this == search parameters (hashtags)
-tweets = get_tweets(20, False, "trump", "biden")
-print(tweets)
-print("\n")
-print(len(tweets))
+# Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
+# tweets = get_tweets(20, False, "trump", "biden")
+# print(tweets)
+# print("\n")
+# print(len(tweets))
