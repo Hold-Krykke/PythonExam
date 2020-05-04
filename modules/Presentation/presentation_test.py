@@ -55,9 +55,13 @@ print(test_data.head())
 
 
 def plot_settings():
+    """
+    Used to set common settings for a pyplot
+    """
+    # https://stackoverflow.com/a/332311/11255140
     plot_size = plt.rcParams["figure.figsize"]
-    plot_size[0] = 8
-    plot_size[1] = 6
+    plot_size[0] = 8  # width in inches
+    plot_size[1] = 6  # height in inches
     plt.rcParams["figure.figsize"] = plot_size
 
 
