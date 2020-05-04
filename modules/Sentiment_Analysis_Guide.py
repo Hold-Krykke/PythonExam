@@ -108,13 +108,17 @@ random.shuffle(dataset)
 train_data = dataset[:7000]
 test_data = dataset[7000:]
 
-
+print(train_data[0])
 classifier = NaiveBayesClassifier.train(train_data)
 
-print("Accuracy is:", classify.accuracy(classifier, test_data))
-print(classifier.show_most_informative_features(10))
+# print("Accuracy is:", classify.accuracy(classifier, test_data))
+# print(classifier.show_most_informative_features(10))
 
 # Single Tweet test
-# custom_tweet = "this is not a positive tweet"
+# custom_tweet = "({'dont': True, 'come': True, 'italy': True, ':(': True}, 'Negative')"
+# custom_tweet = "this is a custom tweet!! #tweet"
 # custom_tokens = remove_noise(word_tokenize(custom_tweet))
+# print(custom_tokens)
 # print(classifier.classify(dict([token, True] for token in custom_tokens)))
+# print("Accuracy is:", classify.accuracy(classifier, test_data))
+print(positive_cleaned_tokens_list[0])
