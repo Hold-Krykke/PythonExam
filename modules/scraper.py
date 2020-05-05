@@ -158,7 +158,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     if not (fresh_search):
         if os.path.isfile("../tweets/" + file_name):
             with open("../tweets/" + file_name, 'r', encoding="utf-8") as f:
-                return f.read()
+                return f.readlines()
 
 
     # Result array with all the tweets
