@@ -104,9 +104,21 @@ def makeDataframe(tweets):
     print("BIDEN TWEETS:")
     print(bidentweets)
 
+    def Average(lst):
+        return sum(lst) / len(lst)
 
-def Average(lst):
-    return sum(lst) / len(lst)
+    trumpaverage = defaultdict(list)
+    bidenaverage = defaultdict(list)
+
+    for date in trumptweets.keys():
+        trumpaverage[date].append(Average(trumptweets[date]))
+    for date in bidentweets.keys():
+        bidenaverage[date].append(Average(bidentweets[date]))
+
+    print("TRUMP AVERAGE PER DATE")
+    print(trumpaverage)
+    print("BIDEN AVERAGE PER DATE")
+    print(bidenaverage)
 
 
 # date { Trump: [sentiment results], Biden}
