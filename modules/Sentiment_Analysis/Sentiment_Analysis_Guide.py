@@ -13,6 +13,7 @@ from nltk.tokenize import word_tokenize
 from ala_Runi_tweets import test_tweets
 import json
 
+
 # Basic Preprocessing, will be replaced by Rúnis work - Tokenizing the Data
 positive_tweets = twitter_samples.strings('positive_tweets.json')
 negative_tweets = twitter_samples.strings('negative_tweets.json')
@@ -137,8 +138,18 @@ print("DICT ", dict([token, True] for token in custom_tokens))
 comb = (dict([token, True] for token in custom_tokens), classifier.classify(
     dict([token, True] for token in custom_tokens)))
 print(comb)
-print(classifier.show_most_informative_features(10))
+print(classifier.show_most_informative_features(100))
 print("Accuracy is:", classify.accuracy(classifier, [comb]))
+
+# print(classifier.prob_classify(dict([token, True] for token in custom_tokens)).max())
+
+
+prob_dist = classifier.prob_classify(dict([token, True]
+                                          for token in custom_tokens))
+print(prob_dist.max())
+print(round(prob_dist.prob("Positive"), 2))
+print(round(prob_dist.prob("Negative"), 2))
+
 
 # print(positive_cleaned_tokens_list[0])
 # print(positive_cleaned_tokens_list[1])
