@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import re
 import nltk
-from Presentation.presentation_helpers import *
-from Presentation.test_data_generator import make_test_data
+from presentation_helpers import *
+from test_data_generator import make_test_data
 
 # Test Data Path
 test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
@@ -82,4 +82,4 @@ def bar_plot_test(dataframe):
 
 # bar_plot_test(dataframe=test_data)
 
-print(make_test_data())
+print(make_test_data(), "\n\n", make_test_data())
