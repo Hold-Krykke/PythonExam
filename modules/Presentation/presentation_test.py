@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import re
 import nltk
-from presentation_helpers import *
+from Presentation.presentation_helpers import *
 
 # Test Data Path
 test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
