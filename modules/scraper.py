@@ -23,10 +23,15 @@ def extract_tweets(soup: bs4.BeautifulSoup):
     "(...) end of sentence.[newline]Beginning of new sentence (...)"
     """
     tweet_elements = soup.find_all("table", class_=["tweet"])
-    tweet_strings = []
+    tweets = []
     for element in tweet_elements:
-        tweet_strings.append(extract_inner_text(element))
-    return tweet_strings
+        tweet_object = extract_inner_text(element)
+        tweet_urls = extract_data_urls(element)
+        tweet_object["tweet_urls"] = tweet_urls
+        tweet_emoji_descriptions = emoji_description_extractor(tweet_object["raw_text"])
+        tweet_object["emojis"] = tweet_emoji_descriptions
+        tweets.append(tweet_object)
+    return tweets
 
 
 def extract_inner_text(tweet_element):
@@ -37,7 +42,22 @@ def extract_inner_text(tweet_element):
     tweet_text = ""
     for element in tweet_fractions:
         tweet_text += str(element.text)
-    return tweet_text
+    return {"raw_text": tweet_text}
+
+
+def extract_data_urls(tweet_element):
+    """
+    Extracts the data-url attributes from a tweet element.
+    """
+    tweet_a_tags = tweet_element.find_all("a")
+    data_urls = []
+    for element in tweet_a_tags:
+        try:
+            data_url = element["data-url"]
+            data_urls.append(data_url)
+        except:
+            pass
+    return data_urls
 
 
 def emoji_description_extractor(text: str):
@@ -138,8 +158,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     if not (fresh_search):
         if os.path.isfile("../tweets/" + file_name):
             with open("../tweets/" + file_name, 'r', encoding="utf-8") as f:
-                # print("Reading from file...")
-                return f.readlines()
+                return f.read()
 
 
     # Result array with all the tweets
@@ -169,7 +188,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     return tweets
 
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
-tweets = get_tweets(20, False, "trump", "biden")
+# tweets = get_tweets(20, True, "trump", "biden")
+# print("Tweets downloaded")
 # for tweet in tweets:
 #     print("\n")
 #     print(str(tweet))
@@ -179,6 +199,6 @@ tweets = get_tweets(20, False, "trump", "biden")
 # print("\n")
 # print(len(tweets))
 
-for tweet in tweets:
-    desciptions = emoji_description_extractor(tweet)
-    print(desciptions)
+# for tweet in tweets:
+#     desciptions = emoji_description_extractor(tweet)
+#     print(desciptions)
