@@ -8,6 +8,7 @@ import pandas as pd
 import re
 import nltk
 from Presentation.presentation_helpers import *
+from Presentation.test_data_generator import make_test_data
 
 # Test Data Path
 test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
@@ -53,7 +54,7 @@ def number_of_tweets_test(dataframe):
     plt.show()
 
 
-number_of_tweets_test(test_data)
+# number_of_tweets_test(test_data)
 
 
 def sentiment_tweets_test(dataframe):
@@ -80,3 +81,5 @@ def bar_plot_test(dataframe):
 
 
 # bar_plot_test(dataframe=test_data)
+
+print(make_test_data())
