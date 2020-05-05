@@ -12,24 +12,29 @@ from presentation_helpers import *
 # Test Data Path
 test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
 
-'''
+"""
 Example of data structure for the real data:
 [
-  1: {
-       words: [
-
-       ],
-       sentiment: ...,
-       date: ...,
-       originalPoster:...,
-       sentiment: true or false,
-       other...
-     },
-  2: {
-     },
-  ...
+    {
+        "tweet": "This tweet year",
+        "hashtags": [
+            "#MyFirstTweet"
+        ],
+        "people": [
+            "@folketinget"
+        ],
+        "urls": [
+            "runivn.dk"
+        ],
+        "author": "Runi Vedel",
+        "date": "01/05/2020",
+        "sentiment": {
+            "result": Neutral / Positive / Negative, 
+            "accuracy": 90
+        }
+    }, 
 ]
-'''
+"""
 
 
 # Getting the test_data.
@@ -42,29 +47,36 @@ def number_of_tweets_test(dataframe):
     # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
     plot_settings()
     # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
-    dataframe.airline.value_counts().plot(kind='pie', autopct='%1.0f%%')
+    array_of_airline_names = dataframe.airline
+    unique_counts_of_airline = array_of_airline_names.value_counts()
+    pie_plot = unique_counts_of_airline.plot(kind="pie", autopct="%1.0f%%")
     plt.show()
 
 
-# number_of_tweets_test(test_data)
+number_of_tweets_test(test_data)
 
 
 def sentiment_tweets_test(dataframe):
     plot_settings()
     dataframe.airline_sentiment.value_counts().plot(
-        kind='pie', autopct='%1.0f%%', colors=["red", "yellow", "green"])
+        kind="pie", autopct="%1.0f%%", colors=["red", "yellow", "green"]
+    )
     plt.show()
 
 
 # sentiment_tweets_test(test_data)
 
+
 def bar_plot_test(dataframe):
     # plot_settings()
-    airline_sentiment = dataframe.groupby(
-        ['airline', 'airline_sentiment']).airline_sentiment.count().unstack()
-    airline_sentiment.plot(kind='bar')
+    airline_sentiment = (
+        dataframe.groupby(["airline", "airline_sentiment"])
+        .airline_sentiment.count()
+        .unstack()
+    )
+    airline_sentiment.plot(kind="bar")
     # save_plot(plt.gcf(), "test")
     plt.show()
 
 
-bar_plot_test(dataframe=test_data)
+# bar_plot_test(dataframe=test_data)
