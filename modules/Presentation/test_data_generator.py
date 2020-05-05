@@ -31,7 +31,7 @@ def make_test_data():
         "people": [random.choice(people), random.choice(people)],
         "urls": [random.choice(urls), random.choice(urls)],
         "author": random.choice(authors),
-        "date": "01/05/2020",
+        "date": random.choice(dates),
         "sentiment": {
             "result": random.choice(results),
             "accuracy": random.choice(accuracy),

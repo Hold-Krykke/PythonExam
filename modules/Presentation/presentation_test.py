@@ -9,6 +9,7 @@ import re
 import nltk
 from presentation_helpers import *
 from test_data_generator import make_test_data
+from collections import defaultdict
 
 # Test Data Path
 test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
@@ -82,4 +83,29 @@ def bar_plot_test(dataframe):
 
 # bar_plot_test(dataframe=test_data)
 
-print(make_test_data(), "\n\n", make_test_data())
+
+def makeDataframe(tweets):
+
+    dataSortedTweets = defaultdict(list)
+
+    for tweet in tweets:
+        if "#Biden" in tweet["hashtags"]:
+            # Add to Biden
+            dataSortedTweets[tweet["date"]].append(
+                {"result": tweet["sentiment"]["result"], "candiate": "Biden",}
+            )
+        if "#Trump" in tweet["hashtags"]:
+            # Add to Trump
+            dataSortedTweets[tweet["date"]].append(
+                {"result": tweet["sentiment"]["result"], "candiate": "Trump",}
+            )
+
+    print(dataSortedTweets)
+
+
+# print(make_test_data(), "\n\n", make_test_data())
+# print(object_test_data)
+object_test_data = []
+for i in range(1000):
+    object_test_data.append(make_test_data())
+makeDataframe(object_test_data)
