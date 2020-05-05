@@ -46,8 +46,8 @@ test_data = get_data_from_csv(test_data_path)
 def number_of_tweets_test(dataframe):
     # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
     plot_settings()
-    # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     array_of_airline_names = dataframe.airline
+    # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     unique_counts_of_airline = array_of_airline_names.value_counts()
     pie_plot = unique_counts_of_airline.plot(kind="pie", autopct="%1.0f%%")
     plt.show()
