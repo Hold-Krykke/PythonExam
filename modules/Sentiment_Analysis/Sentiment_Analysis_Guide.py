@@ -11,7 +11,6 @@ from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
 from ala_Runi_tweets import test_tweets
-import json
 
 
 # Basic Preprocessing, will be replaced by Rúnis work - Tokenizing the Data
@@ -20,7 +19,7 @@ negative_tweets = twitter_samples.strings('negative_tweets.json')
 text = twitter_samples.strings('tweets.20150430-223406.json')
 
 tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
-print(tweet_tokens[0])
+# print(tweet_tokens[0])
 
 # Basic Preprocessing, will be replaced by Rúnis work - Normalizing the Data
 
@@ -100,11 +99,9 @@ positive_tokens_for_model = get_tweets_for_model(positive_cleaned_tokens_list)
 negative_tokens_for_model = get_tweets_for_model(negative_cleaned_tokens_list)
 
 
-positive_dataset = [(tweet_dict, "Positive")
-                    for tweet_dict in positive_tokens_for_model]
+positive_dataset = [(tweet_dict, "Positive") for tweet_dict in positive_tokens_for_model]
 
-negative_dataset = [(tweet_dict, "Negative")
-                    for tweet_dict in negative_tokens_for_model]
+negative_dataset = [(tweet_dict, "Negative") for tweet_dict in negative_tokens_for_model]
 
 dataset = positive_dataset + negative_dataset
 
@@ -113,51 +110,27 @@ random.shuffle(dataset)
 train_data = dataset[:7000]
 test_data = dataset[7000:]
 print('TEST DATA SET', test_data[0])
-# test_tweets
 
-# print(train_data[0])
 classifier = NaiveBayesClassifier.train(train_data)
 
 # print("Accuracy is:", classify.accuracy(classifier, test_data))
 # print(classifier.show_most_informative_features(10))
 
 # Single Tweet test
-#custom_tweet = "({'dont': True, 'come': True, 'italy': True, ':(': True}, 'Negative')"
 custom_tweet = "this is not great custom tweet sad good person!! #tweet"
 custom_tokens = remove_noise(word_tokenize(custom_tweet))
 print(custom_tokens)
 print(classifier.classify(dict([token, True] for token in custom_tokens)))
 print("Accuracy is:", classify.accuracy(classifier, test_data))
 
-# KEY = TOJSON(dict([token, True] for token in custom_tokens))
-# VALUE = classifier.classify(dict([token, True] for token in custom_tokens))
-#test_json = json.dumps(dict([token, True] for token in custom_tokens))
 print("DICT ", dict([token, True] for token in custom_tokens))
-#print("TEST JSON", test_json)
-# print("json test af dict ", test_json)
-comb = (dict([token, True] for token in custom_tokens), classifier.classify(
-    dict([token, True] for token in custom_tokens)))
-print(comb)
-print(classifier.show_most_informative_features(100))
-print("Accuracy is:", classify.accuracy(classifier, [comb]))
-
-# print(classifier.prob_classify(dict([token, True] for token in custom_tokens)).max())
+comb = (dict([token, True] for token in custom_tokens), classifier.classify(dict([token, True] for token in custom_tokens)))
+print("COMB", comb)
 
 
-prob_dist = classifier.prob_classify(dict([token, True]
-                                          for token in custom_tokens))
-print(prob_dist.max())
-print(round(prob_dist.prob("Positive"), 2))
-print(round(prob_dist.prob("Negative"), 2))
+# WORKS
 
-
-# print(positive_cleaned_tokens_list[0])
-# print(positive_cleaned_tokens_list[1])
-# print(positive_cleaned_tokens_list[2])
-# print(positive_cleaned_tokens_list[3])
-# print(positive_cleaned_tokens_list[4])
-# print(positive_cleaned_tokens_list[5])
-# print(positive_cleaned_tokens_list[6])
-# print(positive_cleaned_tokens_list[7])
-# print(positive_cleaned_tokens_list[8])
-# print(positive_cleaned_tokens_list[9])
+probability_distrubution = classifier.prob_classify(dict([token, True] for token in custom_tokens))
+print("max", probability_distrubution.max())
+print("Positive", round(probability_distrubution.prob("Positive"), 2))
+print("Negative", round(probability_distrubution.prob("Negative"), 2))
