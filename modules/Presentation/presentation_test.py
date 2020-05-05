@@ -86,21 +86,30 @@ def bar_plot_test(dataframe):
 
 def makeDataframe(tweets):
 
-    dataSortedTweets = defaultdict(list)
+    trumptweets = defaultdict(list)
+    bidentweets = defaultdict(list)
 
     for tweet in tweets:
         if "#Biden" in tweet["hashtags"]:
             # Add to Biden
-            dataSortedTweets[tweet["date"]].append(
-                {"result": tweet["sentiment"]["result"], "candiate": "Biden",}
-            )
+            bidentweets[tweet["date"]].append(tweet["sentiment"]["result"])
         if "#Trump" in tweet["hashtags"]:
             # Add to Trump
-            dataSortedTweets[tweet["date"]].append(
-                {"result": tweet["sentiment"]["result"], "candiate": "Trump",}
-            )
+            trumptweets[tweet["date"]].append(tweet["sentiment"]["result"])
 
-    print(dataSortedTweets)
+    print("TRUMP TWEETS:")
+    print(trumptweets)
+    print()
+    print()
+    print("BIDEN TWEETS:")
+    print(bidentweets)
+
+
+def Average(lst):
+    return sum(lst) / len(lst)
+
+
+# date { Trump: [sentiment results], Biden}
 
 
 # print(make_test_data(), "\n\n", make_test_data())
@@ -108,4 +117,5 @@ def makeDataframe(tweets):
 object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
+
 makeDataframe(object_test_data)
