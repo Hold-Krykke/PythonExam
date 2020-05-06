@@ -97,12 +97,12 @@ def makeDataframe(tweets):
             # Add to Trump
             trumptweets[tweet["date"]].append(tweet["sentiment"]["result"])
 
-    print("TRUMP TWEETS:")
-    print(trumptweets)
-    print()
-    print()
-    print("BIDEN TWEETS:")
-    print(bidentweets)
+    # print("TRUMP TWEETS:")
+    # print(trumptweets)
+    # print()
+    # print()
+    # print("BIDEN TWEETS:")
+    # print(bidentweets)
 
     def Average(lst):
         return sum(lst) / len(lst)
