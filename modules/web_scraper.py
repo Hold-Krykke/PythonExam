@@ -3,6 +3,7 @@ import requests as req
 import os
 import re
 import pandas as pd
+from datetime import date, datetime
 
 base_URL = "https://mobile.twitter.com/search?q="
 end_URL_part = "&s=typd&x=0&y=0"
@@ -29,11 +30,14 @@ def create_tweet_objects(soup: bs4.BeautifulSoup):
         # Create a tweet object and store the raw text in it
         tweet_object = extract_inner_text(element)
         tweet_urls = extract_data_urls(element)
-        # Creating tweet_urls property which is a list of strings in tweet object
+        # Creating tweet_urls property which is a list of strings
         tweet_object["tweet_urls"] = tweet_urls
         tweet_emoji_descriptions = emoji_description_extractor(tweet_object["raw_text"])
-        # Creating emojis which is a list of strings in tweet object
+        # Creating emojis which is a list of strings
         tweet_object["emojis"] = tweet_emoji_descriptions
+        tweet_date = get_tweet_date(element)
+        # Creating the date property
+        tweet_object["date"] = tweet_date
         tweets.append(tweet_object)
     # Return result
     return tweets
@@ -67,6 +71,26 @@ def extract_data_urls(tweet_element):
         except:
             pass
     return data_urls
+
+
+def get_tweet_date(tweet_element):
+    """
+    Returns a datetime object with the date contained in the tweet.\nThe minutes and hours etc. are not accurate.\n
+    If the tweet is from before 2020 it will still be returned as if it was from 2020 :Hide_the_pain_Harold: Who needs tweets from the previous year anyway
+    """
+    # Finding element that contains the timestamp
+    timestamp_element = tweet_element.find("td", class_=["timestamp"])
+    # Inner element with timestamp or date
+    timestamp_inner_element = timestamp_element.find("a")
+    # The date is stored as inner text
+    timestamp = timestamp_inner_element.text
+    # If the timestamp contains "min" or "h"(hour) etc. it means the tweet is from today so we just return the date today
+    if "min" in timestamp or timestamp[-1] == "m" or "h" in timestamp or "now" in timestamp:
+        return "{},{},{}".format(datetime.now().date().year, datetime.now().date().month, datetime.now().date().day)
+    # Extract date to ensure proper formatting
+    tweet_date = datetime.strptime(timestamp + " 2020", "%b %d %Y")
+    # The weird looking return statement is made to make it easier for other parts of the program to read the date
+    return "{},{},{}".format(tweet_date.date().year, tweet_date.date().month, tweet_date.date().day)
 
 
 def emoji_description_extractor(text: str):
