@@ -106,27 +106,52 @@ def makeDataframe(tweets):
 
     def Average(lst):
         myFloat = sum(lst) / len(lst)
-        print(myFloat)
+        # print(myFloat)
         return myFloat
 
-    trumpaverage = defaultdict(list)
-    bidenaverage = defaultdict(list)
+    # trumpaverage = defaultdict()
+    # bidenaverage = defaultdict()
 
-    for date in trumptweets.keys():
-        trumpaverage[date].append(Average(trumptweets[date]))
-    for date in bidentweets.keys():
-        bidenaverage[date].append(Average(bidentweets[date]))
+    # for date in trumptweets.keys():
+    #     trumpaverage[date].append(Average(trumptweets[date]))
+    # for date in bidentweets.keys():
+    #     bidenaverage[date].append(Average(bidentweets[date]))
 
-    print("TRUMP AVERAGE PER DATE")
-    print(trumpaverage)
-    print("BIDEN AVERAGE PER DATE")
-    print(bidenaverage)
+    # trumpaverage = {}
+    # bidenaverage = {}
 
-    df = pd.DataFrame([trumpaverage, bidenaverage])
-    print(df)
+    # for date in trumptweets.keys():
+    #     trumpaverage[date] = Average(trumptweets[date])
+    # for date in bidentweets.keys():
+    #     bidenaverage[date] = Average(bidentweets[date])
+
+    # print("TRUMP AVERAGE PER DATE")
+    # print(trumpaverage)
+    # print("BIDEN AVERAGE PER DATE")
+    # print(bidenaverage)
+
+    # df = pd.DataFrame([trumpaverage, bidenaverage])
+    # print()
+    # print(df)
+    # print()
+    # print()
+    # print(df.unstack())
     # df = df.astype(float)
     # print("ASS")
     # print(df)
+
+    average = {"Trump": {}, "Biden": {}}
+
+    for date in trumptweets.keys():
+        average["Trump"][date] = Average(trumptweets[date])
+    for date in bidentweets.keys():
+        average["Biden"][date] = Average(bidentweets[date])
+
+    print(average)
+
+    df = pd.DataFrame(average)
+    print(df)
+
     return df
 
 
