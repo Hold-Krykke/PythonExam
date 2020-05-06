@@ -72,3 +72,18 @@ def bar_plot_test(dataframe):
 # print("ASS")
 # print(df)
 
+
+# date { Trump: [sentiment results], Biden}
+
+
+# print(make_test_data(), "\n\n", make_test_data())
+# print(object_test_data)
+
+
+# print("TRUMP TWEETS:")
+# print(trumptweets)
+# print()
+# print()
+# print("BIDEN TWEETS:")
+# print(bidentweets)
+
