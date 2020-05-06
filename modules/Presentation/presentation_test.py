@@ -52,14 +52,23 @@ def makeDataframeByDate(tweets):
     return df
 
 
+def lineGraph(df):
+    df.plot(kind="line")
+
+
+def barPlot(df):
+    df.groupby(["Trump", "Biden"])
+    df.plot(kind="bar", rot=0)
+
+
 # TESTING
 object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
 
-df = makeDataframe(object_test_data)
+df = makeDataframeByDate(object_test_data)
 
-
-def lineGraph(df):
-    df.plot(kind="line")
-    plt.show()
+# lineGraph(df)
+# plt.show()
+barPlot(df)
+plt.show()

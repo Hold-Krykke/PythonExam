@@ -18,9 +18,9 @@ def make_test_data():
     ]
     authors = ["Malte", "Camilla", "some asshole", "Asger", "Runi"]
     dates = [
-        datetime.datetime(2020, 5, 17),
-        datetime.datetime(2020, 6, 17),
-        datetime.datetime(2020, 5, 8),
+        datetime.date(2020, 5, 17),
+        datetime.date(2020, 6, 17),
+        datetime.date(2020, 5, 8),
     ]
     results = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     accuracy = range(100)
