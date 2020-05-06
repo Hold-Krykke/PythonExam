@@ -120,6 +120,9 @@ def makeDataframe(tweets):
     print("BIDEN AVERAGE PER DATE")
     print(bidenaverage)
 
+    attempt = pd.DataFrame([trumpaverage, bidenaverage])
+    print(attempt)
+
 
 # date { Trump: [sentiment results], Biden}
 
