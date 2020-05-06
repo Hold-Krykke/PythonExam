@@ -105,7 +105,9 @@ def makeDataframe(tweets):
     # print(bidentweets)
 
     def Average(lst):
-        return sum(lst) / len(lst)
+        myFloat = sum(lst) / len(lst)
+        print(myFloat)
+        return myFloat
 
     trumpaverage = defaultdict(list)
     bidenaverage = defaultdict(list)
@@ -120,8 +122,12 @@ def makeDataframe(tweets):
     print("BIDEN AVERAGE PER DATE")
     print(bidenaverage)
 
-    attempt = pd.DataFrame([trumpaverage, bidenaverage])
-    print(attempt)
+    df = pd.DataFrame([trumpaverage, bidenaverage])
+    print(df)
+    # df = df.astype(float)
+    # print("ASS")
+    # print(df)
+    return df
 
 
 # date { Trump: [sentiment results], Biden}
@@ -133,4 +139,12 @@ object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
 
-makeDataframe(object_test_data)
+df = makeDataframe(object_test_data)
+
+
+def lineGraph(data):
+    data.plot(kind="line")
+    plt.show()
+
+
+lineGraph(df)
