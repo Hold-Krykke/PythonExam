@@ -1,7 +1,10 @@
+# CONTAINS OUTDATED TESTING
+
 # Manually testing if we got it how we want it.
 # print(test_data.head())
 
 
+# Start-point is this tutorial: https://stackabuse.com/python-for-nlp-sentiment-analysis-with-scikit-learn//
 def number_of_tweets_test(dataframe):
     # https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams
     plot_settings()
@@ -86,4 +89,3 @@ def bar_plot_test(dataframe):
 # print()
 # print("BIDEN TWEETS:")
 # print(bidentweets)
-

@@ -39,3 +39,28 @@ def make_test_data():
     }
 
     return example
+
+
+"""
+Example of data structure for the real data:
+[
+    {
+        "tweet": "This tweet year",
+        "hashtags": [
+            "#MyFirstTweet"
+        ],
+        "people": [
+            "@folketinget"
+        ],
+        "urls": [
+            "runivn.dk"
+        ],
+        "author": "Runi Vedel",
+        "date": "01/05/2020",
+        "sentiment": {
+            "result": Neutral / Positive / Negative, 
+            "accuracy": 90
+        }
+    }, 
+]
+"""
