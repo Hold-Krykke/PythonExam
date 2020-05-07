@@ -44,23 +44,29 @@ def make_test_data():
 """
 Example of data structure for the real data:
 [
-    {
-        "tweet": "This tweet year",
-        "hashtags": [
-            "#MyFirstTweet"
-        ],
-        "people": [
-            "@folketinget"
-        ],
-        "urls": [
-            "runivn.dk"
-        ],
-        "author": "Runi Vedel",
-        "date": "01/05/2020",
-        "sentiment": {
-            "result": Neutral / Positive / Negative, 
-            "accuracy": 90
-        }
-    }, 
+  {
+    'tweet': 'This tweet year', 
+    'hashtags': [
+      '#MyFirstTweet'
+      ], 
+    'people': [
+      '@folketinget'
+      ], 
+    'urls': [
+      'runivn.dk'
+      ], 
+    'author': 'Runi Vedel', 
+    'date': '01/05/2020', 
+    'sentiment_analysis': [
+      {
+        'verdict': 'Positive', 
+        'positive_procent': 0.61, 
+        'negative_procent': 0.39
+      }
+    ]
+  }, 
+  {
+    'tweet': ......
+  }
 ]
 """
