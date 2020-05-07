@@ -1,7 +1,6 @@
 import re
 import string
 from typing import List, Dict
-#from nltk.corpus import twitter_samples
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
@@ -9,14 +8,8 @@ from nltk.tokenize import word_tokenize
 
 # lazy load stopwords
 _stop_words = stopwords.words('english')
+_stop_words.append('twitter')
 
-# punctuation we do not want in our tweets. built from string.punctuation
-# _PUNCTUATION = string.punctuation + "" # add here
-
-# Load tweets into strings
-#positive_tweets = twitter_samples.strings('positive_tweets.json')
-#negative_tweets = twitter_samples.strings('negative_tweets.json')
-# text = twitter_samples.strings('tweets.20150430-223406.json')  # no sentiment analysis
 scraped_tweets = [
     {'raw_text': '  Tomorrow I’ll be joined by @SebGorka, @STEPHMHAMILL and other distinguished guests to discuss the 2020 Presidential Election. \n\nTune into WJLA 24/7 tomorrow from 10:30-11:30 AM EST for another edition of The Armstrong Williams Show. #AWS #Election2020 #Trump #Biden @ABC7News pic.twitter.com/TTldPAD5RL\n',
         'tweet_urls': ['https://twitter.com/Arightside/status/1256364526741729288/video/1'], 'emojis': []},
@@ -53,26 +46,15 @@ scraped_tweets = [
     {'raw_text': '  The #Biden campaign’s neglect of #digital during the primary has led to an enormous shortfall against #Trump. \nBiden’s digital audience — including followers, subscribers and likes — is skimpy.\n\n#SocialMedia #DigitalMarketing twitter.com/nxthompson/sta…\n',
         'tweet_urls': ['https://twitter.com/nxthompson/status/1257671123581444096'], 'emojis': []},
     {'raw_text': "  AI might defeat #Trump because #Biden's intelligence surely won't.😂 twitter.com/Nieczuja_clan/…\n", 'tweet_urls': ['https://twitter.com/Nieczuja_clan/status/1257593194763685889'], 'emojis': ['FACE WITH TEARS OF JOY']}]
-# local setup:
-# install nltk through conda or your prefered option from here: http://www.nltk.org/install.html
-# download punkt tokenizer
-# import nltk
-# nltk.download('punkt')
-
-# Test tokenizer
-#tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
-# print(tweet_tokens[0])
-# print(positive_tweets[0])
 
 
-#TODO#
-# bugfix too aggressive punctuation removal. "follow/follow" becomes "followfollow" and links are killed
-# investigate this emoji solution inputString.encode('ascii', 'ignore').decode('ascii')
-# fjern hashtags, mentions
-# clean emojis
-# indsæt emojis fra liste ind til sidst i tweetet
-# investigate https://stackoverflow.com/questions/21696649/filtering-out-strings-that-only-contains-digits-and-or-punctuation-python
 def remove_noise(tweet: str):
+    """
+    Removes noise from the tweets by:
+    Tokenizing (Splits sentences into array of words)
+    Removes hyperlinks, mentions with regex
+
+    """
     cleaned_tokens = []
     tweet_tokens = word_tokenize(tweet)
     for token, tag in pos_tag(tweet_tokens):
@@ -88,12 +70,11 @@ def remove_noise(tweet: str):
             pos = 'a'
 
         lemmatizer = WordNetLemmatizer()
-        print('tokenb4', token)
+        #print('tokenb4', token)
         token = lemmatizer.lemmatize(token, pos)
-        print('tokenAfter', token)
-        print(token in string.punctuation)
+        #print('tokenAfter', token)
         # remove empty tokens, punctuations and stopwords
-        # and (token not in string.punctuation)
+        # and (token not in string.punctuation) #previous code
         if len(token) > 1 and (token.lower() not in _stop_words):
             cleaned_tokens.append(token.lower())
     return cleaned_tokens
@@ -106,19 +87,19 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
     As of now it looks for hashtags (#) and mentions (@)
     """
     # print(tweets)
-    # append hashtags, mentions to argument object?
     # create for-loop on argument "tweets"
     for tweet in tweets:
-        if 'hashtags' not in tweet:
+        # prepare format
+        if 'hashtags' not in tweet:  # check unnecesary?
             tweet['hashtags'] = []
-        if 'mentions' not in tweet:
+        if 'mentions' not in tweet:  # check unnecesary?
             tweet['mentions'] = []
         tweet_text = tweet.get('raw_text')
         # remove newline characters
         tweet_text = tweet_text.replace('\n', ' ')
-        # .encode('ascii', 'ignore').decode('ascii')
+
         # check text for hashtags or mentions
-        if (tweet_text != None and '#' or '@' in tweet_text):  # check to optimize
+        if (tweet_text != None and '#' or '@' in tweet_text):  # might not be necessary
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
                     tweet['hashtags'].append(word)
@@ -129,10 +110,8 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         # handle emojis
         # handle urls
         # handle punctuation (too aggressive)
-        tweet_text = "".join(
-            [char for char in tweet_text if char not in string.punctuation])
-        #tweet_text = remove_noise(tweet_text)
-        tweet['raw_text'] = remove_noise(tweet_text)  # must finish with this
+        #tweet_text = "".join([char for char in tweet_text if char not in string.punctuation])
+        tweet['tweet'] = remove_noise(tweet_text)  # must finish with this
     # handle hashtag stats
     # handle mention stats
     return tweets
@@ -140,32 +119,5 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
 
 new_tweets = get_tweet_data(scraped_tweets)
 
-print('tweets after: ', new_tweets)
-
-
-def master():  # add all_tweets argument
-    hashtags = __get_hashtags()  # add argument
-    persons = __get_persons()  # add argument
-    URLs = __get_urls()  # add argument
-    emojis = __get_emojis()  # add argument
-    tweet = __get_tweet()  # add argument
-
-
-def __get_hashtags():  # add tweet(s) argument
-    pass
-
-
-def __get_persons():  # add tweet(s) argument
-    pass
-
-
-def __get_urls():  # add tweet(s) argument
-    pass
-
-
-def __get_emojis():  # add tweet(s) argument
-    pass
-
-
-def __get_tweet():  # add tweet(s) argument
-    pass
+for tweet in new_tweets:
+    print('-----\n', tweet, '\n')
