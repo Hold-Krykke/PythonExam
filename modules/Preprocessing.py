@@ -60,9 +60,12 @@ def remove_noise(tweet: str):
     tweet_tokens = word_tokenize(tweet)
     for token, tag in pos_tag(tweet_tokens):
 
-        token = re.sub('(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)', '', token)  # remove hyperlinks
+        # remove hyperlinks
+        token = re.sub(
+            '(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)', '', token)
         token = re.sub("(@[A-Za-z0-9_]+)", "", token)  # remove mentions
-        token = re.sub("[^A-Za-z0-9]", "", token)  # remove special chars, inc emojies
+        # remove special chars, inc emojies
+        token = re.sub("[^A-Za-z0-9]", "", token)
         token = re.sub("[0-9]", "", token)  # remove numbers
 
         if tag.startswith("NN"):
@@ -78,8 +81,9 @@ def remove_noise(tweet: str):
         # print('tokenAfter', token)
         # remove empty tokens, punctuations and stopwords
         # use substring search (find) instead?
-        if len(token.strip()) > 1 and token not in string.punctuation and token.lower() not in _stop_words:
-            cleaned_tokens.append(token.lower())
+        token = token.lower().strip()
+        if len(token) > 1 and token not in string.punctuation and token not in _stop_words:
+            cleaned_tokens.append(token)
     return cleaned_tokens
 
 
