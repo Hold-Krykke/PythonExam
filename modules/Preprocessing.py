@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 
 # lazy load stopwords
 _stop_words = stopwords.words('english')
-_stop_words.append('twitter')
+_stop_words.extend(['twitter', 'nt'])
 
 scraped_tweets = [{'raw_text': '  THANK YOU @LindseyGrahamSC . I know you are #Trump ‘s ally; it’s gratifying to see you stand by #Biden. twitter.com/sarahmucha/sta…\n', 'tweet_urls': ['https://twitter.com/sarahmucha/status/1256404280875114499'], 'emojis': [], 'date': '2020,5,1'},
                   {'raw_text': '  Tomorrow I’ll be joined by @SebGorka, @STEPHMHAMILL and other distinguished guests to discuss the 2020 Presidential Election. \n\nTune into WJLA 24/7 tomorrow from 10:30-11:30 AM EST for another edition of The Armstrong Williams Show. #AWS #Election2020 #Trump #Biden @ABC7News pic.twitter.com/TTldPAD5RL\n',
