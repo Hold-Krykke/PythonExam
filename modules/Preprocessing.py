@@ -73,10 +73,8 @@ def _remove_noise(tweet: str):
         # remove hyperlinks
         token = re.sub(
             '(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)', '', token)
-        token = re.sub("(@[A-Za-z0-9_]+)", "", token)  # remove mentions
-        # remove special chars, inc emojies
-        token = re.sub("[^A-Za-z0-9]", "", token)
-        token = re.sub("[0-9]", "", token)  # remove numbers
+        # remove special chars, numbers, inc emojies
+        token = re.sub("[^A-Za-z]", "", token)
 
         if tag.startswith("NN"):
             pos = 'n'
