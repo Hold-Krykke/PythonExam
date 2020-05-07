@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 import re
 import string
 from typing import List, Dict
@@ -50,16 +50,16 @@ scraped_tweets = [{'raw_text': '  THANK YOU @LindseyGrahamSC . I know you are #T
                    'tweet_urls': ['https://twitter.com/jackhunter74/status/1258041753493520384'], 'emojis': [], 'date': '2020,5,6'}]
 
 
-def handle_date(date_string: str):
+def _handle_date(date_string: str):
     """
     We receive dates from tweets in the format 'yyyy-m-d'.
     This function returns a datetime.date object with proper formatting (yyyy-mm-dd)
     """
-    #return date(*[int(date) for date in date_string.split(',')]) # sorry we didnt get to use you ;(
+    # return date(*[int(date) for date in date_string.split(',')]) # sorry we didnt get to use you ;(
     return datetime.strptime(date_string, '%Y,%m,%d').date()
 
 
-def remove_noise(tweet: str):
+def _remove_noise(tweet: str):
     """
     Removes noise from the tweets by:
     Tokenizing (Splits sentences into array of words)
@@ -112,7 +112,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         if 'mentions' not in tweet:  # check unnecesary?
             tweet['mentions'] = []
         tweet_text = tweet.get('raw_text')
-        # remove newline characters (necessary to add space)
+        # remove newline characters (necessary to add spaces between words)
         tweet_text = tweet_text.replace('\n', ' ')
 
         # check text for hashtags or mentions
@@ -125,12 +125,12 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
                     tweet['mentions'].append(word)
                     tweet_text = tweet_text.replace(word, '')  # remove mention
         # handle dates
-        tweet['date'] = handle_date(tweet['date'])
+        tweet['date'] = _handle_date(tweet['date'])
         # handle emojis
-        # handle urls
+
         # handle punctuation (too aggressive)
         # tweet_text = "".join([char for char in tweet_text if char not in string.punctuation])
-        tweet['tweet'] = remove_noise(tweet_text)  # must finish with this
+        tweet['tweet'] = _remove_noise(tweet_text)  # must finish with this
     # handle hashtag stats
     # handle mention stats
     return tweets
