@@ -107,9 +107,9 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
     # create for-loop on argument "tweets"
     for tweet in tweets:
         # prepare format
-        if 'hashtags' not in tweet:  # check unnecesary?
+        if not tweet['hashtags']:  # check unnecesary?
             tweet['hashtags'] = []
-        if 'mentions' not in tweet:  # check unnecesary?
+        if not tweet['mentions']:  # check unnecesary?
             tweet['mentions'] = []
         tweet_text = tweet.get('raw_text')
         # remove newline characters (necessary to add spaces between words)
@@ -126,8 +126,10 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
                     tweet_text = tweet_text.replace(word, '')  # remove mention
         # handle dates
         tweet['date'] = _handle_date(tweet['date'])
-        # handle emojis
-
+        # add emoji descriptions to tweet text
+        if tweet['emojis']:
+            tweet_text += ' '.join(tweet['emojis'])
+        # clear unused words, numbers, symbols and the like
         tweet['tweet'] = _remove_noise(tweet_text)  # must finish with this
     # handle hashtag stats
     # handle mention stats
