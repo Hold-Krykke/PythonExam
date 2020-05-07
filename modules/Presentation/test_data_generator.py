@@ -24,7 +24,7 @@ def make_test_data():
         datetime.date(2020, 5, 19),
         datetime.date(2020, 5, 20),
     ]
-    verdict = ["Positive", "Negative", "Neutral"]
+    verdict = ["Positive", "Negative", "Uncertain"]
 
     results = np.linspace(0, 1, 101)
     # accuracy = range(100)

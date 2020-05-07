@@ -73,24 +73,25 @@ def positiveOrNegative(tweets):
             )
 
     for candidate in trump_biden_tweets.keys():
-        for date in candidate.keys():
+        for date in trump_biden_tweets[candidate].keys():
             print(candidate, " | DATE: ", date, " | ")
             print(pd.Series(trump_biden_tweets[candidate][date]).value_counts())
+            trump_biden_tweets[candidate][date] = pd.Series(
+                trump_biden_tweets[candidate][date]
+            ).value_counts()
 
-    # print("TRUMP:")
     # print(trump_biden_tweets)
-
-    df = pd.DataFrame(trump_biden_tweets)
-    print(df.unstack())
-    return df
+    return trump_biden_tweets
 
 
-def lineGraph(df):
+def lineGraph(mydict):
     # print("VALUE COUNTS")
     # print(df.Trump.apply(value_counts()))
     # print(df.Biden.value_counts())
-    df.groupby(["Trump", "Biden"])
-    df.plot(kind="line", color=["red", "blue"])
+    trump = pd.DataFrame(mydict["Trump"]).T
+    biden = pd.DataFrame(mydict["Biden"]).T
+    ax = trump.plot(kind="line", color=["red"])
+    biden.plot(kind="line", color=["blue"], ax=ax, rot=30)
 
 
 def barPlot(df):
@@ -106,13 +107,26 @@ object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
 
-df = positiveOrNegative(object_test_data)
-# lineGraph(df)
-# plt.show()
+mydict = positiveOrNegative(object_test_data)
 
+
+def dictBarPlot(mydict):
+    trump = pd.DataFrame(mydict["Trump"]).T
+    biden = pd.DataFrame(mydict["Biden"]).T
+    print("trump\n", trump)
+    print("biden\n", biden)
+    plot_settings()
+    trump.plot(kind="bar", rot=0, title="Trump")
+    plt.show()
+    plot_settings()
+    biden.plot(kind="bar", rot=0, title="Biden")
+    plt.show()
+
+
+dictBarPlot(mydict)
 # df = makeDataframeByDate(object_test_data)
 
-# lineGraph(df)
+# lineGraph(mydict)
 # plt.show()
 # barPlot(df)
 # plt.show()
