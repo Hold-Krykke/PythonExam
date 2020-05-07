@@ -1,3 +1,4 @@
+from datetime import date
 import re
 import string
 from typing import List, Dict
@@ -49,12 +50,25 @@ scraped_tweets = [{'raw_text': '  THANK YOU @LindseyGrahamSC . I know you are #T
                    'tweet_urls': ['https://twitter.com/jackhunter74/status/1258041753493520384'], 'emojis': [], 'date': '2020,5,6'}]
 
 
+def handle_date(date_string: str):
+    """
+    We receive dates from tweets in the format 'yyyy-m-d'.
+    This function returns a datetime.date object with proper formatting (yyyy-mm-dd)
+    ________________________________
+    This might look a little fun. We need integers in format (yyyy, m(m), d(d)) for the date constructor.
+    The * is known as the unpacking operator.
+    We split the string by comma, make a list of every value as integer,
+    then unpack the values into the constructor in the right format and order.
+    """
+    return date(*[int(date) for date in date_string.split(',')])
+
+
 def remove_noise(tweet: str):
     """
     Removes noise from the tweets by:
     Tokenizing (Splits sentences into array of words)
     Removes hyperlinks, mentions with regex
-
+    Removes special characters (primarily used for emojis) as well as numbers.
     """
     cleaned_tokens = []
     tweet_tokens = word_tokenize(tweet)
@@ -114,6 +128,8 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
                 if word.startswith('@'):
                     tweet['mentions'].append(word)
                     tweet_text = tweet_text.replace(word, '')  # remove mention
+        # handle dates
+        tweet['date'] = handle_date(tweet['date'])
         # handle emojis
         # handle urls
         # handle punctuation (too aggressive)
