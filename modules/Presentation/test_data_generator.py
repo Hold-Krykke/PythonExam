@@ -22,7 +22,7 @@ def make_test_data():
         datetime.date(2020, 6, 17),
         datetime.date(2020, 5, 8),
     ]
-    results = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    results = range(0, 1, 0.01)
     accuracy = range(100)
 
     example = {
@@ -32,8 +32,11 @@ def make_test_data():
         "urls": [random.choice(urls), random.choice(urls)],
         "author": random.choice(authors),
         "date": random.choice(dates),
-        "sentiment": {
+        "sentiment_analysis": {
+            "verdict": "Positive",
             "result": random.choice(results),
+            "positive_procent": 0.61,
+            "negative_procent": 0.39,
             "accuracy": random.choice(accuracy),
         },
     }
