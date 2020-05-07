@@ -57,15 +57,6 @@ def prepare_training_data_for_model():
 
     positive_tokens = twitter_samples.tokenized('positive_tweets.json')
     negative_tokens = twitter_samples.tokenized('negative_tweets.json')
-    print()
-    print("raw tokens")
-    print(positive_tokens[0])
-    print()
-    print(positive_tokens[1])
-    print()
-    print(positive_tokens[2])
-    print()
-    print()
 
     positive_preprocessed_tokens = []
     negative_preprocessed_tokens = []
@@ -76,30 +67,11 @@ def prepare_training_data_for_model():
     for tokens in negative_tokens:
         negative_preprocessed_tokens.append(remove_noise(tokens, stop_words))
 
-    print()
-    print("preprocessed tokens")
-    print(positive_preprocessed_tokens[0])
-    print()
-    print(positive_preprocessed_tokens[1])
-    print()
-    print(positive_preprocessed_tokens[2])
-    print()
-    print()
-
     positive_formatted_tokens = get_tweets_for_model(positive_preprocessed_tokens)
     negative_formatted_tokens = get_tweets_for_model(negative_preprocessed_tokens)
 
-    print()
-    print("formatted tokens")
-    print(positive_formatted_tokens)
-    print()
-    print()
-
-    positive_dataset = [(tweet_dict, "Positive")
-                        for tweet_dict in positive_formatted_tokens]
-
-    negative_dataset = [(tweet_dict, "Negative")
-                        for tweet_dict in negative_formatted_tokens]
+    positive_dataset = [(tweet_dict, "Positive") for tweet_dict in positive_formatted_tokens]
+    negative_dataset = [(tweet_dict, "Negative") for tweet_dict in negative_formatted_tokens]
 
     dataset = positive_dataset + negative_dataset
     # random.shuffle(dataset)
