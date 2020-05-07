@@ -45,7 +45,7 @@ scraped_tweets = [{'raw_text': '  THANK YOU @LindseyGrahamSC . I know you are #T
                    'tweet_urls': ['https://twitter.com/summitandnuffin/status/1258137679327346688'], 'emojis': [], 'date': '2020,5,6'},
                   {'raw_text': '  Monmouth Univ poll  #Trump 41%  #Biden 50%.   Among men Trump leads 44-46, Among women,  Biden leads 56% to 36%. Women hold the purse strings! Not looking good for your rally cry!\n',
                    'tweet_urls': [], 'emojis': [], 'date': '2020,5,6'},
-                  {'raw_text': ' @haydentiff While Amash has some positives in foreign policy; overall he scores a D on the SCOPE test. He, #Trump & #Biden will have to bust a— to earn my endorsement & vote! twitter.com/jackhunter74/s…\n',
+                  {'raw_text': ' @haydentiff While 777.77 777 Amash has don\'t some positives follow/follow in foreign policy; overall he scores a D on the SCOPE test. He, #Trump & #Biden will have to bust a— to earn my endorsement & vote! twitter.com/jackhunter74/s…\n',
                    'tweet_urls': ['https://twitter.com/jackhunter74/status/1258041753493520384'], 'emojis': [], 'date': '2020,5,6'}]
 
 
@@ -59,9 +59,11 @@ def remove_noise(tweet: str):
     cleaned_tokens = []
     tweet_tokens = word_tokenize(tweet)
     for token, tag in pos_tag(tweet_tokens):
-        token = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|'
-                       '(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', token)  # remove hyperlinks
+
+        token = re.sub('(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)', '', token)  # remove hyperlinks
         token = re.sub("(@[A-Za-z0-9_]+)", "", token)  # remove mentions
+        token = re.sub("[^A-Za-z0-9]", "", token)  # remove special chars, inc emojies
+        token = re.sub("[0-9]", "", token)  # remove numbers
 
         if tag.startswith("NN"):
             pos = 'n'
@@ -76,7 +78,7 @@ def remove_noise(tweet: str):
         # print('tokenAfter', token)
         # remove empty tokens, punctuations and stopwords
         # use substring search (find) instead?
-        if len(token) > 1 and token not in string.punctuation and token.lower() not in _stop_words:
+        if len(token.strip()) > 1 and token not in string.punctuation and token.lower() not in _stop_words:
             cleaned_tokens.append(token.lower())
     return cleaned_tokens
 
