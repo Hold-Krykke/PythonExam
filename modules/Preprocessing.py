@@ -75,9 +75,8 @@ def remove_noise(tweet: str):
         token = lemmatizer.lemmatize(token, pos)
         # print('tokenAfter', token)
         # remove empty tokens, punctuations and stopwords
-        # and (token not in string.punctuation) #previous code
         # use substring search (find) instead?
-        if len(token) > 1 and (token.lower() not in _stop_words):
+        if len(token) > 1 and token not in string.punctuation and token.lower() not in _stop_words:
             cleaned_tokens.append(token.lower())
     return cleaned_tokens
 
