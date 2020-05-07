@@ -24,6 +24,7 @@ def make_test_data():
         datetime.date(2020, 5, 19),
         datetime.date(2020, 5, 20),
     ]
+    verdict = ["Positive", "Negative", "Neutral"]
 
     results = np.linspace(0, 1, 101)
     # accuracy = range(100)
@@ -38,7 +39,7 @@ def make_test_data():
         "author": random.choice(authors),
         "date": random.choice(dates),
         "sentiment_analysis": {
-            "verdict": "Positive",
+            "verdict": random.choice(verdict),
             "positive_procent": positive_procent,
             "negative_procent": negative_procent,
         },
