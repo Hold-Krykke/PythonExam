@@ -57,34 +57,48 @@ def makeDataframeByDate(tweets):
 
 
 def positiveOrNegative(tweets):
-    trumptweets = defaultdict(list)
-    bidentweets = defaultdict(list)
+    trump_biden_tweets = {"Trump": defaultdict(list), "Biden": defaultdict(list)}
 
     for tweet in tweets:
         ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
         if "#Biden" in tweet["hashtags"]:
             # Add to Biden
-            bidentweets[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+            trump_biden_tweets["Biden"][tweet["date"]].append(
+                tweet["sentiment_analysis"]["verdict"]
+            )
         if "#Trump" in tweet["hashtags"]:
             # Add to Trump
-            trumptweets[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+            trump_biden_tweets["Trump"][tweet["date"]].append(
+                tweet["sentiment_analysis"]["verdict"]
+            )
 
-    print("TRUMP:")
-    print(trumptweets)
-    print()
-    print("BIDEN")
-    print(bidentweets)
+    for candidate in trump_biden_tweets.keys():
+        for date in candidate.keys():
+            print(candidate, " | DATE: ", date, " | ")
+            print(pd.Series(trump_biden_tweets[candidate][date]).value_counts())
 
-    return None
+    # print("TRUMP:")
+    # print(trump_biden_tweets)
+
+    df = pd.DataFrame(trump_biden_tweets)
+    print(df.unstack())
+    return df
 
 
 def lineGraph(df):
-    df.plot(kind="line")
+    # print("VALUE COUNTS")
+    # print(df.Trump.apply(value_counts()))
+    # print(df.Biden.value_counts())
+    df.groupby(["Trump", "Biden"])
+    df.plot(kind="line", color=["red", "blue"])
 
 
 def barPlot(df):
+    # df.value_counts()
+    # print("VALUE COUNTS")
+    # print(df)
     df.groupby(["Trump", "Biden"])
-    df.plot(kind="bar", rot=0, colors=["red", "blue"])
+    df.plot(kind="bar", rot=0, color=["red", "blue"])
 
 
 # TESTING
@@ -93,6 +107,8 @@ for i in range(1000):
     object_test_data.append(make_test_data())
 
 df = positiveOrNegative(object_test_data)
+# lineGraph(df)
+# plt.show()
 
 # df = makeDataframeByDate(object_test_data)
 
