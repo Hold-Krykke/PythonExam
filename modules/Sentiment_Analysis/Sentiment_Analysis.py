@@ -5,7 +5,6 @@ import re
 import string
 from nltk.corpus import stopwords
 from nltk import FreqDist
-# All above i think is just for the dummy preprocessing
 import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
