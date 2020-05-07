@@ -17,45 +17,6 @@ test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
 test_data = get_data_from_csv(test_data_path)
 
 
-def makeDataframeByDate(tweets):
-
-    trumptweets = defaultdict(list)
-    bidentweets = defaultdict(list)
-
-    for tweet in tweets:
-        ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
-        if "#Biden" in tweet["hashtags"]:
-            # Add to Biden
-            bidentweets[tweet["date"]].append(
-                tweet["sentiment_analysis"]["positive_procent"]
-            )
-        if "#Trump" in tweet["hashtags"]:
-            # Add to Trump
-            trumptweets[tweet["date"]].append(
-                tweet["sentiment_analysis"]["positive_procent"]
-            )
-
-    def Average(lst):
-        # GET AVERAGE OF A LIST
-        myFloat = sum(lst) / len(lst)
-        # print(myFloat)
-        return myFloat
-
-    average = {"Trump": {}, "Biden": {}}
-
-    for date in trumptweets.keys():
-        average["Trump"][date] = Average(trumptweets[date])
-    for date in bidentweets.keys():
-        average["Biden"][date] = Average(bidentweets[date])
-
-    print(average)
-
-    df = pd.DataFrame(average)
-    print(df)
-
-    return df
-
-
 def positiveOrNegative(tweets):
     """
     Returns 2 pandas dataframes.
@@ -73,12 +34,16 @@ def positiveOrNegative(tweets):
 
     """
 
+    # Making a somewhat empty dict to contain the info we need.
     trump_biden_tweets = {"Trump": defaultdict(list), "Biden": defaultdict(list)}
 
     for tweet in tweets:
         ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
         if "#Biden" in tweet["hashtags"]:
             # Add to Biden
+            # We only want the sentiment_analysis verdict and the date here.
+            # Date is the key. Verdict is added to the value array.
+            # "date": [Positive, Negative, Uncertain, Negative, etc, etc]
             trump_biden_tweets["Biden"][tweet["date"]].append(
                 tweet["sentiment_analysis"]["verdict"]
             )
@@ -88,10 +53,12 @@ def positiveOrNegative(tweets):
                 tweet["sentiment_analysis"]["verdict"]
             )
 
+    # We now take .value_counts() and put that as the dates value:
+    # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     for candidate in trump_biden_tweets.keys():
         for date in trump_biden_tweets[candidate].keys():
-            print(candidate, " | DATE: ", date, " | ")
-            print(pd.Series(trump_biden_tweets[candidate][date]).value_counts())
+            # print(candidate, " | DATE: ", date, " | ")
+            # print(pd.Series(trump_biden_tweets[candidate][date]).value_counts())
             trump_biden_tweets[candidate][date] = pd.Series(
                 trump_biden_tweets[candidate][date]
             ).value_counts()
@@ -147,3 +114,45 @@ barPlot(trump, biden)
 # plt.show()
 # barPlot(df)
 # plt.show()
+
+
+def makeDataframeByDate(tweets):
+    """
+    Might be outdated.
+    """
+
+    trumptweets = defaultdict(list)
+    bidentweets = defaultdict(list)
+
+    for tweet in tweets:
+        ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
+        if "#Biden" in tweet["hashtags"]:
+            # Add to Biden
+            bidentweets[tweet["date"]].append(
+                tweet["sentiment_analysis"]["positive_procent"]
+            )
+        if "#Trump" in tweet["hashtags"]:
+            # Add to Trump
+            trumptweets[tweet["date"]].append(
+                tweet["sentiment_analysis"]["positive_procent"]
+            )
+
+    def Average(lst):
+        # GET AVERAGE OF A LIST
+        myFloat = sum(lst) / len(lst)
+        # print(myFloat)
+        return myFloat
+
+    average = {"Trump": {}, "Biden": {}}
+
+    for date in trumptweets.keys():
+        average["Trump"][date] = Average(trumptweets[date])
+    for date in bidentweets.keys():
+        average["Biden"][date] = Average(bidentweets[date])
+
+    print(average)
+
+    df = pd.DataFrame(average)
+    print(df)
+
+    return df
