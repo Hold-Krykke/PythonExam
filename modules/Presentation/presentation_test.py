@@ -100,6 +100,7 @@ def barPlot(df):
     # print(df)
     df.groupby(["Trump", "Biden"])
     df.plot(kind="bar", rot=0, color=["red", "blue"])
+    # rot=0 is that x-labels are horizontal
 
 
 # TESTING
@@ -111,8 +112,10 @@ mydict = positiveOrNegative(object_test_data)
 
 
 def dictBarPlot(mydict):
-    trump = pd.DataFrame(mydict["Trump"]).T
+    trump = pd.DataFrame(mydict["Trump"]).T  # .T = Transpose
     biden = pd.DataFrame(mydict["Biden"]).T
+    # trump.sort('Date')
+    # biden.sort('Date')
     print("trump\n", trump)
     print("biden\n", biden)
     trump.plot(kind="bar", rot=0, title="Trump")
