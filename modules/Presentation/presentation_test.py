@@ -81,6 +81,18 @@ def lineGraph(mydict):
     biden.plot(kind="line", color=["blue"], ax=ax, rot=30)
 
 
+def pieChart(trump, biden, sentiment):
+    trump_sentiment = [trump[sentiment].sum()]  # sum up tweets
+    biden_sentiment = [biden[sentiment].sum()]
+    trump_string = f"Trump {sentiment} tweets"
+    biden_string = f"Biden {sentiment} tweets"
+    df = pd.DataFrame(
+        {trump_string: trump_sentiment, biden_string: biden_sentiment}, index=[0]
+    )
+    df.plot(kind="pie", autopct="%1.0f%%")
+    plt.show()
+
+
 def barPlot(df):
     # df.value_counts()
     # print("VALUE COUNTS")
@@ -88,14 +100,6 @@ def barPlot(df):
     df.groupby(["Trump", "Biden"])
     df.plot(kind="bar", rot=0, color=["red", "blue"])
     # rot=0 is that x-labels are horizontal
-
-
-# TESTING
-object_test_data = []
-for i in range(1000):
-    object_test_data.append(make_test_data())
-
-trump, biden = positiveOrNegative(object_test_data)
 
 
 def barPlot(trump, biden):
@@ -107,7 +111,16 @@ def barPlot(trump, biden):
     plt.show()
 
 
-barPlot(trump, biden)
+# TESTING
+object_test_data = []
+for i in range(1000):
+    object_test_data.append(make_test_data())
+
+trump, biden = positiveOrNegative(object_test_data)
+
+
+# barPlot(trump, biden)
+pieChart(trump, biden, "Positive")
 # df = makeDataframeByDate(object_test_data)
 
 # lineGraph(mydict)
