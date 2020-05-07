@@ -207,8 +207,13 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
         if os.path.isfile("../tweets/" + file_name):
             with open("../tweets/" + file_name, 'r', encoding="utf-8") as f:
                 result = []
+                count = 0
                 for line in f.readlines():
+                    if count > tweet_count:
+                        break
                     result.append(line)
+                    count += 1
+
                 return result
 
 
