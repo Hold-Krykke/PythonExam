@@ -26,10 +26,14 @@ def makeDataframeByDate(tweets):
         ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
         if "#Biden" in tweet["hashtags"]:
             # Add to Biden
-            bidentweets[tweet["date"]].append(tweet["sentiment"]["result"])
+            bidentweets[tweet["date"]].append(
+                tweet["sentiment_analysis"]["positive_procent"]
+            )
         if "#Trump" in tweet["hashtags"]:
             # Add to Trump
-            trumptweets[tweet["date"]].append(tweet["sentiment"]["result"])
+            trumptweets[tweet["date"]].append(
+                tweet["sentiment_analysis"]["positive_procent"]
+            )
 
     def Average(lst):
         # GET AVERAGE OF A LIST
@@ -52,13 +56,35 @@ def makeDataframeByDate(tweets):
     return df
 
 
+def positiveOrNegative(tweets):
+    trumptweets = defaultdict(list)
+    bidentweets = defaultdict(list)
+
+    for tweet in tweets:
+        ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
+        if "#Biden" in tweet["hashtags"]:
+            # Add to Biden
+            bidentweets[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+        if "#Trump" in tweet["hashtags"]:
+            # Add to Trump
+            trumptweets[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+
+    print("TRUMP:")
+    print(trumptweets)
+    print()
+    print("BIDEN")
+    print(bidentweets)
+
+    return None
+
+
 def lineGraph(df):
     df.plot(kind="line")
 
 
 def barPlot(df):
     df.groupby(["Trump", "Biden"])
-    df.plot(kind="bar", rot=0)
+    df.plot(kind="bar", rot=0, colors=["red", "blue"])
 
 
 # TESTING
@@ -66,9 +92,11 @@ object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
 
-df = makeDataframeByDate(object_test_data)
+df = positiveOrNegative(object_test_data)
+
+# df = makeDataframeByDate(object_test_data)
 
 # lineGraph(df)
 # plt.show()
-barPlot(df)
-plt.show()
+# barPlot(df)
+# plt.show()
