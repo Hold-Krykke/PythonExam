@@ -13,7 +13,7 @@ from nltk.tokenize import word_tokenize
 from ala_Runi_tweets import test_tweets
 
 
-################### Preprocessing util methods ##################
+###### Preprocessing util methods will be replaced by Rúni ######
 def remove_noise(tweet_tokens, stop_words=()):
 
     cleaned_tokens = []
@@ -46,50 +46,63 @@ def get_all_words(cleaned_tokens_list):
 
 def get_tweets_for_model(cleaned_tokens_list):
     for tweet_tokens in cleaned_tokens_list:
+        print(dict([token, True] for token in tweet_tokens))
         yield dict([token, True] for token in tweet_tokens)
-################### Preprocessing util methods ##################
-
-
-################### Test Tweets for building ####################
-positive_tweets = twitter_samples.strings('positive_tweets.json')
-negative_tweets = twitter_samples.strings('negative_tweets.json')
-text = twitter_samples.strings('tweets.20150430-223406.json')
-################### Test Tweets for building ####################
+###### Preprocessing util methods will be replaced by Rúni ######
 
 
 ####################### Prepare the Data ########################
-def prepare_tweet_data_for_model():
+def prepare_training_data_for_model():
     stop_words = stopwords.words('english')
 
-    positive_tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
-    negative_tweet_tokens = twitter_samples.tokenized('negative_tweets.json')
+    positive_tokens = twitter_samples.tokenized('positive_tweets.json')
+    negative_tokens = twitter_samples.tokenized('negative_tweets.json')
+    print()
+    print("raw tokens")
+    print(positive_tokens[0])
+    print()
+    print(positive_tokens[1])
+    print()
+    print(positive_tokens[2])
+    print()
+    print()
 
-    positive_cleaned_tokens_list = []
-    negative_cleaned_tokens_list = []
+    positive_preprocessed_tokens = []
+    negative_preprocessed_tokens = []
 
-    for tokens in positive_tweet_tokens:
-        positive_cleaned_tokens_list.append(remove_noise(tokens, stop_words))
+    for tokens in positive_tokens:
+        positive_preprocessed_tokens.append(remove_noise(tokens, stop_words))
 
-    for tokens in negative_tweet_tokens:
-        negative_cleaned_tokens_list.append(remove_noise(tokens, stop_words))
+    for tokens in negative_tokens:
+        negative_preprocessed_tokens.append(remove_noise(tokens, stop_words))
 
-    all_pos_words = get_all_words(positive_cleaned_tokens_list)
+    print()
+    print("preprocessed tokens")
+    print(positive_preprocessed_tokens[0])
+    print()
+    print(positive_preprocessed_tokens[1])
+    print()
+    print(positive_preprocessed_tokens[2])
+    print()
+    print()
 
-    freq_dist_pos = FreqDist(all_pos_words)
-    # print("Freq")
-    # print(freq_dist_pos.most_common(20))
+    positive_formatted_tokens = get_tweets_for_model(positive_preprocessed_tokens)
+    negative_formatted_tokens = get_tweets_for_model(negative_preprocessed_tokens)
 
-    positive_tokens_for_model = get_tweets_for_model(positive_cleaned_tokens_list)
-    negative_tokens_for_model = get_tweets_for_model(negative_cleaned_tokens_list)
+    print()
+    print("formatted tokens")
+    print(positive_formatted_tokens)
+    print()
+    print()
 
     positive_dataset = [(tweet_dict, "Positive")
-                        for tweet_dict in positive_tokens_for_model]
+                        for tweet_dict in positive_formatted_tokens]
 
     negative_dataset = [(tweet_dict, "Negative")
-                        for tweet_dict in negative_tokens_for_model]
+                        for tweet_dict in negative_formatted_tokens]
 
     dataset = positive_dataset + negative_dataset
-    random.shuffle(dataset)
+    # random.shuffle(dataset)
     # train_data = dataset[:7000]
     # test_data = dataset[7000:]
 
@@ -98,21 +111,27 @@ def prepare_tweet_data_for_model():
 
 
 ####################### Analyze the Data ########################
-def analyze_many_tweets(classifier, tweets_list):
+
+training_dataset = prepare_training_data_for_model()
+classifier_has_been_trained = False
+classifier = None
+
+
+def analyze_many_tweets(tweets_list):
 
     for item in tweets_list:
         tweet = item.get("tweet")
-        result = analyze_tweet(tweet, classifier)
+        result = analyze_tweet(tweet)
         item["sentiment_analysis"] = [result]
 
     return tweets_list
 
 
-def analyze_tweet(tweet, classifier):
+def analyze_tweet(tweet):
+    train_model_if_necessary()
     tweet_tokens = remove_noise(word_tokenize(tweet))
-
     # Check format
-    comb = (dict([token, True] for token in tweet_tokens), classifier.classify(dict([token, True] for token in tweet_tokens)))
+    # comb = (dict([token, True] for token in tweet_tokens), classifier.classify(dict([token, True] for token in tweet_tokens)))
     # print("COMB", comb)
 
     probability_distrubution = classifier.prob_classify(dict([token, True] for token in tweet_tokens))
@@ -121,10 +140,22 @@ def analyze_tweet(tweet, classifier):
     result["verdict"] = probability_distrubution.max()
     result["positive_procent"] = round(probability_distrubution.prob("Positive"), 2)
     result["negative_procent"] = round(probability_distrubution.prob("Negative"), 2)
+    if (result.get("positive_procent") < 0.75 and result.get("positive_procent") > 0.25):
+        result["verdict"] = "Uncertain"
+
+    print(result)
+    print()
     return result
 
 
-train_data = prepare_tweet_data_for_model()
-classifier = NaiveBayesClassifier.train(train_data)
-print(analyze_many_tweets(classifier, test_tweets))
+def train_model_if_necessary():
+    global classifier_has_been_trained
+    global classifier
+
+    if (not classifier_has_been_trained):
+        classifier = NaiveBayesClassifier.train(training_dataset)
+        classifier_has_been_trained = True
+
+
+print(analyze_many_tweets(test_tweets))
 ####################### Analyze the Data ########################
