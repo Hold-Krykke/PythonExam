@@ -128,8 +128,6 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         tweet['date'] = _handle_date(tweet['date'])
         # handle emojis
 
-        # handle punctuation (too aggressive)
-        # tweet_text = "".join([char for char in tweet_text if char not in string.punctuation])
         tweet['tweet'] = _remove_noise(tweet_text)  # must finish with this
     # handle hashtag stats
     # handle mention stats
