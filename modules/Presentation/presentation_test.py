@@ -57,6 +57,22 @@ def makeDataframeByDate(tweets):
 
 
 def positiveOrNegative(tweets):
+    """
+    Returns 2 pandas dataframes.
+    Columns are Negative, Positive and Uncertain Tweets
+    Rows are the date of the tweet.
+    The value in the cell is the number of tweets that day.
+
+    Parameters:
+        tweets: Array of tweets. 
+
+
+    Returns:
+        Trump: Pandas Dataframe of Trump tweets.
+        Biden: Pandas Dataframe of Biden tweets.
+
+    """
+
     trump_biden_tweets = {"Trump": defaultdict(list), "Biden": defaultdict(list)}
 
     for tweet in tweets:
@@ -81,7 +97,11 @@ def positiveOrNegative(tweets):
             ).value_counts()
 
     # print(trump_biden_tweets)
-    return trump_biden_tweets
+
+    # Making dataframes. Transposing so the structure is correct.
+    trump = pd.DataFrame(trump_biden_tweets["Trump"]).T  # .T = Transpose
+    biden = pd.DataFrame(trump_biden_tweets["Biden"]).T
+    return trump, biden
 
 
 def lineGraph(mydict):
@@ -108,14 +128,10 @@ object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
 
-mydict = positiveOrNegative(object_test_data)
+trump, biden = positiveOrNegative(object_test_data)
 
 
-def dictBarPlot(mydict):
-    trump = pd.DataFrame(mydict["Trump"]).T  # .T = Transpose
-    biden = pd.DataFrame(mydict["Biden"]).T
-    # trump.sort('Date')
-    # biden.sort('Date')
+def barPlot(trump, biden):
     print("trump\n", trump)
     print("biden\n", biden)
     trump.plot(kind="bar", rot=0, title="Trump")
@@ -124,7 +140,7 @@ def dictBarPlot(mydict):
     plt.show()
 
 
-dictBarPlot(mydict)
+barPlot(trump, biden)
 # df = makeDataframeByDate(object_test_data)
 
 # lineGraph(mydict)
