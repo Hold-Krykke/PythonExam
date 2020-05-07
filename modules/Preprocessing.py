@@ -101,16 +101,17 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
     """
     This function takes a list of tweets, containing web scraped dicts (in particular raw_text) and grabs useful information from it.
 
-    As of now it looks for hashtags (#) and mentions (@)
+    As of now it looks for hashtags (#), mentions (@) and emojis.
+
+    Following this, it cleans up the data and returns the same object with fields:
+    hashtags, mentions, tweet
     """
     # print(tweets)
     # create for-loop on argument "tweets"
     for tweet in tweets:
         # prepare format
-        if not tweet['hashtags']:  # check unnecesary?
-            tweet['hashtags'] = []
-        if not tweet['mentions']:  # check unnecesary?
-            tweet['mentions'] = []
+        tweet['hashtags'] = tweet.get('hashtags', [])
+        tweet['mentions'] = tweet.get('mentions', [])
         tweet_text = tweet.get('raw_text')
         # remove newline characters (necessary to add spaces between words)
         tweet_text = tweet_text.replace('\n', ' ')
