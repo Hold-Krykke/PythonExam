@@ -82,14 +82,33 @@ def lineGraph(mydict):
 
 
 def pieChart(trump, biden, sentiment):
-    trump_sentiment = [trump[sentiment].sum()]  # sum up tweets
-    biden_sentiment = [biden[sentiment].sum()]
-    trump_string = f"Trump {sentiment} tweets"
-    biden_string = f"Biden {sentiment} tweets"
-    df = pd.DataFrame(
-        {trump_string: trump_sentiment, biden_string: biden_sentiment}, index=[0]
+    """
+    Parameters: 
+        trump & biden: DataFrame: has to come from positiveOrNegative
+        sentiment: String: Positive, Negative or Uncertain
+
+    
+    """
+    print(trump, "\n", biden)
+    df = pd.Series(
+        {"Trump": trump[sentiment].sum(), "Biden": biden[sentiment].sum()}
+    ).plot(
+        kind="pie",
+        autopct="%1.0f%%",
+        colors=["red", "blue"],
+        title=f"{sentiment} tweets.",
     )
-    df.plot(kind="pie", autopct="%1.0f%%")
+
+    print(df)
+
+    # trump_sentiment = [trump[sentiment].sum()]  # sum up tweets
+    # biden_sentiment = [biden[sentiment].sum()]
+    # trump_string = f"Trump {sentiment} tweets"
+    # biden_string = f"Biden {sentiment} tweets"
+    # df = pd.DataFrame(
+    #     {trump_string: trump_sentiment, biden_string: biden_sentiment}, index=[0]
+    # )
+
     plt.show()
 
 
