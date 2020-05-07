@@ -2,8 +2,9 @@
 
 # Manually testing if we got it how we want it.
 # print(test_data.head())
+import numpy as np
 
-print(range(0, 1, 0.01))
+print(np.linspace(0, 1, 101))
 
 # Start-point is this tutorial: https://stackabuse.com/python-for-nlp-sentiment-analysis-with-scikit-learn//
 def number_of_tweets_test(dataframe):
