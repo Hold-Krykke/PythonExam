@@ -63,7 +63,7 @@ def _remove_noise(tweet: str):
     """
     Removes noise from the tweets by:
     Tokenizing (Splits sentences into array of words)
-    Removes hyperlinks, mentions with regex
+    Removes hyperlinks with regex
     Removes special characters (primarily used for emojis) as well as numbers.
     """
     cleaned_tokens = []
@@ -104,7 +104,6 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
     Following this, it cleans up the data and returns the same object with fields:
     hashtags, mentions, tweet
     """
-    # print(tweets)
     # create for-loop on argument "tweets"
     for tweet in tweets:
         # prepare format
@@ -115,7 +114,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         tweet_text = tweet_text.replace('\n', ' ')
 
         # check text for hashtags or mentions
-        if (tweet_text != None and '#' or '@' in tweet_text):  # might not be necessary
+        if (tweet_text != None and '#' or '@' in tweet_text):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
                     tweet['hashtags'].append(word)
@@ -130,12 +129,12 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
             tweet_text += ' '.join(tweet['emojis'])
         # clear unused words, numbers, symbols and the like
         tweet['tweet'] = _remove_noise(tweet_text)  # must finish with this
-    # handle hashtag stats
-    # handle mention stats
+    # handle hashtag stats here or in presentation
+    # handle mention stats here or in presentation
     return tweets
 
 
-new_tweets = get_tweet_data(scraped_tweets)
+# new_tweets = get_tweet_data(scraped_tweets)
 
-for tweet in new_tweets:
-    print('-----\n', tweet, '\n')
+# for tweet in new_tweets:
+#     print('-----\n', tweet, '\n')
