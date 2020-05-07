@@ -54,13 +54,9 @@ def handle_date(date_string: str):
     """
     We receive dates from tweets in the format 'yyyy-m-d'.
     This function returns a datetime.date object with proper formatting (yyyy-mm-dd)
-    ________________________________
-    This might look a little fun. We need integers in format (yyyy, m(m), d(d)) for the date constructor.
-    The * is known as the unpacking operator.
-    We split the string by comma, make a list of every value as integer,
-    then unpack the values into the constructor in the right format and order.
     """
-    return date(*[int(date) for date in date_string.split(',')])
+    #return date(*[int(date) for date in date_string.split(',')]) # sorry we didnt get to use you ;(
+    return datetime.strptime(date_string, '%Y,%m,%d').date()
 
 
 def remove_noise(tweet: str):
@@ -116,7 +112,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         if 'mentions' not in tweet:  # check unnecesary?
             tweet['mentions'] = []
         tweet_text = tweet.get('raw_text')
-        # remove newline characters
+        # remove newline characters (necessary to add space)
         tweet_text = tweet_text.replace('\n', ' ')
 
         # check text for hashtags or mentions
