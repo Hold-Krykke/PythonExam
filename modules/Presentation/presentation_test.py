@@ -115,10 +115,8 @@ def dictBarPlot(mydict):
     biden = pd.DataFrame(mydict["Biden"]).T
     print("trump\n", trump)
     print("biden\n", biden)
-    plot_settings()
     trump.plot(kind="bar", rot=0, title="Trump")
     plt.show()
-    plot_settings()
     biden.plot(kind="bar", rot=0, title="Biden")
     plt.show()
 
