@@ -4,10 +4,10 @@ import os
 from datetime import date, datetime
 import emoji
 
-base_URL = "https://mobile.twitter.com/search?q="
-end_URL_part = "&s=typd&x=0&y=0"
+_base_URL = "https://mobile.twitter.com/search?q="
+_end_URL_part = "&s=typd&x=0&y=0"
 
-def get_soup(URL: str):
+def _get_soup(URL: str):
     """
     Downloads the html from given URL and returns the content as soup (bs4)
     """
@@ -16,24 +16,24 @@ def get_soup(URL: str):
     return soup
 
 
-def create_tweet_object(tweet_element, hashtags):
+def _create_tweet_object(tweet_element, hashtags):
     # Create a tweet object and store the raw text and the hashtags searched for in it
     tweet_object = {}
     tweet_object["search_hashtags"] = hashtags
-    tweet_object["raw_text"] = extract_inner_text(tweet_element)
+    tweet_object["raw_text"] = _extract_inner_text(tweet_element)
     # Creating tweet_urls property which is a list of strings
-    tweet_urls = extract_data_urls(tweet_element)
+    tweet_urls = _extract_data_urls(tweet_element)
     tweet_object["tweet_urls"] = tweet_urls
     # Creating emojis which is a list of strings
-    tweet_emoji_descriptions = emoji_description_extractor(tweet_object["raw_text"])
+    tweet_emoji_descriptions = _emoji_description_extractor(tweet_object["raw_text"])
     tweet_object["emojis"] = tweet_emoji_descriptions
     # Creating the date property
-    tweet_date = get_tweet_date(tweet_element)
+    tweet_date = _get_tweet_date(tweet_element)
     tweet_object["date"] = tweet_date
     return tweet_object
 
 
-def create_tweet_objects(soup: bs4.BeautifulSoup, hashtags):
+def _create_tweet_objects(soup: bs4.BeautifulSoup, hashtags):
     """
     Extracts tweets from given soup and returns an array of strings, each string containing a tweet.
     """
@@ -41,13 +41,13 @@ def create_tweet_objects(soup: bs4.BeautifulSoup, hashtags):
     tweets = []
 
     for element in tweet_elements:
-        tweet_object = create_tweet_object(element, hashtags)
+        tweet_object = _create_tweet_object(element, hashtags)
         tweets.append(tweet_object)
     # Return result
     return tweets
 
 
-def extract_inner_text(tweet_element):
+def _extract_inner_text(tweet_element):
     """
     Extracts raw text from a tweet element.
     """
@@ -60,7 +60,7 @@ def extract_inner_text(tweet_element):
     return tweet_text
 
 
-def extract_data_urls(tweet_element):
+def _extract_data_urls(tweet_element):
     """
     Extracts the data-url attributes from a tweet element.
     """
@@ -77,7 +77,7 @@ def extract_data_urls(tweet_element):
     return data_urls
 
 
-def get_tweet_date(tweet_element):
+def _get_tweet_date(tweet_element):
     """
     Returns a datetime object with the date contained in the tweet.\nThe minutes and hours etc. are not accurate.\n
     If the tweet is from before 2020 it will still be returned as if it was from 2020 :Hide_the_pain_Harold: Who needs tweets from the previous year anyway
@@ -97,7 +97,7 @@ def get_tweet_date(tweet_element):
     return "{},{},{}".format(tweet_date.date().year, tweet_date.date().month, tweet_date.date().day)
 
 
-def emoji_description_extractor(text: str):
+def _emoji_description_extractor(text: str):
     """ 58 lol
     Used to extract the decription of emojis used in the given text.
     This function only supports 842 emojis. Some descriptions may be empty if the used emoji is rare or whatever
@@ -107,7 +107,7 @@ def emoji_description_extractor(text: str):
     return emoji_descriptions
 
 
-def get_next_page_link(soup: bs4.BeautifulSoup):
+def _get_next_page_link(soup: bs4.BeautifulSoup):
     """
     Used to get the link to the next twitter page with older tweets. Extracts the link from given soup (bs4).
     """
@@ -139,7 +139,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     Pass True as the fresh_search parameter if you want to make sure you get the newest results from Twitter.
     """
     # Creating initial URL
-    URL = base_URL
+    URL = _base_URL
     # Name of the file the tweets will be saved in
     file_name = ""
     hashtag_list = []
@@ -155,12 +155,14 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
         else:
             file_name += (hashtag + "_")
     # Adding the end-part of the URL to URL after all search parameters have been added
-    URL += end_URL_part
+    URL += _end_URL_part
 
     # If we don't want to do a fresh search and if the file corresponding to the hashtag(s) exists then return the file content
     if not (fresh_search):
         if os.path.isfile("../tweets/" + file_name):
             with open("../tweets/" + file_name, 'r', encoding="utf-8") as f:
+                # The first line in each save file will contain a number which is the amount of tweets in the file
+                # If the user requests more tweets than what has previously been saved in the file then we have to do a fresh search
                 amount_of_tweets_in_file = int(f.readline())
                 if amount_of_tweets_in_file >= tweet_count:  
                     result = []
@@ -187,17 +189,21 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     # There are 20 tweets pr page that's why we devide the number of tweets by 20
     loop_count = int(temp_count / 20)
 
-    # Going through twitter pages and collecting tweets
+    soups = []
     for i in range(loop_count):
         # Getting soup from the Twitter page
-        soup = get_soup(URL)
+        soup = _get_soup(URL)
+        soups.append(soup)
+        # Updating the URL to the next-page URL of the current page
+        URL = _get_next_page_link(soup)
+
+    # Going through twitter pages and collecting tweets
+    for soup in soups:
         # extractions will be an array of "tweet objects" that contain the raw tweet, an array of URLs, and more
-        extractions = create_tweet_objects(soup, hashtag_list)
+        extractions = _create_tweet_objects(soup, hashtag_list)
         # Adding each tweet object to the result array (tweets)
         for element in extractions:
             tweets.append(element)
-        # Updating the URL to the next-page URL of the current page
-        URL = get_next_page_link(soup)
     
     # Saving tweets in file
     with open("../tweets/" + file_name, 'w', encoding="utf-8") as f:
@@ -210,8 +216,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
 
 
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
-# tweets = get_tweets(20, False, "trump")
-# print("Tweets downloaded")
+tweets = get_tweets(20, True, "trump")
+print("Tweets downloaded")
 # for tweet in tweets:
 #     print("\n")
 #     print(str(tweet).encode())
