@@ -222,8 +222,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
 
 
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
-tweets = get_tweets(20, True, "trump")
-print("Tweets downloaded")
+# tweets = get_tweets(20, True, "trump")
+# print("Tweets downloaded")
 # for tweet in tweets:
 #     print("\n")
 #     print(str(tweet).encode())
