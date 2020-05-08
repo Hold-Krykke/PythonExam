@@ -9,109 +9,14 @@ import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
-from ala_Runi_tweets import test_tweets  # should be removed when merged
-from ala_scraped import scraped_tweets  # should be removed when merged
 
-# These are the only methods that should be called from other modules:
-# train_model_if_necessary()
-# analyze_many_tweets(scraped_tweets, 0.25, 0.75)
+# import Rúnis module
 
-
-########################################################################################################################################################################
-from datetime import datetime
-from typing import List, Dict
-
-
-_stop_words = stopwords.words('english')
-_stop_words.extend(['twitter', 'nt'])
-
-
-def _handle_date(date_string: str):
-    """
-    We receive dates from tweets in the format 'yyyy-m-d'.
-    This function returns a datetime.date object with proper formatting (yyyy-mm-dd)
-    """
-    # return date(*[int(date) for date in date_string.split(',')]) # sorry we didnt get to use you ;(
-    return datetime.strptime(date_string, '%Y,%m,%d').date()
-
-
-def _remove_noise(tweet: str):
-    """
-    Removes noise from the tweets by:
-    Tokenizing (Splits sentences into array of words)
-    Removes hyperlinks with regex
-    Removes special characters (primarily used for emojis) as well as numbers.
-    """
-    cleaned_tokens = []
-    tweet_tokens = word_tokenize(tweet)
-    for token, tag in pos_tag(tweet_tokens):
-
-        # remove hyperlinks
-        token = re.sub(
-            '(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)', '', token)
-        # remove special chars, numbers, inc emojies
-        token = re.sub("[^A-Za-z]", "", token)
-
-        if tag.startswith("NN"):
-            pos = 'n'
-        elif tag.startswith('VB'):
-            pos = 'v'
-        else:
-            pos = 'a'
-
-        lemmatizer = WordNetLemmatizer()
-        # print('tokenb4', token)
-        token = lemmatizer.lemmatize(token, pos)
-        # print('tokenAfter', token)
-        # remove empty tokens, punctuations and stopwords
-        # use substring search (find) instead?
-        token = token.lower().strip()
-        if len(token) > 1 and token not in string.punctuation and token not in _stop_words:
-            cleaned_tokens.append(token)
-    return cleaned_tokens
-
-
-def get_tweet_data(tweets: List[Dict[str, str]]):
-    """
-    This function takes a list of tweets, containing web scraped dicts (in particular raw_text) and grabs useful information from it.
-
-    As of now it looks for hashtags (#), mentions (@) and emojis.
-
-    Following this, it cleans up the data and returns the same object with fields:
-    hashtags, mentions, tweet
-    """
-    # create for-loop on argument "tweets"
-    for tweet in tweets:
-        # prepare format
-        tweet['hashtags'] = tweet.get('hashtags', [])
-        tweet['mentions'] = tweet.get('mentions', [])
-        tweet_text = tweet.get('raw_text')
-        # remove newline characters (necessary to add spaces between words)
-        tweet_text = tweet_text.replace('\n', ' ')
-
-        # check text for hashtags or mentions
-        if (tweet_text != None and '#' or '@' in tweet_text):
-            for word in tweet_text.split(' '):
-                if word.startswith('#'):
-                    tweet['hashtags'].append(word)
-                    tweet_text = tweet_text.replace(word, '')  # remove hashtag
-                if word.startswith('@'):
-                    tweet['mentions'].append(word)
-                    tweet_text = tweet_text.replace(word, '')  # remove mention
-        # handle dates
-        tweet['date'] = _handle_date(tweet['date'])
-        # add emoji descriptions to tweet text
-        if tweet['emojis']:
-            tweet_text += ' '.join(tweet['emojis'])
-        # clear unused words, numbers, symbols and the like
-        tweet['tweet'] = _remove_noise(tweet_text)  # must finish with this
-        print("tweet['tweet']")
-        print(tweet['tweet'])
-    # handle hashtag stats here or in presentation
-    # handle mention stats here or in presentation
-    return tweets
-
-########################################################################################################################################################################
+"""
+These are the only methods that should be called from other modules:
+    train_model_if_necessary()
+    analyze_many_tweets(scraped_tweets, 0.25, 0.75)
+"""
 
 
 ####################### Prepare the Data ########################
@@ -164,7 +69,7 @@ def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float
     Takes in a list of scraped tweets and calls the analyzer for each, before appending the analyzed 
     result to the tweet and returning the list
     """
-    analyzed_tweets = get_tweet_data(tweets_list)
+    analyzed_tweets = get_tweet_data(tweets_list)  # get_tweet_data should be called correctly from Rúnis module
     for item in analyzed_tweets:
         tweet = item.get("tweet")
         result = _analyze_tweet(tweet, uncertain_low, uncertain_high)
