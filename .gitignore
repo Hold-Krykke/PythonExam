@@ -4,3 +4,5 @@ data/
 
 # Other
 .vscode/
+
+modules/__pycache__/
