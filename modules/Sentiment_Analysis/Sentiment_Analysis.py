@@ -17,6 +17,11 @@ These are the only methods that should be called from other modules:
     train_model_if_necessary()
     analyze_many_tweets(scraped_tweets, 0.25, 0.75)
 """
+######################## Global variables ########################
+_training_dataset = _prepare_training_data_for_model()
+_classifier_has_been_trained = False
+_classifier = None
+######################## Global variables ########################
 
 
 ####################### Prepare the Data ########################
@@ -59,11 +64,6 @@ def _get_tweets_for_model(preprocessed_token_list):
 
 
 ####################### Analyze the Data ########################
-_training_dataset = _prepare_training_data_for_model()
-_classifier_has_been_trained = False
-_classifier = None
-
-
 def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float):
     """
     Takes in a list of scraped tweets and calls the analyzer for each, before appending the analyzed 
