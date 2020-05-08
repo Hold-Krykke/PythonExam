@@ -104,10 +104,20 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
 
     As of now it looks for hashtags (#), mentions (@) and emojis.
 
-    Following this, it cleans up the data and returns the same object with fields:
-    hashtags, mentions, tweet
+    Following this, it cleans up the data using remove_noise().
+
+    ## Returns
+    Returns the same object with fields:  
+
+    hashtags, mentions, tweet.
+
+    As well as stats for hashtags and mentions
+    >>> tweets, hashtag_stats, mention_stats
     """
-    # create for-loop on argument "tweets"
+    # prepare stats_format for
+    hashtag_stats = {}
+    mention_stats = {}
+
     for tweet in tweets:
         # prepare format
         tweet['hashtags'] = tweet.get('hashtags', [])
@@ -120,24 +130,41 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         if (tweet_text != None and '#' or '@' in tweet_text):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
+                    # add to local hashtags
                     tweet['hashtags'].append(word)
-                    tweet_text = tweet_text.replace(word, '')  # remove hashtag
+                    # add to overall hashtags
+                    hashtag_stats[word.lower()] = hashtag_stats.get(
+                        word.lower(), 0) + 1
+                    # remove hashtag
+                    tweet_text = tweet_text.replace(word, '')
                 if word.startswith('@'):
+                    # add to local hashtags
                     tweet['mentions'].append(word)
-                    tweet_text = tweet_text.replace(word, '')  # remove mention
+                    # add to overall hashtags
+                    mention_stats[word.lower()] = mention_stats.get(
+                        word.lower(), 0) + 1
+                    # remove mention
+                    tweet_text = tweet_text.replace(word, '')
         # handle dates
         tweet['date'] = _handle_date(tweet['date'])
         # add emoji descriptions to tweet text
         if tweet['emojis']:
             tweet_text += ' '.join(tweet['emojis'])
         # clear unused words, numbers, symbols and the like
-        tweet['tweet'] = _remove_noise(tweet_text)  # must finish with this
-    # handle hashtag stats here or in presentation
-    # handle mention stats here or in presentation
-    return tweets
+        tweet['tweet'] = remove_noise(tweet_text)  # must finish with this
+    # sort hashtag and mention stats
+    hashtag_stats = {k: v for k, v in sorted(
+        hashtag_stats.items(), key=lambda item: item[1], reverse=True)}
+    mention_stats = {k: v for k, v in sorted(
+        mention_stats.items(), key=lambda item: item[1], reverse=True)}
+    return tweets, hashtag_stats, mention_stats
 
 
-# new_tweets = get_tweet_data(scraped_tweets)
+#new_tweets, hashtags, mentions = get_tweet_data(scraped_tweets)
+# print(new_tweets)
+# print('\nhash\n', hashtags)
+# print('\nmentions\n', mentions)
+
 
 # for tweet in new_tweets:
 #     print('-----\n', tweet, '\n')
