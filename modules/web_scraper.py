@@ -195,7 +195,13 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
         soup = _get_soup(URL)
         soups.append(soup)
         # Updating the URL to the next-page URL of the current page
-        URL = _get_next_page_link(soup)
+        try:
+            URL = _get_next_page_link(soup)
+        except:
+            print("No more tweets available")
+            print("Tried to find {} tweets".format(str( tweet_count )))
+            print("Number of tweets found: ~{}".format(str( len(soups) * 20 )))
+            break
 
     # Going through twitter pages and collecting tweets
     for soup in soups:
