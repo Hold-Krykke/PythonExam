@@ -7,9 +7,10 @@ from nltk.corpus import stopwords
 from nltk.tag import pos_tag
 from nltk.tokenize import word_tokenize
 
+
 # lazy load stopwords
-_stop_words = stopwords.words('english')
-_stop_words.extend(['twitter', 'nt'])
+_stopwords = stopwords.words('english')
+_stopwords.extend(['twitter', 'nt'])
 
 scraped_tweets = [{'raw_text': '  THANK YOU @LindseyGrahamSC . I know you are #Trump ‘s ally; it’s gratifying to see you stand by #Biden. twitter.com/sarahmucha/sta…\n', 'tweet_urls': ['https://twitter.com/sarahmucha/status/1256404280875114499'], 'emojis': [], 'date': '2020,5,1'},
                   {'raw_text': '  Tomorrow I’ll be joined by @SebGorka, @STEPHMHAMILL and other distinguished guests to discuss the 2020 Presidential Election. \n\nTune into WJLA 24/7 tomorrow from 10:30-11:30 AM EST for another edition of The Armstrong Williams Show. #AWS #Election2020 #Trump #Biden @ABC7News pic.twitter.com/TTldPAD5RL\n',
@@ -53,18 +54,20 @@ scraped_tweets = [{'raw_text': '  THANK YOU @LindseyGrahamSC . I know you are #T
 def _handle_date(date_string: str):
     """
     We receive dates from tweets in the format 'yyyy-m-d'.
-    This function returns a datetime.date object with proper formatting (yyyy-mm-dd)
+    This function returns a datetime object with proper formatting (yyyy-mm-dd)
     """
     # return date(*[int(date) for date in date_string.split(',')]) # sorry we didnt get to use you ;(
     return datetime.strptime(date_string, '%Y,%m,%d').date()
 
 
-def _remove_noise(tweet: str):
+def remove_noise(tweet: str):
     """
     Removes noise from the tweets by:
     Tokenizing (Splits sentences into array of words)
     Removes hyperlinks with regex
     Removes special characters (primarily used for emojis) as well as numbers.
+    _____________
+    Is used for cleaning both scraped data as well as cleaning the data for training the model
     """
     cleaned_tokens = []
     tweet_tokens = word_tokenize(tweet)
@@ -90,7 +93,7 @@ def _remove_noise(tweet: str):
         # remove empty tokens, punctuations and stopwords
         # use substring search (find) instead?
         token = token.lower().strip()
-        if len(token) > 1 and token not in string.punctuation and token not in _stop_words:
+        if len(token) > 1 and token not in string.punctuation and token not in _stopwords:
             cleaned_tokens.append(token)
     return cleaned_tokens
 
