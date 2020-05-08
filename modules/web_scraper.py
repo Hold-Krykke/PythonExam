@@ -1,9 +1,8 @@
 import bs4
 import requests as req
 import os
-import re
-import pandas as pd
 from datetime import date, datetime
+import emoji
 
 base_URL = "https://mobile.twitter.com/search?q="
 end_URL_part = "&s=typd&x=0&y=0"
@@ -90,7 +89,7 @@ def get_tweet_date(tweet_element):
     # The date is stored as inner text
     timestamp = timestamp_inner_element.text
     # If the timestamp contains "min" or "h"(hour) etc. it means the tweet is from today so we just return the date today
-    if "min" in timestamp or timestamp[-1] == "m" or "h" in timestamp or "now" in timestamp:
+    if "min" in timestamp or timestamp[-1] == "m" or timestamp[-1] == "s" or "h" in timestamp or "now" in timestamp:
         return "{},{},{}".format(datetime.now().date().year, datetime.now().date().month, datetime.now().date().day)
     # Extract date to ensure proper formatting
     tweet_date = datetime.strptime(timestamp + " 2020", "%b %d %Y")
@@ -99,63 +98,12 @@ def get_tweet_date(tweet_element):
 
 
 def emoji_description_extractor(text: str):
-    """
+    """ 58 lol
     Used to extract the decription of emojis used in the given text.
     This function only supports 842 emojis. Some descriptions may be empty if the used emoji is rare or whatever
     """
-    # Source of regex: https://gist.github.com/Alex-Just/e86110836f3f93fe7932290526529cd1
-    emoji = re.compile(
-    "(["
-    "\U0001F1E0-\U0001F1FF"  # flags (iOS)
-    "\U0001F300-\U0001F5FF"  # symbols & pictographs
-    "\U0001F600-\U0001F64F"  # emoticons
-    "\U0001F680-\U0001F6FF"  # transport & map symbols
-    "\U0001F700-\U0001F77F"  # alchemical symbols
-    "\U0001F780-\U0001F7FF"  # Geometric Shapes Extended
-    "\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
-    "\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
-    "\U0001FA00-\U0001FA6F"  # Chess Symbols
-    "\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
-    "\U00002702-\U000027B0"  # Dingbats
-    "])"
-    )
-    # Finding all emojis in text
-    matcher_object = emoji.findall(text)
-
-    # Loading list of emojis and their descriptions
-    emoji_matrix_df = pd.read_excel("../resources/emoji_unicode.xlsx")
-
-    # Getting the two columns we need from the original dataframe
-    utf8 = emoji_matrix_df["UTF8"]
-    desc = emoji_matrix_df["Description"]
-    # Combining the columns
-    emoji_df = pd.concat([utf8, desc], axis=1, keys=['UTF8', 'Description'])
-
-    # Make all the utf-8 codes uppercase. This is needed when we compare utf-8 codes later on
-    emoji_df["UTF8"] = emoji_df["UTF8"].apply(lambda x: x.upper())
-
-    # Initializing the result list
-    emoji_descriptions = []
-
-    # Function creating a mask matching a given emoji
-    def get_emoji_mask(emoji):
-        emoji_mask = (emoji_df["UTF8"] == str(emoji.encode())[2:-1].upper())
-        return emoji_mask
-
-    # Running through all found emojis and adding their desciptions to the result list
-    for element in matcher_object:
-        # Getting the index of the current emoji (the index representing the emojis position in the dataframe)
-        index_of_smiley = emoji_df[get_emoji_mask(element)].index.values
-        emoji_description = ""
-        try:
-            # Trying to get the description
-            emoji_description = emoji_df["Description"][index_of_smiley].values[0]
-        except:
-            # If we can't extract description just let the description stay empty
-            pass
-        # Adding description of emoji to the result list
-        emoji_descriptions.append(emoji_description)
-    # Returning all descriptions 
+    emoji_list = emoji.emoji_lis(text)
+    emoji_descriptions = [str.strip(emoji.demojize(vars.get("emoji")).replace("_", " ").replace(":", "")) for vars in emoji_list]
     return emoji_descriptions
 
 
@@ -262,8 +210,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
 
 
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
-tweets = get_tweets(25, False, "trump", "biden")
-print("Tweets downloaded")
+# tweets = get_tweets(20, False, "trump")
+# print("Tweets downloaded")
 # for tweet in tweets:
 #     print("\n")
 #     print(str(tweet).encode())
