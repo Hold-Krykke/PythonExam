@@ -17,27 +17,32 @@ def get_soup(URL: str):
     return soup
 
 
-def create_tweet_objects(soup: bs4.BeautifulSoup):
+def create_tweet_object(tweet_element, hashtags):
+    # Create a tweet object and store the raw text and the hashtags searched for in it
+    tweet_object = {}
+    tweet_object["search_hashtags"] = hashtags
+    tweet_object["raw_text"] = extract_inner_text(tweet_element)
+    # Creating tweet_urls property which is a list of strings
+    tweet_urls = extract_data_urls(tweet_element)
+    tweet_object["tweet_urls"] = tweet_urls
+    # Creating emojis which is a list of strings
+    tweet_emoji_descriptions = emoji_description_extractor(tweet_object["raw_text"])
+    tweet_object["emojis"] = tweet_emoji_descriptions
+    # Creating the date property
+    tweet_date = get_tweet_date(tweet_element)
+    tweet_object["date"] = tweet_date
+    return tweet_object
+
+
+def create_tweet_objects(soup: bs4.BeautifulSoup, hashtags):
     """
     Extracts tweets from given soup and returns an array of strings, each string containing a tweet.
-    Each string will contain a lot of newlines right next to characters like this:\n 
-    "(...) end of sentence.\ nBeginning of new sentence (...)"
     """
     tweet_elements = soup.find_all("table", class_=["tweet"])
     tweets = []
-    # Creating tweet objects for each tweet element in the soup
+
     for element in tweet_elements:
-        # Create a tweet object and store the raw text in it
-        tweet_object = extract_inner_text(element)
-        tweet_urls = extract_data_urls(element)
-        # Creating tweet_urls property which is a list of strings
-        tweet_object["tweet_urls"] = tweet_urls
-        tweet_emoji_descriptions = emoji_description_extractor(tweet_object["raw_text"])
-        # Creating emojis which is a list of strings
-        tweet_object["emojis"] = tweet_emoji_descriptions
-        tweet_date = get_tweet_date(element)
-        # Creating the date property
-        tweet_object["date"] = tweet_date
+        tweet_object = create_tweet_object(element, hashtags)
         tweets.append(tweet_object)
     # Return result
     return tweets
@@ -53,7 +58,7 @@ def extract_inner_text(tweet_element):
     for element in tweet_fractions:
         tweet_text += str(element.text)
     # Create initial tweet object and return it
-    return {"raw_text": tweet_text}
+    return tweet_text
 
 
 def extract_data_urls(tweet_element):
@@ -171,7 +176,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     List of strings. The contents of each string will be structured as a dictionary
 
     --- Parameters ---\n
-    tweet_count: integer - The amount of tweets you want.\n
+    tweet_count: integer - The amount of tweets you want. Provide a number in an interval of 20.\n
     fresh_search: boolean - Pass True if you want newly downloadet tweets. When passing False the function will return tweets from a file if a file with matching content exists\n
     *hashtags: string - Pass as many strings as you want. Omit the # when passing this parameter.
 
@@ -189,10 +194,12 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     URL = base_URL
     # Name of the file the tweets will be saved in
     file_name = ""
+    hashtag_list = []
     # Creating file name and updating initial URL 
     for index, hashtag in enumerate(hashtags):
         # %23 is URL language for #. Adding + between each search parameter because whitespace is converted to + in the URL
         URL += ("%23" + hashtag + "+")
+        hashtag_list.append("#" + hashtag)
         # If we've reached the last search parameter we end the file name with the last search parameter
         if ((len(hashtags) - index) == 1):
             file_name += hashtag
@@ -206,15 +213,17 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     if not (fresh_search):
         if os.path.isfile("../tweets/" + file_name):
             with open("../tweets/" + file_name, 'r', encoding="utf-8") as f:
-                result = []
-                count = 0
-                for line in f.readlines():
-                    if count > tweet_count:
-                        break
-                    result.append(line)
-                    count += 1
+                amount_of_tweets_in_file = int(f.readline())
+                if amount_of_tweets_in_file >= tweet_count:  
+                    result = []
+                    count = 0
+                    for line in f.readlines():
+                        if count > tweet_count - 1:
+                            break
+                        result.append(line)
+                        count += 1
 
-                return result
+                    return result
 
 
     # Result array with all the tweets
@@ -235,7 +244,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
         # Getting soup from the Twitter page
         soup = get_soup(URL)
         # extractions will be an array of "tweet objects" that contain the raw tweet, an array of URLs, and more
-        extractions = create_tweet_objects(soup)
+        extractions = create_tweet_objects(soup, hashtag_list)
         # Adding each tweet object to the result array (tweets)
         for element in extractions:
             tweets.append(element)
@@ -244,22 +253,22 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     
     # Saving tweets in file
     with open("../tweets/" + file_name, 'w', encoding="utf-8") as f:
-        for element in tweets:
+        f.write(str(loop_count*20) + "\n")
+        for index, element in enumerate(tweets):
             f.write(str(element))
             # Adding newline so it's easier to read one tweet at a time later on by using .readlines()
             f.write("\n")
-    
     return tweets
 
 
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
-# tweets = get_tweets(20, True, "trump", "biden")
-# print("Tweets downloaded")
+tweets = get_tweets(25, False, "trump", "biden")
+print("Tweets downloaded")
 # for tweet in tweets:
 #     print("\n")
-#     print(str(tweet))
+#     print(str(tweet).encode())
 #     print("\n")
-    
+# print(len(tweets))
 # print(tweets)
 # print("\n")
 # print(len(tweets))
