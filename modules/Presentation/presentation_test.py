@@ -119,12 +119,32 @@ def positiveOrNegative(tweets):
                 trump_biden_tweets[candidate][date]
             ).value_counts()
 
-    # print(trump_biden_tweets)
+    print(trump_biden_tweets)
 
     # Making dataframes. Transposing so the structure is correct.
     trump = pd.DataFrame(trump_biden_tweets["Trump"]).T  # .T = Transpose
     biden = pd.DataFrame(trump_biden_tweets["Biden"]).T
-    return trump, biden
+    return trump.sort_index(), biden.sort_index()
+
+
+def getSentiment(tweets):
+    """
+    Not yet implemented
+    Filter tweets using other methods, before you use this one. 
+    Takes an array of tweets
+    Returns their sentiments in a DataFrame like:
+    index = date sorted
+    Then columns are .value_counts() of 
+    Negative, Positive, Uncertain 
+    """
+    tweets_dict = defaultdict(list)
+    for tweet in tweets:
+        tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+
+    for date in tweets_dict.keys():
+        tweets_dict[date] = pd.Series(tweet[date]).value_counts()
+
+    return pd.DataFrame(tweets_dict).sort_index().T
 
 
 def lineGraph(mydict):
@@ -186,25 +206,25 @@ def barPlot(trump, biden):
 
 # TESTING
 object_test_data = []
-for i in range(100):
+for i in range(10000):
     object_test_data.append(make_test_data())
 
 # Testing daterange
-# print(
-#     get_tweets_in_daterange(
-#         object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
-#     )
-# )
+object_test_data = get_tweets_in_daterange(
+    object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
+)
 
 # Testing getting tweets by hashtag
-# for tweet in get_by_key_value(object_test_data, "hashtags", "#Trump"):
-#     print(tweet["hashtags"])
+object_test_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
+
+print(getSentiment(object_test_data))
 
 # trump, biden = positiveOrNegative(object_test_data)
 
-
 # barPlot(trump, biden)
 # pieChart(trump, biden, "Positive")
+
+
 # df = makeDataframeByDate(object_test_data)
 
 # lineGraph(mydict)
