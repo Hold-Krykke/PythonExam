@@ -92,6 +92,8 @@ def get_by_sentiment(tweets, sentiment):
     Not Yet Implemented
     Returns all tweets with a certain sentiment. 
     Positive, Negative or Uncertain 
+
+    pie_chart should also be updated to work with this
     """
 
     return None
