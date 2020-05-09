@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import re
 import nltk
-from helpers import *
+from helpers import save_plot, get_data_from_csv
 from test_data_generator import make_test_data
 from collections import defaultdict
 import datetime
@@ -19,6 +19,7 @@ You have to have an array of tweets.
 1. Sort
 2. Get sentiment
 3. Plot
+4. Save plot or show
 
 First, you sort the tweets, using for example get_by_key_value or get_tweets_in_daterange
 Then you use get_sentiment 
@@ -102,6 +103,8 @@ def get_by_sentiment(tweets, sentiment):
 def get_sentiment(tweets):
     """
     Filter tweets using other methods, before you use this one. 
+    Makes a list of tweets into a Pandas DataFrame. 
+    It has date on index and Sentiment on Columns and the value is the amount of tweets. 
     """
     # Make a dict, where key is date and value is a list of all sentiments for that date
     tweets_dict = defaultdict(list)
@@ -117,11 +120,15 @@ def get_sentiment(tweets):
 
 
 # PLOTTING START
-
-
-def pie_chart(df, title):
+def pie_chart(df, title, save=None):
     """
     Make a Pie Chart about Sentiments for given dataframe
+
+    Parameters: 
+
+        df = DataFrame made by get_sentiment
+        title = String
+        save = If set, save with this file_name
     """
     plt.axes(
         pd.Series(
@@ -133,13 +140,28 @@ def pie_chart(df, title):
         ).plot(kind="pie", autopct="%1.0f%%", title=title)
     )
 
+    if save:
+        save_plot(plt, save)
+    else:
+        plt.show()
 
-def bar_plot(df, title):
+
+def bar_plot(df, title, save=None):
     df.plot(kind="bar", rot=0, title=title)
 
+    if save:
+        save_plot(plt, save)
+    else:
+        plt.show()
 
-def line_plot(df, title):
+
+def line_plot(df, title, save=None):
     df.plot(kind="line", title=title)
+
+    if save:
+        save_plot(plt, save)
+    else:
+        plt.show()
 
 
 # PLOTTING END
@@ -163,5 +185,5 @@ hashtag_filtered_data = get_by_key_value(date_filtered_data, "hashtags", "#Trump
 plot_me = get_sentiment(hashtag_filtered_data)
 
 # Testing plotting
-pie_chart(plot_me, "ASS")
-plt.show()
+# pie_chart(plot_me, "ASS")
+# plt.show()
