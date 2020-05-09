@@ -25,6 +25,8 @@ First, you sort the tweets, using for example get_by_key_value or get_tweets_in_
 Then you use get_sentiment 
 Then you feed the result of get_sentiment to a plotter function
 
+You can chain several filters.
+
 """
 
 # FILTERING / SORTING FUNCTIONS START
@@ -89,14 +91,27 @@ def get_by_key_value(tweets, key, value):
 
 def get_by_sentiment(tweets, sentiment):
     """
-    Not Yet Implemented
     Returns all tweets with a certain sentiment. 
     Positive, Negative or Uncertain 
-
-    pie_chart should also be updated to work with this
     """
+    # The is keyword is used to test if two variables refer to the same object.
+    # Use the == operator to test if two variables are equal.
+    return list(
+        filter(
+            lambda tweet: sentiment == tweet["sentiment_analysis"]["verdict"], tweets
+        )
+    )
 
-    return None
+
+def remove_sentiment(tweets, sentiment):
+    """
+    Remove all tweets with certain sentiment
+    """
+    return list(
+        filter(
+            lambda tweet: sentiment != tweet["sentiment_analysis"]["verdict"], tweets
+        )
+    )
 
 
 # FILTERING / SORTING FUNCTIONS DONE
@@ -132,15 +147,13 @@ def pie_chart(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
-    plt.axes(
-        pd.Series(
-            {
-                "Positive": df["Positive"].sum(),
-                "Negative": df["Negative"].sum(),
-                "Uncertain": df["Uncertain"].sum(),
-            }
-        ).plot(kind="pie", autopct="%1.0f%%", title=title)
-    )
+    sentiment = {}
+    for column in ["Positive", "Negative", "Uncertain"]:
+        if column in df.columns:
+            sentiment[column] = df[column].sum()
+
+    plt.axes(pd.Series(sentiment).plot(kind="pie", autopct="%1.0f%%", title=title))
+    plt.ylabel("")
 
     if save:
         save_plot(plt, save)
@@ -172,20 +185,26 @@ def line_plot(df, title, save=None):
 # TESTING BELOW
 # MAKE TEST DATA
 object_test_data = []
-for i in range(10000):
+for i in range(1000):
     object_test_data.append(make_test_data())
 
 # Testing daterange
-date_filtered_data = get_tweets_in_daterange(
-    object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
-)
+# filtered_data = get_tweets_in_daterange(
+#     object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
+# )
 
 # Testing getting tweets by hashtag
-hashtag_filtered_data = get_by_key_value(date_filtered_data, "hashtags", "#Trump")
+# filtered_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
+
+# Testing get_by_sentiment
+# filtered_data = get_by_sentiment(object_test_data, "Positive")
+
+# Testing remove_sentiment
+filtered_data = remove_sentiment(object_test_data, "Uncertain")
 
 # Testing get_sentiment
-plot_me = get_sentiment(hashtag_filtered_data)
+plot_me = get_sentiment(filtered_data)
 
 # Testing plotting
-# pie_chart(plot_me, "ASS")
-# plt.show()
+pie_chart(plot_me, "ASS")
+plt.show()
