@@ -129,7 +129,6 @@ def positiveOrNegative(tweets):
 
 def getSentiment(tweets):
     """
-    Not yet implemented
     Filter tweets using other methods, before you use this one. 
     Takes an array of tweets
     Returns their sentiments in a DataFrame like:
@@ -142,9 +141,9 @@ def getSentiment(tweets):
         tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
 
     for date in tweets_dict.keys():
-        tweets_dict[date] = pd.Series(tweet[date]).value_counts()
+        tweets_dict[date] = pd.Series(tweets_dict[date]).value_counts()
 
-    return pd.DataFrame(tweets_dict).sort_index().T
+    return pd.DataFrame(tweets_dict).T.sort_index()
 
 
 def lineGraph(mydict):
@@ -217,7 +216,9 @@ object_test_data = get_tweets_in_daterange(
 # Testing getting tweets by hashtag
 object_test_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
 
-print(getSentiment(object_test_data))
+plot_me = getSentiment(object_test_data)
+plot_me.plot(kind="bar", rot=0, title="Sentiment")
+plt.show()
 
 # trump, biden = positiveOrNegative(object_test_data)
 
