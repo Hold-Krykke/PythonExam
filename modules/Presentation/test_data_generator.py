@@ -19,11 +19,8 @@ def make_test_data():
     ]
     authors = ["Malte", "Camilla", "some asshole", "Asger", "Runi"]
     dates = [
-        datetime.date(2020, 5, 17),
-        datetime.date(2020, 5, 18),
-        datetime.date(2020, 5, 19),
-        datetime.date(2020, 5, 20),
-    ]
+        datetime.date(2020, 5, 17) + datetime.timedelta(days=x) for x in range(100)
+    ]  # generates range amount of dates.
     verdict = ["Positive", "Negative", "Uncertain"]
 
     results = np.linspace(0, 1, 101)

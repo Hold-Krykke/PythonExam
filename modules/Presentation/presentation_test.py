@@ -9,6 +9,7 @@ import nltk
 from presentation_helpers import *
 from test_data_generator import make_test_data
 from collections import defaultdict
+import datetime
 
 # Test Data Path
 test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
@@ -19,28 +20,18 @@ test_data = get_data_from_csv(test_data_path)
 
 def get_tweets_in_daterange(tweets, start_date, end_date):
     """
-    Not Yet Tested
+    Returns all tweets with "date" between start_date and end_date
 
     Parameters:
 
         tweets: array of tweets
         start_date and end_date are datetime objects
 
-    Wanted behavior:
-    
-    Returns all tweets with "date" between start_date and end_date
-
-    Resources: 
-
-    https://www.kite.com/python/answers/how-to-compare-two-dates-with-datetime-in-python
-    https://www.geeksforgeeks.org/comparing-dates-python/
-    https://stackoverflow.com/questions/8142364/how-to-compare-two-dates
-
     Returns:
 
         Filtered list of tweets within start_date and end_date
     """
-    if start_date < end_date:
+    if start_date > end_date:
         raise Exception("Start_date was before end_date.")
 
     return list(
@@ -195,11 +186,19 @@ def barPlot(trump, biden):
 
 # TESTING
 object_test_data = []
-for i in range(1000):
+for i in range(100):
     object_test_data.append(make_test_data())
 
-for tweet in get_by_key_value(object_test_data, "hashtags", "#Trump"):
-    print(tweet["hashtags"])
+# Testing daterange
+# print(
+#     get_tweets_in_daterange(
+#         object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
+#     )
+# )
+
+# Testing getting tweets by hashtag
+# for tweet in get_by_key_value(object_test_data, "hashtags", "#Trump"):
+#     print(tweet["hashtags"])
 
 # trump, biden = positiveOrNegative(object_test_data)
 
