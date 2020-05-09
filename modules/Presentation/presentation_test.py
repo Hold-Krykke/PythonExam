@@ -40,9 +40,12 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
 
         Filtered list of tweets within start_date and end_date
     """
+    if start_date < end_date:
+        raise Exception("Start_date was before end_date.")
+
     return list(
         filter(
-            lambda tweet: tweet["date"] < end_date and tweet["date"] > start_date,
+            lambda tweet: tweet["date"] <= end_date and tweet["date"] >= start_date,
             tweets,
         )
     )
