@@ -31,17 +31,21 @@ def get_by_key_value(tweets, key, value):
         tweets = Array of tweets you want to filter
         key = String: one of: [hashtags, people, urls]
         value = String
+
+    Returns: 
+
+        Filtered List
     """
 
-    def custom_filter(tweet):
-        # For use by .filter()
-        if value in tweet[key]:
-            return True
-        else:
-            return False
+    # def custom_filter(tweet):
+    #     # For use by .filter()
+    #     if value in tweet[key]:
+    #         return True
+    #     else:
+    #         return False
 
-    return tweets.filter(custom_filter, tweets)
-
+    # return list(filter(custom_filter, tweets))
+    return list(filter(lambda tweet: value in tweet[key], tweets))
 
 
 def positiveOrNegative(tweets):
@@ -160,7 +164,8 @@ object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
 
-print(get_by_key_value(object_test_data, "hashtags", "#Trump"))
+for tweet in get_by_key_value(object_test_data, "hashtags", "#Trump"):
+    print(tweet["hashtags"])
 
 # trump, biden = positiveOrNegative(object_test_data)
 
