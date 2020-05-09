@@ -19,7 +19,12 @@ test_data = get_data_from_csv(test_data_path)
 
 def get_tweets_in_daterange(tweets, start_date, end_date):
     """
-    Not Yet Implemented
+    Not Yet Tested
+
+    Parameters:
+
+        tweets: array of tweets
+        start_date and end_date are datetime objects
 
     Wanted behavior:
     
@@ -30,8 +35,17 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
     https://www.kite.com/python/answers/how-to-compare-two-dates-with-datetime-in-python
     https://www.geeksforgeeks.org/comparing-dates-python/
     https://stackoverflow.com/questions/8142364/how-to-compare-two-dates
+
+    Returns:
+
+        Filtered list of tweets within start_date and end_date
     """
-    return None
+    return list(
+        filter(
+            lambda tweet: tweet["date"] < end_date and tweet["date"] > start_date,
+            tweets,
+        )
+    )
 
 
 def get_by_key_value(tweets, key, value):
