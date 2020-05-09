@@ -17,9 +17,25 @@ test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
 # Getting the test_data.
 test_data = get_data_from_csv(test_data_path)
 
+"""
+How to use:
+
+You have to have an array of tweets.
+1. Sort
+2. Get sentiment
+3. Plot
+
+First, you sort the tweets, using for example get_by_key_value or get_tweets_in_daterange
+Then you use get_sentiment 
+Then you feed the result of get_sentiment to a plotter function
+
+"""
+
 
 def get_tweets_in_daterange(tweets, start_date, end_date):
     """
+    Category: Sorter function
+
     Returns all tweets with "date" between start_date and end_date
 
     Parameters:
@@ -44,6 +60,8 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
 
 def get_by_key_value(tweets, key, value):
     """
+    Category: Sorter function
+
     Get tweets from tweet array, by key and value. 
 
     For example:
@@ -73,79 +91,41 @@ def get_by_key_value(tweets, key, value):
     return list(filter(lambda tweet: value in tweet[key], tweets))
 
 
-def positiveOrNegative(tweets):
-    """
-    Returns 2 pandas dataframes.
-    Columns are Negative, Positive and Uncertain Tweets
-    Rows are the date of the tweet.
-    The value in the cell is the number of tweets that day.
-
-    Parameters:
-        tweets: Array of tweets. 
-
-
-    Returns:
-        Trump: Pandas Dataframe of Trump tweets.
-        Biden: Pandas Dataframe of Biden tweets.
-
-    """
-
-    # Making a somewhat empty dict to contain the info we need.
-    trump_biden_tweets = {"Trump": defaultdict(list), "Biden": defaultdict(list)}
-
-    for tweet in tweets:
-        ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
-        if "#Biden" in tweet["hashtags"]:
-            # Add to Biden
-            # We only want the sentiment_analysis verdict and the date here.
-            # Date is the key. Verdict is added to the value array.
-            # "date": [Positive, Negative, Uncertain, Negative, etc, etc]
-            trump_biden_tweets["Biden"][tweet["date"]].append(
-                tweet["sentiment_analysis"]["verdict"]
-            )
-        if "#Trump" in tweet["hashtags"]:
-            # Add to Trump
-            trump_biden_tweets["Trump"][tweet["date"]].append(
-                tweet["sentiment_analysis"]["verdict"]
-            )
-
-    # We now take .value_counts() and put that as the dates value:
-    # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
-    for candidate in trump_biden_tweets.keys():
-        for date in trump_biden_tweets[candidate].keys():
-            # print(candidate, " | DATE: ", date, " | ")
-            # print(pd.Series(trump_biden_tweets[candidate][date]).value_counts())
-            trump_biden_tweets[candidate][date] = pd.Series(
-                trump_biden_tweets[candidate][date]
-            ).value_counts()
-
-    print(trump_biden_tweets)
-
-    # Making dataframes. Transposing so the structure is correct.
-    trump = pd.DataFrame(trump_biden_tweets["Trump"]).T  # .T = Transpose
-    biden = pd.DataFrame(trump_biden_tweets["Biden"]).T
-    return trump.sort_index(), biden.sort_index()
-
-
 def getSentiment(tweets):
     """
     Filter tweets using other methods, before you use this one. 
-    Takes an array of tweets
-    Returns their sentiments in a DataFrame like:
-    index = date sorted
-    Then columns are .value_counts() of 
-    Negative, Positive, Uncertain 
     """
+    # Make a dict, where key is date and value is a list of all sentiments for that date
     tweets_dict = defaultdict(list)
     for tweet in tweets:
         tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
 
+    # Takes .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     for date in tweets_dict.keys():
         tweets_dict[date] = pd.Series(tweets_dict[date]).value_counts()
 
+    # Makes a transposed dataframe sorted by index(date in this case)
     return pd.DataFrame(tweets_dict).T.sort_index()
 
 
+# TESTING
+object_test_data = []
+for i in range(10000):
+    object_test_data.append(make_test_data())
+
+# Testing daterange
+object_test_data = get_tweets_in_daterange(
+    object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
+)
+
+# Testing getting tweets by hashtag
+object_test_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
+
+plot_me = getSentiment(object_test_data)
+plot_me.plot(kind="bar", rot=0, title="Sentiment")
+plt.show()
+
+# FUNCTIONS BELOW MIGHT BE OUTDATED
 def lineGraph(mydict):
     # print("VALUE COUNTS")
     # print(df.Trump.apply(value_counts()))
@@ -203,35 +183,58 @@ def barPlot(trump, biden):
     plt.show()
 
 
-# TESTING
-object_test_data = []
-for i in range(10000):
-    object_test_data.append(make_test_data())
+def positiveOrNegative(tweets):
+    """
+    Returns 2 pandas dataframes.
+    Columns are Negative, Positive and Uncertain Tweets
+    Rows are the date of the tweet.
+    The value in the cell is the number of tweets that day.
 
-# Testing daterange
-object_test_data = get_tweets_in_daterange(
-    object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
-)
-
-# Testing getting tweets by hashtag
-object_test_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
-
-plot_me = getSentiment(object_test_data)
-plot_me.plot(kind="bar", rot=0, title="Sentiment")
-plt.show()
-
-# trump, biden = positiveOrNegative(object_test_data)
-
-# barPlot(trump, biden)
-# pieChart(trump, biden, "Positive")
+    Parameters:
+        tweets: Array of tweets. 
 
 
-# df = makeDataframeByDate(object_test_data)
+    Returns:
+        Trump: Pandas Dataframe of Trump tweets.
+        Biden: Pandas Dataframe of Biden tweets.
 
-# lineGraph(mydict)
-# plt.show()
-# barPlot(df)
-# plt.show()
+    """
+
+    # Making a somewhat empty dict to contain the info we need.
+    trump_biden_tweets = {"Trump": defaultdict(list), "Biden": defaultdict(list)}
+
+    for tweet in tweets:
+        ## IF THE TWEET IS ABOUT TRUMP OR BIDEN
+        if "#Biden" in tweet["hashtags"]:
+            # Add to Biden
+            # We only want the sentiment_analysis verdict and the date here.
+            # Date is the key. Verdict is added to the value array.
+            # "date": [Positive, Negative, Uncertain, Negative, etc, etc]
+            trump_biden_tweets["Biden"][tweet["date"]].append(
+                tweet["sentiment_analysis"]["verdict"]
+            )
+        if "#Trump" in tweet["hashtags"]:
+            # Add to Trump
+            trump_biden_tweets["Trump"][tweet["date"]].append(
+                tweet["sentiment_analysis"]["verdict"]
+            )
+
+    # We now take .value_counts() and put that as the dates value:
+    # .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
+    for candidate in trump_biden_tweets.keys():
+        for date in trump_biden_tweets[candidate].keys():
+            # print(candidate, " | DATE: ", date, " | ")
+            # print(pd.Series(trump_biden_tweets[candidate][date]).value_counts())
+            trump_biden_tweets[candidate][date] = pd.Series(
+                trump_biden_tweets[candidate][date]
+            ).value_counts()
+
+    print(trump_biden_tweets)
+
+    # Making dataframes. Transposing so the structure is correct.
+    trump = pd.DataFrame(trump_biden_tweets["Trump"]).T  # .T = Transpose
+    biden = pd.DataFrame(trump_biden_tweets["Biden"]).T
+    return trump.sort_index(), biden.sort_index()
 
 
 def makeDataframeByDate(tweets):
