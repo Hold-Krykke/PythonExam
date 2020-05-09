@@ -86,8 +86,6 @@ def pieChart(trump, biden, sentiment):
     Parameters: 
         trump & biden: DataFrame: has to come from positiveOrNegative
         sentiment: String: Positive, Negative or Uncertain
-
-    
     """
     print(trump, "\n", biden)
     df = pd.Series(
