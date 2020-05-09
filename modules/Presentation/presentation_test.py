@@ -24,6 +24,12 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
     Wanted behavior:
     
     Returns all tweets with "date" between start_date and end_date
+
+    Resources: 
+
+    https://www.kite.com/python/answers/how-to-compare-two-dates-with-datetime-in-python
+    https://www.geeksforgeeks.org/comparing-dates-python/
+    https://stackoverflow.com/questions/8142364/how-to-compare-two-dates
     """
     return None
 
