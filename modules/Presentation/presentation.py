@@ -99,7 +99,7 @@ def get_by_sentiment(tweets, sentiment):
 # FILTERING / SORTING FUNCTIONS DONE
 
 
-def getSentiment(tweets):
+def get_sentiment(tweets):
     """
     Filter tweets using other methods, before you use this one. 
     """
@@ -119,11 +119,27 @@ def getSentiment(tweets):
 # PLOTTING START
 
 
-def pie_chart(df):
+def pie_chart(df, title):
     """
+    Make a Pie Chart about Sentiments for given dataframe
     """
-    plot = df.plot(kind="pie", autopct="%1.0f%%", title=f"Tweets.",)
-    return plot
+    plt.axes(
+        pd.Series(
+            {
+                "Positive": df["Positive"].sum(),
+                "Negative": df["Negative"].sum(),
+                "Uncertain": df["Uncertain"].sum(),
+            }
+        ).plot(kind="pie", autopct="%1.0f%%", title=title)
+    )
+
+
+def bar_plot(df, title):
+    df.plot(kind="bar", rot=0, title=title)
+
+
+def line_plot(df, title):
+    df.plot(kind="line", title=title)
 
 
 # PLOTTING END
@@ -136,15 +152,16 @@ for i in range(10000):
     object_test_data.append(make_test_data())
 
 # Testing daterange
-object_test_data = get_tweets_in_daterange(
+date_filtered_data = get_tweets_in_daterange(
     object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
 )
 
 # Testing getting tweets by hashtag
-object_test_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
+hashtag_filtered_data = get_by_key_value(date_filtered_data, "hashtags", "#Trump")
 
-plot_me = getSentiment(object_test_data)
-# plot_me.plot(kind="bar", rot=0, title="Sentiment")
-# print(plot_me)
-# plot_me.plot(kind="line", title="Sentiment over time")
-pie_chart(plot_me).show()
+# Testing get_sentiment
+plot_me = get_sentiment(hashtag_filtered_data)
+
+# Testing plotting
+pie_chart(plot_me, "ASS")
+plt.show()
