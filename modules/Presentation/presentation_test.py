@@ -17,6 +17,17 @@ test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
 test_data = get_data_from_csv(test_data_path)
 
 
+def get_tweets_in_daterange(tweets, start_date, end_date):
+    """
+    Not Yet Implemented
+
+    Wanted behavior:
+    
+    Returns all tweets with "date" between start_date and end_date
+    """
+    return None
+
+
 def get_by_key_value(tweets, key, value):
     """
     Get tweets from tweet array, by key and value. 
