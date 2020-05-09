@@ -17,6 +17,33 @@ test_data_path = "../../data/test_tweets/presentation_test_tweets.csv"
 test_data = get_data_from_csv(test_data_path)
 
 
+def get_by_key_value(tweets, key, value):
+    """
+    Get tweets from tweet array, by key and value. 
+
+    For example:
+        
+        key = hashtags
+        value = #Biden
+
+    Parameters:
+        
+        tweets = Array of tweets you want to filter
+        key = String: one of: [hashtags, people, urls]
+        value = String
+    """
+
+    def custom_filter(tweet):
+        # For use by .filter()
+        if value in tweet[key]:
+            return True
+        else:
+            return False
+
+    return tweets.filter(custom_filter, tweets)
+
+
+
 def positiveOrNegative(tweets):
     """
     Returns 2 pandas dataframes.
@@ -133,11 +160,13 @@ object_test_data = []
 for i in range(1000):
     object_test_data.append(make_test_data())
 
-trump, biden = positiveOrNegative(object_test_data)
+print(get_by_key_value(object_test_data, "hashtags", "#Trump"))
+
+# trump, biden = positiveOrNegative(object_test_data)
 
 
 # barPlot(trump, biden)
-pieChart(trump, biden, "Positive")
+# pieChart(trump, biden, "Positive")
 # df = makeDataframeByDate(object_test_data)
 
 # lineGraph(mydict)
