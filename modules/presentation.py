@@ -50,7 +50,6 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
 
     if start_date > end_date:
         raise Exception("Start_date was before end_date.")
-
     return list(
         filter(
             lambda tweet: tweet["date"] <= end_date and tweet["date"] >= start_date,
@@ -134,7 +133,8 @@ def get_sentiment(tweets):
     # Make a dict, where key is date and value is a list of all sentiments for that date
     tweets_dict = defaultdict(list)
     for tweet in tweets:
-        tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+        # The sentiment_analysis apparently has a list with the dict inside instead of just the dict..
+        tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"][0]["verdict"])
 
     # Takes .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     for date in tweets_dict.keys():
@@ -164,7 +164,7 @@ def pie_chart(df, title, save=None):
     plt.ylabel("")
 
     if save:
-        save_plot(plt, save)
+        save_plot(plt, title)
     else:
         plt.show()
 
@@ -181,7 +181,7 @@ def bar_plot(df, title, save=None):
     df.plot(kind="bar", rot=0, title=title)
 
     if save:
-        save_plot(plt, save)
+        save_plot(plt, title)
     else:
         plt.show()
 
@@ -198,7 +198,7 @@ def line_plot(df, title, save=None):
     df.plot(kind="line", title=title)
 
     if save:
-        save_plot(plt, save)
+        save_plot(plt, title) # if title is a string, the plot is saved as [title].png
     else:
         plt.show()
 
@@ -217,6 +217,8 @@ def save_plot(fig, name):
     Returns:\n
         Nothing. 
     """
+    print(type(name))
+    print(name)
     if isinstance(name, str):
         from pathlib import Path
 
