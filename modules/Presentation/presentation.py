@@ -26,22 +26,26 @@ You can chain several filters.
 
 """
 
+# Change here, if sentiments change
+sentiments = ["Positive", "Negative", "Uncertain"]
+
 # FILTERING / SORTING FUNCTIONS START
 def get_tweets_in_daterange(tweets, start_date, end_date):
     """
-    Category: Sorter function
+    Category: Filter function
 
     Returns all tweets with "date" between start_date and end_date
 
-    Parameters:
-
+    Parameters:\n
         tweets: array of tweets
         start_date and end_date are datetime objects
 
-    Returns:
-
+    Returns:\n
         Filtered list of tweets within start_date and end_date
     """
+    if !isinstance(start_date, datetime.date) or !isinstance(end_date, datetime.date):
+        raise Exception("Wrong date format. Has to be datetime.date")
+
     if start_date > end_date:
         raise Exception("Start_date was before end_date.")
 
@@ -55,42 +59,39 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
 
 def get_by_key_value(tweets, key, value):
     """
-    Category: Sorter function
+    Category: Filter function
 
     Get tweets from tweet array, by key and value. 
 
-    For example:
-        
+    For example:\n
         key = hashtags
         value = #Biden
 
-    Parameters:
-        
+    Parameters: \n
         tweets = Array of tweets you want to filter
         key = String: one of: [hashtags, people, urls]
         value = String
 
-    Returns: 
-
+    Returns: \n
         Filtered List
     """
+    if key is not in ["hashtags", "people", "urls"]:
+        raise Exception("key has to be 'Positive', 'Negative' or 'Uncertain'")
 
-    # def custom_filter(tweet):
-    #     # For use by .filter()
-    #     if value in tweet[key]:
-    #         return True
-    #     else:
-    #         return False
-
-    # return list(filter(custom_filter, tweets))
     return list(filter(lambda tweet: value in tweet[key], tweets))
 
 
 def get_by_sentiment(tweets, sentiment):
-    """
+    f"""
+    Category: Filter function
+
+    Parameters: \n
+        Sentiment: {sentiments}
+
     Returns all tweets with a certain sentiment. 
-    Positive, Negative or Uncertain 
     """
+    if sentiment is not in sentiments:
+        raise Exception(f"Sentiment has to be in '{sentiments}'")
     # The is keyword is used to test if two variables refer to the same object.
     # Use the == operator to test if two variables are equal.
     return list(
@@ -102,8 +103,14 @@ def get_by_sentiment(tweets, sentiment):
 
 def remove_sentiment(tweets, sentiment):
     """
-    Remove all tweets with certain sentiment
+    Category: Filter function
+
+    Remove all tweets with certain sentiment.
+    Positive, Negative or Uncertain.
     """
+    if sentiment is not in sentiments:
+        raise Exception(f"Sentiment has to be in '{sentiments}'")
+
     return list(
         filter(
             lambda tweet: sentiment != tweet["sentiment_analysis"]["verdict"], tweets
@@ -138,14 +145,13 @@ def pie_chart(df, title, save=None):
     """
     Make a Pie Chart about Sentiments for given dataframe
 
-    Parameters: 
-
+    Parameters: \n
         df = DataFrame made by get_sentiment
         title = String
         save = If set, save with this file_name
     """
     sentiment = {}
-    for column in ["Positive", "Negative", "Uncertain"]:
+    for column in sentiments:
         if column in df.columns:
             sentiment[column] = df[column].sum()
 
