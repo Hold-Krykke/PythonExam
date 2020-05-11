@@ -9,6 +9,7 @@ import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
+import Preprocessing
 
 # import Rúnis module
 
@@ -17,11 +18,6 @@ These are the only methods that should be called from other modules:
     train_model_if_necessary()
     analyze_many_tweets(scraped_tweets, 0.25, 0.75)
 """
-######################## Global variables ########################
-_training_dataset = _prepare_training_data_for_model()
-_classifier_has_been_trained = False
-_classifier = None
-######################## Global variables ########################
 
 
 ####################### Prepare the Data ########################
@@ -38,10 +34,10 @@ def _prepare_training_data_for_model():
     negative_preprocessed_tokens = []
 
     for tweet in positive_tweets:
-        positive_preprocessed_tokens.append(_remove_noise(tweet))  # _remove_noise should be called correctly from Rúnis module
+        positive_preprocessed_tokens.append(Preprocessing.remove_noise(tweet))  # _remove_noise should be called correctly from Rúnis module
 
     for tweet in negative_tweets:
-        negative_preprocessed_tokens.append(_remove_noise(tweet))  # _remove_noise should be called correctly from Rúnis module
+        negative_preprocessed_tokens.append(Preprocessing.remove_noise(tweet))  # _remove_noise should be called correctly from Rúnis module
 
     positive_formatted_tokens = _get_tweets_for_model(positive_preprocessed_tokens)
     negative_formatted_tokens = _get_tweets_for_model(negative_preprocessed_tokens)
@@ -69,8 +65,7 @@ def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float
     Takes in a list of scraped tweets and calls the analyzer for each, before appending the analyzed 
     result to the tweet and returning the list
     """
-    analyzed_tweets = get_tweet_data(tweets_list)  # get_tweet_data should be called correctly from Rúnis module
-    for item in analyzed_tweets:
+    for item in tweets_list:
         tweet = item.get("tweet")
         result = _analyze_tweet(tweet, uncertain_low, uncertain_high)
         item["sentiment_analysis"] = [result]
@@ -105,7 +100,13 @@ def train_model_if_necessary():
     global _classifier
 
     if (not _classifier_has_been_trained):
-        classifier = NaiveBayesClassifier.train(_training_dataset)
-        classifier_has_been_trained = True
+        _classifier = NaiveBayesClassifier.train(_training_dataset)
+        _classifier_has_been_trained = True
 
 ####################### Analyze the Data ########################
+
+######################## Global variables ########################
+_training_dataset = _prepare_training_data_for_model()
+_classifier_has_been_trained = False
+_classifier = None
+######################## Global variables ########################

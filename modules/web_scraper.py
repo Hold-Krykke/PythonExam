@@ -3,6 +3,7 @@ import requests as req
 import os
 from datetime import date, datetime
 import emoji
+import ast
 
 _base_URL = "https://mobile.twitter.com/search?q="
 _end_URL_part = "&s=typd&x=0&y=0"
@@ -175,9 +176,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
                     for line in f.readlines():
                         if count > tweet_count - 1:
                             break
-                        result.append(line)
+                        result.append(ast.literal_eval(line))
                         count += 1
-
                     return result
 
 
