@@ -1,8 +1,0 @@
-{
-  "python.autoComplete.extraPaths": [
-    "./modules",
-    "./modules/Presentation"
-  ],
-  "python.pythonPath": "C:\\ProgramData\\Anaconda3\\python.exe",
-  "python.formatting.provider": "black"
-}
