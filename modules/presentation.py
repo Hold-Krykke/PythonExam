@@ -223,8 +223,8 @@ def save_plot(fig, name):
         # https://stackoverflow.com/a/273227/11255140
         # if plots folder doesn't exist, create it.
         Path("./plots").mkdir(parents=True, exist_ok=True)
-        # bbox_inces="tight" ensures less white space in the image.
-        fig.savefig("./plots/" + name + ".png", bbox_inces="tight")
+        # bbox_inches="tight" ensures less white space in the image.
+        fig.savefig("./plots/" + name + ".png", bbox_inches="tight")
         print("Successfully saved Plot to ./plots/" + name + ".png")
     else:
         print("Name has to be a string.")
