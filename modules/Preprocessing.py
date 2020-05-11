@@ -24,6 +24,21 @@ def _handle_date(date_string: str):
     return datetime.strptime(date_string, '%Y,%m,%d').date()
 
 
+def sort_dict(curDict: dict, descending: bool = True):
+    """
+    Sorts a dict by value-fields using lambda.  
+
+    curDict: dict to sort  
+
+    descending: sort descending (True) or ascending (False)
+
+    # Returns  
+    Same dict but sorted
+
+    """
+    return {k: v for k, v in sorted(curDict.items(), key=lambda item: item[1], reverse=descending)}
+
+
 def remove_noise(tweet: str):
     """
     Removes noise from the tweets by:
@@ -75,7 +90,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
     As well as stats for hashtags and mentions
     >>> tweets, hashtag_stats, mention_stats
     """
-    # prepare stats_format for
+    # prepare stats_format
     hashtag_stats = {}
     mention_stats = {}
 
@@ -115,7 +130,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
             tweet_text += ' '.join(tweet['emojis'])
         # clear unused words, numbers, symbols and the like
         tweet['tweet'] = remove_noise(tweet_text)  # must finish with this
-    # sort hashtag and mention stats
-    hashtag_stats = {k: v for k, v in sorted(hashtag_stats.items(), key=lambda item: item[1], reverse=True)}
-    mention_stats = {k: v for k, v in sorted(mention_stats.items(), key=lambda item: item[1], reverse=True)}
+    # sort hashtag and mention stats by their values
+    hashtag_stats = sort_dict(hashtag_stats)
+    mention_stats = sort_dict(mention_stats)
     return tweets, hashtag_stats, mention_stats
