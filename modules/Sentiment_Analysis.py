@@ -9,9 +9,7 @@ import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
-import Preprocessing
-
-# import Rúnis module
+from modules.Preprocessing import remove_noise, get_tweet_data
 
 """
 These are the only methods that should be called from other modules:
@@ -34,10 +32,10 @@ def _prepare_training_data_for_model():
     negative_preprocessed_tokens = []
 
     for tweet in positive_tweets:
-        positive_preprocessed_tokens.append(Preprocessing.remove_noise(tweet))  # _remove_noise should be called correctly from Rúnis module
+        positive_preprocessed_tokens.append(remove_noise(tweet))
 
     for tweet in negative_tweets:
-        negative_preprocessed_tokens.append(Preprocessing.remove_noise(tweet))  # _remove_noise should be called correctly from Rúnis module
+        negative_preprocessed_tokens.append(remove_noise(tweet))
 
     positive_formatted_tokens = _get_tweets_for_model(positive_preprocessed_tokens)
     negative_formatted_tokens = _get_tweets_for_model(negative_preprocessed_tokens)
@@ -69,7 +67,7 @@ def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float
         tweet = item.get("tweet")
         result = _analyze_tweet(tweet, uncertain_low, uncertain_high)
         item["sentiment_analysis"] = [result]
-    return analyzed_tweets
+    return tweets_list
 
 
 def _analyze_tweet(tweet, uncertain_low: float, uncertain_high: float):
@@ -98,7 +96,6 @@ def train_model_if_necessary():
     """
     global _classifier_has_been_trained
     global _classifier
-
     if (not _classifier_has_been_trained):
         _classifier = NaiveBayesClassifier.train(_training_dataset)
         _classifier_has_been_trained = True
