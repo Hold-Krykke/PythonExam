@@ -2,11 +2,10 @@
 
 data/
 
-
 # Other
 
 **/__pycache__
-=======
+
 ### IDE ###
 
 .vscode
