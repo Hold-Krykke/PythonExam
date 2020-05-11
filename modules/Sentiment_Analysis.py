@@ -109,5 +109,3 @@ _training_dataset = _prepare_training_data_for_model()
 _classifier_has_been_trained = False
 _classifier = None
 ######################## Global variables ########################
-
-train_model_if_necessary()
