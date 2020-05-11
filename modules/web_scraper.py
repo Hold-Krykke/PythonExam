@@ -82,7 +82,7 @@ def _extract_data_urls(tweet_element):
 
 def _get_tweet_date(tweet_element):
     """
-    Returns a datetime object with the date contained in the tweet.\nThe minutes and hours etc. are not accurate.\n
+    Returns a string with the date contained in the tweet.
     If the tweet is from before 2020 it will still be returned as if it was from 2020
     """
     # Finding element that contains the timestamp
