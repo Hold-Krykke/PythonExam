@@ -1,8 +1,13 @@
-# Raw data folder 
+### Raw data folder ###
 
 data/
 
-# Other
-.vscode/
 
-modules/__pycache__/
+# Other
+
+**/__pycache__
+=======
+### IDE ###
+
+.vscode
+
