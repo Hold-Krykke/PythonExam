@@ -13,6 +13,7 @@ _stopwords = stopwords.words('english')
 _stopwords.extend(['twitter', 'nt'])
 _REGEX_URL_MATCHER = re.compile('(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)')
 _REGEX_CHAR_MATCHER = re.compile('[^A-Za-z]')
+_REGEX_CHAR_MATCHER_TWEETS = re.compile('[^A-Za-z0-9#@]')  # allows hashtags, mentions with letters & numbers
 
 
 def _handle_date(date_string: str):
@@ -107,7 +108,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
                     # clean hashtag
-                    clean_word = re.sub(_REGEX_CHAR_MATCHER, "", word)
+                    clean_word = re.sub(_REGEX_CHAR_MATCHER_TWEETS, "", word)
                     # add to local hashtags
                     tweet['hashtags'].append(clean_word)
                     # add to overall hashtags
@@ -116,7 +117,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
                     tweet_text = tweet_text.replace(word, '')
                 if word.startswith('@'):
                     # clean mention
-                    clean_word = re.sub(_REGEX_CHAR_MATCHER, "", word)
+                    clean_word = re.sub(_REGEX_CHAR_MATCHER_TWEETS, "", word)
                     # add to local hashtags
                     tweet['mentions'].append(clean_word)
                     # add to overall hashtags
