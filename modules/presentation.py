@@ -44,7 +44,7 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
     Returns:\n
         Filtered list of tweets within start_date and end_date
     """
-    if !isinstance(start_date, datetime.date) or !isinstance(end_date, datetime.date):
+    if not isinstance(start_date, datetime.date) or not isinstance(end_date, datetime.date):
         raise Exception("Wrong date format. Has to be datetime.date")
 
     if start_date > end_date:
