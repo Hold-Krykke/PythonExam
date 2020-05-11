@@ -6,9 +6,6 @@ import numpy as np
 import pandas as pd
 import re
 import nltk
-from helpers import save_plot, get_data_from_csv
-from test_data_generator import make_test_data
-from collections import defaultdict
 import datetime
 
 
@@ -181,30 +178,26 @@ def line_plot(df, title, save=None):
 
 # PLOTTING END
 
+def save_plot(fig, name):
+    """
+    Save Plot to file
 
-# TESTING BELOW
-# MAKE TEST DATA
-object_test_data = []
-for i in range(1000):
-    object_test_data.append(make_test_data())
+    Parameters:\n
+        fig: Figure. pyplot fig. 
+        name: string. Name of file. No extension. 
 
-# Testing daterange
-# filtered_data = get_tweets_in_daterange(
-#     object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
-# )
+    Returns:\n
+        Nothing. 
+    """
+    if isinstance(name, str):
+        from pathlib import Path
 
-# Testing getting tweets by hashtag
-# filtered_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
+        # https://stackoverflow.com/a/273227/11255140
+        # if plots folder doesn't exist, create it.
+        Path("./plots").mkdir(parents=True, exist_ok=True)
+        # bbox_inces="tight" ensures less white space in the image.
+        fig.savefig("./plots/" + name + ".png", bbox_inces="tight")
+        print("Successfully saved Plot to ./plots/" + name + ".png")
+    else:
+        print("Name has to be a string.")
 
-# Testing get_by_sentiment
-# filtered_data = get_by_sentiment(object_test_data, "Positive")
-
-# Testing remove_sentiment
-filtered_data = remove_sentiment(object_test_data, "Uncertain")
-
-# Testing get_sentiment
-plot_me = get_sentiment(filtered_data)
-
-# Testing plotting
-pie_chart(plot_me, "ASS")
-plt.show()
