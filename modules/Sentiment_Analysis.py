@@ -63,12 +63,11 @@ def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float
     Takes in a list of scraped tweets and calls the analyzer for each, before appending the analyzed 
     result to the tweet and returning the list
     """
-    analyzed_tweets = get_tweet_data(tweets_list)
-    for item in analyzed_tweets:
+    for item in tweets_list:
         tweet = item.get("tweet")
         result = _analyze_tweet(tweet, uncertain_low, uncertain_high)
         item["sentiment_analysis"] = [result]
-    return analyzed_tweets
+    return tweets_list
 
 
 def _analyze_tweet(tweet, uncertain_low: float, uncertain_high: float):
