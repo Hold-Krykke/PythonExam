@@ -209,4 +209,5 @@ def save_plot(fig, name):
         print("Successfully saved Plot to ./plots/" + name + ".png")
     else:
         print("Name has to be a string.")
+        raise Exception("name has to be a string.")
 
