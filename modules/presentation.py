@@ -77,7 +77,7 @@ def get_by_key_value(tweets, key, value):
         Filtered List
     """
     if key is not in ["hashtags", "people", "urls"]:
-        raise Exception("key has to be 'Positive', 'Negative' or 'Uncertain'")
+        raise Exception('key has to be "hashtags", "people", "urls"')
 
     return list(filter(lambda tweet: value in tweet[key], tweets))
 
