@@ -1,5 +1,7 @@
-# Raw data folder 
+### Raw data folder ###
 
 data/
 
-# Other
+### IDE ###
+
+.vscode
