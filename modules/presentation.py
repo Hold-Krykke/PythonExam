@@ -7,6 +7,7 @@ import pandas as pd
 import re
 import nltk
 import datetime
+from collections import defaultdict # https://www.accelebrate.com/blog/using-defaultdict-python
 
 
 """
@@ -76,7 +77,7 @@ def get_by_key_value(tweets, key, value):
     Returns: \n
         Filtered List
     """
-    if key is not in ["hashtags", "people", "urls"]:
+    if key not in ["hashtags", "people", "urls"]:
         raise Exception('key has to be "hashtags", "people", "urls"')
 
     return list(filter(lambda tweet: value in tweet[key], tweets))
@@ -91,7 +92,7 @@ def get_by_sentiment(tweets, sentiment):
 
     Returns all tweets with a certain sentiment. 
     """
-    if sentiment is not in sentiments:
+    if sentiment not in sentiments:
         raise Exception(f"Sentiment has to be in '{sentiments}'")
     # The is keyword is used to test if two variables refer to the same object.
     # Use the == operator to test if two variables are equal.
@@ -111,7 +112,7 @@ def remove_sentiment(tweets, sentiment):
 
     Returns all tweets without a certain sentiment. 
     """
-    if sentiment is not in sentiments:
+    if sentiment not in sentiments:
         raise Exception(f"Sentiment has to be in '{sentiments}'")
 
     return list(
