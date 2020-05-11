@@ -11,6 +11,8 @@ from nltk.tokenize import word_tokenize
 # lazy load stopwords
 _stopwords = stopwords.words('english')
 _stopwords.extend(['twitter', 'nt'])
+_REGEX_URL_MATCHER = re.compile('(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)')
+_REGEX_CHAR_MATCHER = re.compile('[^A-Za-z]')
 
 
 def _handle_date(date_string: str):
@@ -34,22 +36,22 @@ def remove_noise(tweet: str):
     cleaned_tokens = []
     tweet_tokens = word_tokenize(tweet)
     for token, tag in pos_tag(tweet_tokens):
-
-        # remove hyperlinks
-        token = re.sub('(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)', '', token)
-        # remove special chars, numbers, inc emojies
-        token = re.sub("[^A-Za-z]", "", token)
-
-        if tag.startswith("NN"): #noun
+        if tag.startswith("NN"):  # noun
             pos = 'n'
-        elif tag.startswith('VB'): #verb
+        elif tag.startswith('VB'):  # verb
             pos = 'v'
-        else: #adjective
+        else:  # adjective
             pos = 'a'
 
         lemmatizer = WordNetLemmatizer()
-        #lemmatize sentence (bring word from full form to base form) (running -> run)
+        # lemmatize sentence (bring word from full form to base form) (running -> run)
         token = lemmatizer.lemmatize(token, pos)
+
+        # remove hyperlinks
+        token = re.sub(_REGEX_URL_MATCHER, '', token)
+        # remove special chars, numbers, inc emojies
+        token = re.sub(_REGEX_CHAR_MATCHER, "", token)
+
         # remove empty tokens, punctuations and stopwords
         token = token.lower().strip()
         if len(token) > 1 and token not in string.punctuation and token not in _stopwords:
@@ -89,17 +91,21 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         if (tweet_text != None and any(symbol in tweet_text for symbol in ['#', '@'])):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
+                    # clean hashtag
+                    clean_word = re.sub(_REGEX_CHAR_MATCHER, "", word)
                     # add to local hashtags
-                    tweet['hashtags'].append(word)
+                    tweet['hashtags'].append(clean_word)
                     # add to overall hashtags
-                    hashtag_stats[word.lower()] = hashtag_stats.get(word.lower(), 0) + 1
+                    hashtag_stats[clean_word.lower()] = hashtag_stats.get(clean_word.lower(), 0) + 1
                     # remove hashtag
                     tweet_text = tweet_text.replace(word, '')
                 if word.startswith('@'):
+                    # clean mention
+                    clean_word = re.sub(_REGEX_CHAR_MATCHER, "", word)
                     # add to local hashtags
-                    tweet['mentions'].append(word)
+                    tweet['mentions'].append(clean_word)
                     # add to overall hashtags
-                    mention_stats[word.lower()] = mention_stats.get(word.lower(), 0) + 1
+                    mention_stats[clean_word.lower()] = mention_stats.get(clean_word.lower(), 0) + 1
                     # remove mention
                     tweet_text = tweet_text.replace(word, '')
         # handle dates
