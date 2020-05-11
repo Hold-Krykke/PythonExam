@@ -3,3 +3,7 @@
 data/
 
 # Other
+
+__pycache__
+
+.vscode
