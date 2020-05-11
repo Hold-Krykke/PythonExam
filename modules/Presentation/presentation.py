@@ -29,6 +29,7 @@ You can chain several filters.
 # Change here, if sentiments change
 sentiments = ["Positive", "Negative", "Uncertain"]
 
+# 1 SORTING
 # FILTERING / SORTING FUNCTIONS START
 def get_tweets_in_daterange(tweets, start_date, end_date):
     """
@@ -120,7 +121,7 @@ def remove_sentiment(tweets, sentiment):
 
 # FILTERING / SORTING FUNCTIONS DONE
 
-
+# 2. GET SENTIMENT
 def get_sentiment(tweets):
     """
     Filter tweets using other methods, before you use this one. 
@@ -140,6 +141,7 @@ def get_sentiment(tweets):
     return pd.DataFrame(tweets_dict).T.sort_index()
 
 
+# 3. PLOT
 # PLOTTING START
 def pie_chart(df, title, save=None):
     """
@@ -184,6 +186,7 @@ def line_plot(df, title, save=None):
 
 # PLOTTING END
 
+# Save helper function 
 def save_plot(fig, name):
     """
     Save Plot to file
