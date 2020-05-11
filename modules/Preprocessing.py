@@ -86,7 +86,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         tweet_text = tweet_text.replace('\n', ' ')
 
         # check text for hashtags or mentions
-        if (tweet_text != None and '#' or '@' in tweet_text):
+        if (tweet_text != None and any(symbol in tweet_text for symbol in ['#', '@'])):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
                     # add to local hashtags
