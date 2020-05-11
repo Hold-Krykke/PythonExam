@@ -103,11 +103,13 @@ def get_by_sentiment(tweets, sentiment):
 
 
 def remove_sentiment(tweets, sentiment):
-    """
+    f"""
     Category: Filter function
 
-    Remove all tweets with certain sentiment.
-    Positive, Negative or Uncertain.
+    Parameters: \n
+        Sentiment: {sentiments}
+
+    Returns all tweets without a certain sentiment. 
     """
     if sentiment is not in sentiments:
         raise Exception(f"Sentiment has to be in '{sentiments}'")
