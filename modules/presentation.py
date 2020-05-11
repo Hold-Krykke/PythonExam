@@ -7,6 +7,7 @@ import pandas as pd
 import re
 import nltk
 import datetime
+from collections import defaultdict # https://www.accelebrate.com/blog/using-defaultdict-python
 
 
 """
@@ -76,7 +77,7 @@ def get_by_key_value(tweets, key, value):
     Returns: \n
         Filtered List
     """
-    if key is not in ["hashtags", "people", "urls"]:
+    if key not in ["hashtags", "people", "urls"]:
         raise Exception('key has to be "hashtags", "people", "urls"')
 
     return list(filter(lambda tweet: value in tweet[key], tweets))
@@ -91,7 +92,7 @@ def get_by_sentiment(tweets, sentiment):
 
     Returns all tweets with a certain sentiment. 
     """
-    if sentiment is not in sentiments:
+    if sentiment not in sentiments:
         raise Exception(f"Sentiment has to be in '{sentiments}'")
     # The is keyword is used to test if two variables refer to the same object.
     # Use the == operator to test if two variables are equal.
@@ -111,7 +112,7 @@ def remove_sentiment(tweets, sentiment):
 
     Returns all tweets without a certain sentiment. 
     """
-    if sentiment is not in sentiments:
+    if sentiment not in sentiments:
         raise Exception(f"Sentiment has to be in '{sentiments}'")
 
     return list(
@@ -212,4 +213,33 @@ def save_plot(fig, name):
     else:
         print("Name has to be a string.")
         raise Exception("name has to be a string.")
+
+# TESTING
+# TESTING BELOW
+# MAKE TEST DATA
+from test_data_generator import make_test_data
+object_test_data = []
+for i in range(10000):
+    object_test_data.append(make_test_data())
+
+# TESTING FILTERS - COMMENT IN ANY FILTER, 
+# BUT REMEMBER TO SET object_test_data to filtered_data, if you wanna chain multiple filters, before plotting
+
+# Testing daterange
+filtered_data = get_tweets_in_daterange(
+    object_test_data, datetime.date(2020, 5, 19), datetime.date(2020, 5, 22)
+)
+
+# Testing getting tweets by hashtag
+# filtered_data = get_by_key_value(object_test_data, "hashtags", "#Trump")
+
+# Testing get_by_sentiment
+# filtered_data = get_by_sentiment(object_test_data, "Positive")
+
+# Testing remove_sentiment
+# filtered_data = remove_sentiment(object_test_data, "Uncertain")
+
+_PLOT_ME = get_sentiment(filtered_data)
+
+bar_plot(_PLOT_ME, "TITLE")
 
