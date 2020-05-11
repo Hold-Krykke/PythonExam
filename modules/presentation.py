@@ -170,6 +170,14 @@ def pie_chart(df, title, save=None):
 
 
 def bar_plot(df, title, save=None):
+    """
+    Make a Bar Plot about Sentiments for given dataframe
+
+    Parameters: \n
+        df = DataFrame made by get_sentiment
+        title = String
+        save = If set, save with this file_name
+    """
     df.plot(kind="bar", rot=0, title=title)
 
     if save:
@@ -179,6 +187,14 @@ def bar_plot(df, title, save=None):
 
 
 def line_plot(df, title, save=None):
+    """
+    Make a Line Chart about Sentiments for given dataframe
+
+    Parameters: \n
+        df = DataFrame made by get_sentiment
+        title = String
+        save = If set, save with this file_name
+    """
     df.plot(kind="line", title=title)
 
     if save:
