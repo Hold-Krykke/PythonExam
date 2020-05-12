@@ -16,6 +16,10 @@ These are the only methods that should be called from other modules:
     train_model_if_necessary()
     analyze_many_tweets(scraped_tweets, 0.25, 0.75)
 """
+######################## Global variables ########################
+_classifier_has_been_trained = False
+_classifier = None
+######################## Global variables ########################
 
 
 ####################### Prepare the Data ########################
@@ -122,9 +126,3 @@ def train_model_if_necessary():
         print("Accuracy is:", accuracy)
     return accuracy
 ####################### Analyze the Data ########################
-
-
-######################## Global variables ########################
-_classifier_has_been_trained = False
-_classifier = None
-######################## Global variables ########################
