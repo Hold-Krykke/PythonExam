@@ -66,7 +66,7 @@ def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float
     for item in tweets_list:
         tweet = item.get("tweet")
         result = _analyze_tweet(tweet, uncertain_low, uncertain_high)
-        item["sentiment_analysis"] = [result]
+        item["sentiment_analysis"] = result
     return tweets_list
 
 

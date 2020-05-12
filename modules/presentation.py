@@ -134,7 +134,7 @@ def get_sentiment(tweets):
     tweets_dict = defaultdict(list)
     for tweet in tweets:
         # The sentiment_analysis apparently has a list with the dict inside instead of just the dict..
-        tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"][0]["verdict"])
+        tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
 
     # Takes .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     for date in tweets_dict.keys():
@@ -164,7 +164,7 @@ def pie_chart(df, title, save=None):
     plt.ylabel("")
 
     if save:
-        save_plot(plt, title)
+        save_plot(plt, save)
     else:
         plt.show()
 
@@ -178,10 +178,10 @@ def bar_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
-    df.plot(kind="bar", rot=0, title=title)
+    df.plot(kind="bar", rot=17, title=title)
 
     if save:
-        save_plot(plt, title)
+        save_plot(plt, save)
     else:
         plt.show()
 
@@ -195,10 +195,10 @@ def line_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
-    df.plot(kind="line", title=title)
+    df.plot(kind="line", rot=17, title=title)
 
     if save:
-        save_plot(plt, title) # if title is a string, the plot is saved as [title].png
+        save_plot(plt, save)
     else:
         plt.show()
 
@@ -217,8 +217,6 @@ def save_plot(fig, name):
     Returns:\n
         Nothing. 
     """
-    print(type(name))
-    print(name)
     if isinstance(name, str):
         from pathlib import Path
 
