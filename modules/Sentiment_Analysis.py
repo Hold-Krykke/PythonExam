@@ -121,12 +121,10 @@ def train_model_if_necessary():
         classifier_has_been_trained = True
         print("Accuracy is:", accuracy)
     return accuracy
-
 ####################### Analyze the Data ########################
 
 
 ######################## Global variables ########################
 _classifier_has_been_trained = False
 _classifier = None
-#_accuracy = None
 ######################## Global variables ########################
