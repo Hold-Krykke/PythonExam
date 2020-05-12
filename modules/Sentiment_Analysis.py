@@ -1,10 +1,4 @@
 from nltk.corpus import twitter_samples
-from nltk.tag import pos_tag
-from nltk.stem.wordnet import WordNetLemmatizer
-import re
-import string
-from nltk.corpus import stopwords
-from nltk import FreqDist
 import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
