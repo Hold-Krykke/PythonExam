@@ -58,7 +58,7 @@ def _get_tweets_for_model(preprocessed_token_list):
 
 
 ####################### Analyze the Data ########################
-def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float):
+def analyze_many_tweets(tweets_list, uncertain_low=0.25, uncertain_high=0.75):
     """
     Takes in a list of scraped tweets and calls the analyzer for each, before appending the analyzed 
     result to the tweet and returning the list
