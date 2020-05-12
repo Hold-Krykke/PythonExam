@@ -10,11 +10,6 @@ These are the only methods that should be called from other modules:
     train_model_if_necessary()
     analyze_many_tweets()
 """
-######################## Global variables ########################
-_classifier_has_been_trained = False
-_classifier = None
-######################## Global variables ########################
-
 
 ####################### Prepare the Data ########################
 def _prepare_training_data_for_model():
@@ -109,14 +104,21 @@ def train_model_if_necessary():
     """
     global _classifier_has_been_trained
     global _classifier
-    training_dataset, testing_dataset = _prepare_training_data_for_model()
+    global _training_dataset
+    global _testing_dataset
 
     if (not _classifier_has_been_trained):
         print("Training Classifier...")
-        classifier = NaiveBayesClassifier.train(training_dataset)
+        _classifier = NaiveBayesClassifier.train(_training_dataset)
         print("Testing Classifier...")
-        accuracy = classify.accuracy(classifier, testing_dataset)
-        classifier_has_been_trained = True
+        accuracy = classify.accuracy(_classifier, _testing_dataset)
+        _classifier_has_been_trained = True
         print("Accuracy is:", accuracy)
-    return accuracy
+        return accuracy
 ####################### Analyze the Data ########################
+
+######################## Global variables ########################
+_training_dataset, _testing_dataset = _prepare_training_data_for_model()
+_classifier_has_been_trained = False
+_classifier = None
+######################## Global variables ########################
