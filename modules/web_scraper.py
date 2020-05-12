@@ -226,7 +226,34 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
     return tweets
 
 
+def get_many_tweets_test_data():
+    """
+    DO NOT CALL THIS METHOD.
+    This function collects a lot of data used when testing the SA.
+    """
+    tweets1 = get_tweets(500, True, "trump")
+    tweets2 = get_tweets(500, True, "biden")
+    tweets3 = get_tweets(500, True, "crypto")
+    tweets4 = get_tweets(500, True, "olympics")
+    tweets5 = get_tweets(500, True, "crowdfunding")
+    all = []
+    for tweet in tweets1:
+        all.append(tweet)
+    for tweet in tweets2:
+        all.append(tweet)
+    for tweet in tweets3:
+        all.append(tweet)
+    for tweet in tweets4:
+        all.append(tweet)
+    for tweet in tweets5:
+        all.append(tweet)
+    
+    return all
+
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
 # tweets = get_tweets(20, True, "trump")
 # print("Tweets downloaded")
+tweets = get_many_tweets_test_data()
+print("Tweets downloaded")
+print(len(tweets))
 
