@@ -25,7 +25,7 @@ Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af fø
   * Teknologier:
     * Regex
     * Natural Language Toolkit (NLTK) 
-* __Sentiment analysis / evt topic analysis hvis tid (swear words, hate speech eller lignende)__
+* __Sentiment analysis__
   * Teknologier:
     * Natural Language Toolkit (NLTK)
     * evt sklearn
