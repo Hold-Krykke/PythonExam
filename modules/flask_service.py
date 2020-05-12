@@ -52,12 +52,14 @@ def get_burglaries():
         abort(400, "Please provide start date")
     start_date_string = request.json['start_date']
     start_date = datetime.strptime(start_date_string, '%Y-%m-%d').date()
+    print(start_date)
 
     # Check if end date has been provided
     if not 'end_date' in request.json:
         abort(400, "Please provide end date")
     end_date_string = request.json['end_date']
     end_date = datetime.strptime(end_date_string, '%Y-%m-%d').date()
+    print(end_date)
 
     # Creating plot
     do_everything(hashtags, file_name, start_date, end_date, plot_type)
@@ -66,26 +68,29 @@ def get_burglaries():
 
 def do_everything(hashtags: list, file_name, start_date, end_date, plot_type):
     # tweet_list a list of tweet objects (not a list of strings)
-    tweet_list = web_scraper.get_tweets(500, False, hashtags)
+    tweet_list = web_scraper.get_tweets(100, False, hashtags)
+    print("Done scraping...")
 
     # tweet_data is a tuple with a list and 2 dicts: tweets: list[dict[str, str]], hashtag_stats: dict, mention_stats: dict
     tweet_data = Preprocessing.get_tweet_data(tweet_list) 
-
-    # Train the model if necessary
-    Sentiment_Analysis.train_model_if_necessary()
+    print("Done preprocessing...")
 
     # analyzed_tweet_data is a list of tweet dicts with the new data from the SA 
-    analyzed_tweet_data = Sentiment_Analysis.analyze_many_tweets(tweet_data[0], 0.25, 0.75)
+    analyzed_tweet_data = Sentiment_Analysis.analyze_many_tweets(tweet_data[0])
+    print("Done analyzing...")
 
     # creating new tuple with the updated analyzed data and the stats from the previous tuple (tweet_data)
     # we have to update the data by creating a new tuple because tuples are immutable :)))
     analyzed_data = analyzed_tweet_data, tweet_data[1], tweet_data[2]
+    print("Done creating new tuple with analyzed data...")
     
     # filtering data to get only data between the two specified dates
     filtered_data = presentation.get_tweets_in_daterange(analyzed_data[0], start_date, end_date)
+    print("Done filtering on date...")
 
     # Getting plot data from the get_sentiment function 
     PLOT_ME = presentation.get_sentiment(filtered_data)
+    print("Done getting sentiment df for plotting...")
 
     # Create plot and save so the endpoint can send the .png file
     if plot_type == "bar":
