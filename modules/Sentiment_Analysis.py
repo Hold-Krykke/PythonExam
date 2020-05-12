@@ -9,7 +9,7 @@ import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
-from modules.Preprocessing import remove_noise, get_tweet_data
+from modules.Preprocessing import remove_noise
 
 """
 These are the only methods that should be called from other modules:
@@ -66,7 +66,7 @@ def analyze_many_tweets(tweets_list, uncertain_low: float, uncertain_high: float
     for item in tweets_list:
         tweet = item.get("tweet")
         result = _analyze_tweet(tweet, uncertain_low, uncertain_high)
-        item["sentiment_analysis"] = [result]
+        item["sentiment_analysis"] = result
     return tweets_list
 
 
