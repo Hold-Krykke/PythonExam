@@ -98,7 +98,7 @@ def do_everything(hashtags: list, file_name, start_date, end_date, plot_type):
 
 
 if __name__ == '__main__':
-
+    Sentiment_Analysis.train_model_if_necessary()
     app.run(debug=True)
 
     
