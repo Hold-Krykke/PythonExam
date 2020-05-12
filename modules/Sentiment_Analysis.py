@@ -14,7 +14,7 @@ from modules.Preprocessing import remove_noise
 """
 These are the only methods that should be called from other modules:
     train_model_if_necessary()
-    analyze_many_tweets(scraped_tweets, 0.25, 0.75)
+    analyze_many_tweets()
 """
 ######################## Global variables ########################
 _classifier_has_been_trained = False
