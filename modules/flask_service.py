@@ -72,20 +72,15 @@ def do_everything(hashtags: list, file_name, start_date, end_date, plot_type):
     print("Done scraping...")
 
     # tweet_data is a tuple with a list and 2 dicts: tweets: list[dict[str, str]], hashtag_stats: dict, mention_stats: dict
-    tweet_data = Preprocessing.get_tweet_data(tweet_list) 
+    tweets, hashtag_stats, mention_stats = Preprocessing.get_tweet_data(tweet_list) 
     print("Done preprocessing...")
 
     # analyzed_tweet_data is a list of tweet dicts with the new data from the SA 
-    analyzed_tweet_data = Sentiment_Analysis.analyze_many_tweets(tweet_data[0])
+    analyzed_tweet_data = Sentiment_Analysis.analyze_many_tweets(tweets)
     print("Done analyzing...")
 
-    # creating new tuple with the updated analyzed data and the stats from the previous tuple (tweet_data)
-    # we have to update the data by creating a new tuple because tuples are immutable :)))
-    analyzed_data = analyzed_tweet_data, tweet_data[1], tweet_data[2]
-    print("Done creating new tuple with analyzed data...")
-    
     # filtering data to get only data between the two specified dates
-    filtered_data = presentation.get_tweets_in_daterange(analyzed_data[0], start_date, end_date)
+    filtered_data = presentation.get_tweets_in_daterange(analyzed_tweet_data, start_date, end_date)
     print("Done filtering on date...")
 
     # Getting plot data from the get_sentiment function 

@@ -11,7 +11,6 @@ These are the only methods that should be called from other modules:
     analyze_many_tweets()
 """
 
-
 ####################### Prepare the Data ########################
 def _prepare_training_data_for_model():
     """
