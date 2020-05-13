@@ -7,7 +7,8 @@ import pandas as pd
 import re
 import nltk
 import datetime
-from collections import defaultdict # https://www.accelebrate.com/blog/using-defaultdict-python
+# https://www.accelebrate.com/blog/using-defaultdict-python
+from collections import defaultdict
 
 
 """
@@ -32,6 +33,8 @@ sentiments = ["Positive", "Negative", "Uncertain"]
 
 # 1 SORTING
 # FILTERING / SORTING FUNCTIONS START
+
+
 def get_tweets_in_daterange(tweets, start_date, end_date):
     """
     Category: Filter function
@@ -78,7 +81,7 @@ def get_by_key_value(tweets, key, value):
     """
     if key not in ["hashtags", "mentions", "tweet_urls"]:
         raise Exception('key has to be "hashtags", "people", "urls"')
-    
+
     print(tweets[0])
     return list(filter(lambda tweet: value in tweet[key], tweets))
 
@@ -135,14 +138,15 @@ def get_sentiment(tweets):
     tweets_dict = defaultdict(list)
     for tweet in tweets:
         # The sentiment_analysis apparently has a list with the dict inside instead of just the dict..
-        tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+        tweets_dict[tweet["date"]].append(
+            tweet["sentiment_analysis"]["verdict"])
 
     # Takes .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     for date in tweets_dict.keys():
         tweets_dict[date] = pd.Series(tweets_dict[date]).value_counts()
 
     # Makes a transposed dataframe sorted by index(date in this case)
-    return pd.DataFrame(tweets_dict).T.sort_index()
+    return pd.DataFrame(tweets_dict).T.fillna(value=0).sort_index()
 
 
 # 3. PLOT
@@ -161,7 +165,8 @@ def pie_chart(df, title, save=None):
         if column in df.columns:
             sentiment[column] = df[column].sum()
 
-    plt.axes(pd.Series(sentiment).plot(kind="pie", autopct="%1.0f%%", title=title))
+    plt.axes(pd.Series(sentiment).plot(
+        kind="pie", autopct="%1.0f%%", title=title))
     plt.ylabel("")
 
     if save:
@@ -206,7 +211,7 @@ def line_plot(df, title, save=None):
 
 # PLOTTING END
 
-# Save helper function 
+# Save helper function
 def save_plot(fig, name):
     """
     Save Plot to file
@@ -230,4 +235,3 @@ def save_plot(fig, name):
     else:
         print("Name has to be a string.")
         raise Exception("name has to be a string.")
-
