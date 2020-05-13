@@ -7,7 +7,8 @@ import pandas as pd
 import re
 import nltk
 import datetime
-from collections import defaultdict # https://www.accelebrate.com/blog/using-defaultdict-python
+# https://www.accelebrate.com/blog/using-defaultdict-python
+from collections import defaultdict
 
 
 """
@@ -32,6 +33,8 @@ sentiments = ["Positive", "Negative", "Uncertain"]
 
 # 1 SORTING
 # FILTERING / SORTING FUNCTIONS START
+
+
 def get_tweets_in_daterange(tweets, start_date, end_date):
     """
     Category: Filter function
@@ -50,7 +53,6 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
 
     if start_date > end_date:
         raise Exception("Start_date was before end_date.")
-
     return list(
         filter(
             lambda tweet: tweet["date"] <= end_date and tweet["date"] >= start_date,
@@ -77,9 +79,10 @@ def get_by_key_value(tweets, key, value):
     Returns: \n
         Filtered List
     """
-    if key not in ["hashtags", "people", "urls"]:
+    if key not in ["hashtags", "mentions", "tweet_urls"]:
         raise Exception('key has to be "hashtags", "people", "urls"')
 
+    print(tweets[0])
     return list(filter(lambda tweet: value in tweet[key], tweets))
 
 
@@ -134,14 +137,16 @@ def get_sentiment(tweets):
     # Make a dict, where key is date and value is a list of all sentiments for that date
     tweets_dict = defaultdict(list)
     for tweet in tweets:
-        tweets_dict[tweet["date"]].append(tweet["sentiment_analysis"]["verdict"])
+        # The sentiment_analysis apparently has a list with the dict inside instead of just the dict..
+        tweets_dict[tweet["date"]].append(
+            tweet["sentiment_analysis"]["verdict"])
 
     # Takes .value_counts() https://www.geeksforgeeks.org/python-pandas-index-value_counts/
     for date in tweets_dict.keys():
         tweets_dict[date] = pd.Series(tweets_dict[date]).value_counts()
 
     # Makes a transposed dataframe sorted by index(date in this case)
-    return pd.DataFrame(tweets_dict).T.sort_index()
+    return pd.DataFrame(tweets_dict).T.fillna(value=0).sort_index()
 
 
 # 3. PLOT
@@ -160,7 +165,8 @@ def pie_chart(df, title, save=None):
         if column in df.columns:
             sentiment[column] = df[column].sum()
 
-    plt.axes(pd.Series(sentiment).plot(kind="pie", autopct="%1.0f%%", title=title))
+    plt.axes(pd.Series(sentiment).plot(
+        kind="pie", autopct="%1.0f%%", title=title))
     plt.ylabel("")
 
     if save:
@@ -178,7 +184,12 @@ def bar_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
-    df.plot(kind="bar", rot=0, title=title)
+    ax = df.plot(kind="bar", rot=17, title=title)
+    # There is a bit of repeat settings here, and in line_plot.
+    # Maybe a "plt_settings" function could be an idea?
+    ax.locator_params(integer=True)
+    ax.set_ylabel("Tweets")
+    plt.gca().set_ylim(bottom=0)
 
     if save:
         save_plot(plt, save)
@@ -195,7 +206,11 @@ def line_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
-    df.plot(kind="line", title=title)
+    ax = df.plot(kind="line", rot=17, title=title)
+    ax.locator_params(integer=True)
+    ax.set_xticks(df.index)
+    ax.set_ylabel("Tweets")
+    plt.gca().set_ylim(bottom=0)
 
     if save:
         save_plot(plt, save)
@@ -205,7 +220,7 @@ def line_plot(df, title, save=None):
 
 # PLOTTING END
 
-# Save helper function 
+# Save helper function
 def save_plot(fig, name):
     """
     Save Plot to file
@@ -229,4 +244,3 @@ def save_plot(fig, name):
     else:
         print("Name has to be a string.")
         raise Exception("name has to be a string.")
-
