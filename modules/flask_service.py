@@ -12,9 +12,34 @@ app = Flask(__name__)
 def get_burglaries():
     # Check there is a body in request
     if not request.json:
-        abort(400, 'Please provide search data. Example: {"hashtags": ["trump","biden"],"start_date": "2020-5-3","end_date": "2020-5-12","plot_type": "line","remove_sentiment": "uncertain"}')
+        abort(400, 'Please provide search data. Example: {"hashtags": ["trump","biden"],"start_date": "2020-5-8","end_date": "2020-5-12","plot_type": "line","remove_sentiment": "Uncertain","search_for": {"mentions": "@JoeBiden"},"tweet_count": 300,"fresh_search": false}')
     
 
+    hashtags, tweet_amount, fresh_search = get_web_scrape_data(request)
+
+    # If the user only wants statistics the we create stats and return them without analyzing or creating plost
+    if 'get_stats' in request.json:
+        get_stats = request.json['get_stats']
+        stats = prepare_data_and_create_stats(hashtags, tweet_amount, fresh_search, str.lower(get_stats))
+        return jsonify(stats), 200
+
+    
+    file_name, search_for, rm_sentiment = get_optional_filter_values(request, hashtags)
+
+    plot_type = get_plot_type(request)
+
+    start_date, end_date = get_dates(request)
+
+    # Creating plot
+    try:
+        prepare_data_and_create_plot(hashtags, tweet_amount, fresh_search, file_name, start_date, end_date, plot_type, search_for, rm_sentiment)
+    except:
+        return jsonify({"Message": "All data has been filtered away - unable to create plot"})
+
+    return send_file("./plots/" + file_name + ".png"), 200
+
+
+def get_web_scrape_data(request: request):
     # Check if user wants a specific amount of tweets scraped
     tweet_amount = 300
     if 'tweet_amount' in request.json:
@@ -29,12 +54,10 @@ def get_burglaries():
     if not 'hashtags' in request.json:
         abort(400, 'Please provide search hashtags: {"hashtags": ["trump", "biden"]}')
     hashtags = request.json['hashtags']
+    return hashtags, tweet_amount, fresh_search
 
-    if 'get_stats' in request.json:
-        get_stats = request.json['get_stats']
-        stats = prepare_data_and_create_stats(hashtags, tweet_amount, fresh_search, str.lower(get_stats))
-        return jsonify(stats), 200
 
+def get_optional_filter_values(request: request, hashtags: list):
     search_for = {}
     if 'search_for' in request.json:
         search_for = request.json['search_for']
@@ -54,7 +77,11 @@ def get_burglaries():
     rm_sentiment = ""
     if 'remove_sentiment' in request.json:
         rm_sentiment = request.json['remove_sentiment']
+    
+    return file_name, search_for, rm_sentiment
 
+
+def get_plot_type(request: request):
     # Check type of plot
     if not 'plot_type' in request.json:
         abort(400, "Please provide plot type")
@@ -62,8 +89,10 @@ def get_burglaries():
 
     if not any(p_type in plot_type for p_type in ['bar', 'line', 'pie']):
         abort(400, "Please provide plot type, must be either bar, line or pie")
+    return plot_type
 
-    
+
+def get_dates(request: request):
     # Check if start date has been provided
     if not 'start_date' in request.json:
         abort(400, "Please provide start date")
@@ -75,11 +104,8 @@ def get_burglaries():
         abort(400, "Please provide end date")
     end_date_string = request.json['end_date']
     end_date = datetime.strptime(end_date_string, '%Y-%m-%d').date()
+    return start_date, end_date
 
-    # Creating plot
-    prepare_data_and_create_plot(hashtags, tweet_amount, fresh_search, file_name, start_date, end_date, plot_type, search_for, rm_sentiment)
-
-    return send_file("./plots/" + file_name + ".png"), 200
 
 def prepare_data_and_create_stats(hashtags: list, tweet_amount: int, fresh_search: bool, stat_type: str):
     # tweet_list a list of tweet objects (not a list of strings)
@@ -96,6 +122,7 @@ def prepare_data_and_create_stats(hashtags: list, tweet_amount: int, fresh_searc
         return hashtag_stats
     else:
         return {"Message": "No statistics available. Options: mentions, hashtags"}
+
 
 def prepare_data_and_create_plot(hashtags: list, tweet_amount: int, fresh_search: bool, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
     # tweet_list a list of tweet objects (not a list of strings)
