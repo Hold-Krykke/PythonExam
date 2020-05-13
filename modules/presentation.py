@@ -184,7 +184,9 @@ def bar_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
-    df.plot(kind="bar", rot=17, title=title)
+    ax = df.plot(kind="bar", rot=17, title=title)
+    ax.locator_params(integer=True)
+    ax.set_ylabel("Tweets")
 
     if save:
         save_plot(plt, save)
@@ -201,7 +203,10 @@ def line_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
-    df.plot(kind="line", rot=17, title=title)
+    ax = df.plot(kind="line", rot=17, title=title)
+    ax.locator_params(integer=True)
+    ax.set_xticks(df.index)
+    ax.set_ylabel("Tweets")
 
     if save:
         save_plot(plt, save)
