@@ -15,6 +15,16 @@ def get_burglaries():
         abort(400, 'Please provide search data. Example: {"hashtags": ["trump","biden"],"start_date": "2020-5-3","end_date": "2020-5-12","plot_type": "line","remove_sentiment": "uncertain"}')
     
 
+    # Check if user wants a specific amount of tweets scraped
+    tweet_amount = 300
+    if 'tweet_amount' in request.json:
+        tweet_amount = int(request.json['tweet_amount'])
+    
+    # Check if user wants a fresh search
+    fresh_search = False
+    if 'fresh_search' in request.json:
+        fresh_search = request.json['fresh_search']
+    
     # Check if there is a hashtag list in the JSON
     if not 'hashtags' in request.json:
         abort(400, 'Please provide search hashtags: {"hashtags": ["trump", "biden"]}')
@@ -64,13 +74,13 @@ def get_burglaries():
     print(end_date)
 
     # Creating plot
-    do_everything(hashtags, file_name, start_date, end_date, plot_type, search_for, rm_sentiment)
+    do_everything(hashtags, tweet_amount, fresh_search, file_name, start_date, end_date, plot_type, search_for, rm_sentiment)
 
     return send_file("./plots/" + file_name + ".png"), 200
 
-def do_everything(hashtags: list, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
+def do_everything(hashtags: list, tweet_amount: int, fresh_search: bool, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
     # tweet_list a list of tweet objects (not a list of strings)
-    tweet_list = web_scraper.get_tweets(100, False, hashtags)
+    tweet_list = web_scraper.get_tweets(tweet_amount, fresh_search, hashtags)
     print("Done scraping...")
 
     # tweet_data is a tuple with a list and 2 dicts: tweets: list[dict[str, str]], hashtag_stats: dict, mention_stats: dict
