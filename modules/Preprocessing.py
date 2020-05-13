@@ -11,8 +11,7 @@ from nltk.tokenize import word_tokenize
 # lazy load stopwords
 _stopwords = stopwords.words('english')
 _stopwords.extend(['twitter', 'nt'])
-_REGEX_URL_MATCHER = re.compile(
-    '(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)')
+_REGEX_URL_MATCHER = re.compile('(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)')
 _REGEX_CHAR_MATCHER = re.compile('[^A-Za-z]')
 # allows hashtags, mentions with letters & numbers
 _REGEX_CHAR_MATCHER_TWEETS = re.compile('[^A-Za-z0-9#@]')
@@ -102,7 +101,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
         tweet['hashtags'] = tweet.get('hashtags', [])
         tweet['mentions'] = tweet.get('mentions', [])
         tweet_text = tweet.get('raw_text')
-        # remove newline characters (necessary to add spaces between words)
+        # remove newline characters
         tweet_text = tweet_text.replace('\n', ' ')
 
         # check text for hashtags or mentions
@@ -114,23 +113,21 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
                     # add to local hashtags
                     tweet['hashtags'].append(clean_word)
                     # add to overall hashtags
-                    hashtag_stats[clean_word.lower()] = hashtag_stats.get(
-                        clean_word.lower(), 0) + 1
+                    hashtag_stats[clean_word.lower()] = hashtag_stats.get(clean_word.lower(), 0) + 1
                     # remove hashtag
                     tweet_text = tweet_text.replace(word, '')
                 if word.startswith('@'):
                     # clean mention
                     clean_word = re.sub(_REGEX_CHAR_MATCHER_TWEETS, "", word)
-                    # add to local hashtags
+                    # add to local mentions
                     tweet['mentions'].append(clean_word)
-                    # add to overall hashtags
-                    mention_stats[clean_word.lower()] = mention_stats.get(
-                        clean_word.lower(), 0) + 1
+                    # add to overall mentions
+                    mention_stats[clean_word.lower()] = mention_stats.get(clean_word.lower(), 0) + 1
                     # remove mention
                     tweet_text = tweet_text.replace(word, '')
         # handle dates
         tweet['date'] = _handle_date(tweet['date'])
-        # add emoji descriptions to tweet text
+        # add emoji descriptions to tweet text for analysis
         if tweet['emojis']:
             tweet_text += ' '.join(tweet['emojis'])
         # clear unused words, numbers, symbols and the like
