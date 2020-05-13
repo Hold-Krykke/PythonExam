@@ -1,3 +1,4 @@
+import datetime
 from modules.web_scraper import get_tweets
 from modules.Preprocessing import handle_tweet_data
 # from modules.Preprocessing import handle_tweet_data
@@ -18,7 +19,26 @@ def _restricted_float(val: float):
         raise argparse.ArgumentTypeError(f"{val} not in range [0.0, 1.0]")
     return val
 
+
 #########CUSTOM TYPES#########
+
+#########HELPER METHODS#########
+
+class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter):
+    """
+    Allows us to use two formatters for argparse instead of only the default 1 (hackish)
+    """
+    pass  # https://stackoverflow.com/a/18462760
+
+
+def _default_date():
+    """
+    Generates today and five days from now for use with default values of the date-argument
+    """
+    today = datetime.date.today()
+    five_days_from_now = today + datetime.timedelta(days=5)
+    return today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')
+#########HELPER METHODS#########
 
 
 # def prepare_data_and_create_plot(hashtags: list, tweet_amount: int, fresh_search: bool, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
