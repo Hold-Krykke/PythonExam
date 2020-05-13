@@ -76,7 +76,7 @@ def remove_noise(tweet: str):
     return cleaned_tokens
 
 
-def get_tweet_data(tweets: List[Dict[str, str]]):
+def handle_tweet_data(tweets: List[Dict[str, str]]):
     """
     This function takes a list of tweets, containing web scraped dicts (in particular raw_text) and grabs useful information from it.
 

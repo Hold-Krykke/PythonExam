@@ -113,7 +113,7 @@ def prepare_data_and_create_stats(hashtags: list, tweet_amount: int, fresh_searc
     print("Done scraping...")
 
     # tweet_data is a tuple with a list and 2 dicts: tweets: list[dict[str, str]], hashtag_stats: dict, mention_stats: dict
-    tweets, hashtag_stats, mention_stats = Preprocessing.get_tweet_data(tweet_list) 
+    tweets, hashtag_stats, mention_stats = Preprocessing.handle_tweet_data(tweet_list)
     print("Done preprocessing...")
     print("Statistics created...")
     if stat_type == "mentions":
@@ -130,7 +130,7 @@ def prepare_data_and_create_plot(hashtags: list, tweet_amount: int, fresh_search
     print("Done scraping...")
 
     # tweet_data is a tuple with a list and 2 dicts: tweets: list[dict[str, str]], hashtag_stats: dict, mention_stats: dict
-    tweets, hashtag_stats, mention_stats = Preprocessing.get_tweet_data(tweet_list) 
+    tweets, hashtag_stats, mention_stats = Preprocessing.handle_tweet_data(tweet_list)
     print("Done preprocessing...")
     
     # analyzed_tweet_data is a list of tweet dicts with the new data from the SA 

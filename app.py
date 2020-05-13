@@ -1,5 +1,5 @@
 from modules.web_scraper import get_tweets
-from modules.Preprocessing import get_tweet_data
+from modules.Preprocessing import handle_tweet_data
 from modules.Sentiment_Analysis import train_model_if_necessary, analyze_many_tweets
 import modules.presentation as presentation
 import argparse
