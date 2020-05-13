@@ -30,6 +30,11 @@ def get_burglaries():
         abort(400, 'Please provide search hashtags: {"hashtags": ["trump", "biden"]}')
     hashtags = request.json['hashtags']
 
+    if 'get_stats' in request.json:
+        get_stats = request.json['get_stats']
+        stats = prepare_data_and_create_stats(hashtags, tweet_amount, fresh_search, str.lower(get_stats))
+        return jsonify(stats), 200
+
     search_for = {}
     if 'search_for' in request.json:
         search_for = request.json['search_for']
@@ -64,21 +69,35 @@ def get_burglaries():
         abort(400, "Please provide start date")
     start_date_string = request.json['start_date']
     start_date = datetime.strptime(start_date_string, '%Y-%m-%d').date()
-    print(start_date)
 
     # Check if end date has been provided
     if not 'end_date' in request.json:
         abort(400, "Please provide end date")
     end_date_string = request.json['end_date']
     end_date = datetime.strptime(end_date_string, '%Y-%m-%d').date()
-    print(end_date)
 
     # Creating plot
-    do_everything(hashtags, tweet_amount, fresh_search, file_name, start_date, end_date, plot_type, search_for, rm_sentiment)
+    prepare_data_and_create_plot(hashtags, tweet_amount, fresh_search, file_name, start_date, end_date, plot_type, search_for, rm_sentiment)
 
     return send_file("./plots/" + file_name + ".png"), 200
 
-def do_everything(hashtags: list, tweet_amount: int, fresh_search: bool, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
+def prepare_data_and_create_stats(hashtags: list, tweet_amount: int, fresh_search: bool, stat_type: str):
+    # tweet_list a list of tweet objects (not a list of strings)
+    tweet_list = web_scraper.get_tweets(tweet_amount, fresh_search, hashtags)
+    print("Done scraping...")
+
+    # tweet_data is a tuple with a list and 2 dicts: tweets: list[dict[str, str]], hashtag_stats: dict, mention_stats: dict
+    tweets, hashtag_stats, mention_stats = Preprocessing.get_tweet_data(tweet_list) 
+    print("Done preprocessing...")
+    print("Statistics created...")
+    if stat_type == "mentions":
+        return mention_stats
+    elif stat_type == "hashtags":
+        return hashtag_stats
+    else:
+        return {"Message": "No statistics available. Options: mentions, hashtags"}
+
+def prepare_data_and_create_plot(hashtags: list, tweet_amount: int, fresh_search: bool, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
     # tweet_list a list of tweet objects (not a list of strings)
     tweet_list = web_scraper.get_tweets(tweet_amount, fresh_search, hashtags)
     print("Done scraping...")
