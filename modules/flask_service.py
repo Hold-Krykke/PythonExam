@@ -8,19 +8,11 @@ from datetime import datetime, date
 
 app = Flask(__name__)
 
-@app.route('/api/hashtag/<string:hashtag>', methods=['POST'])
-def get_test(hashtag):
-    print(hashtag)
-    # if hashtag == "trump":
-    #     do_everything(str(hashtag))
-    #     return send_file("./plots/trump.png"), 200
-    return jsonify({"message": "No content"}), 404
-
 @app.route('/api/sentiment', methods=['POST'])
 def get_burglaries():
     # Check there is a body in request
     if not request.json:
-        abort(400, 'Please provide search data. Example: {"hashtags": ["trump","biden"],"start_date": "2020-5-10","end_date": "2020-5-11"}')
+        abort(400, 'Please provide search data. Example: {"hashtags": ["trump","biden"],"start_date": "2020-5-3","end_date": "2020-5-12","plot_type": "line","remove_sentiment": "uncertain"}')
     
 
     # Check if there is a hashtag list in the JSON
@@ -43,6 +35,10 @@ def get_burglaries():
 
     if(list(search_for.keys())):
         file_name = list(search_for.values())[0]
+
+    rm_sentiment = ""
+    if 'remove_sentiment' in request.json:
+        rm_sentiment = request.json['remove_sentiment']
 
     # Check type of plot
     if not 'plot_type' in request.json:
@@ -68,11 +64,11 @@ def get_burglaries():
     print(end_date)
 
     # Creating plot
-    do_everything(hashtags, file_name, start_date, end_date, plot_type, search_for)
+    do_everything(hashtags, file_name, start_date, end_date, plot_type, search_for, rm_sentiment)
 
     return send_file("./plots/" + file_name + ".png"), 200
 
-def do_everything(hashtags: list, file_name, start_date, end_date, plot_type, search_for: dict):
+def do_everything(hashtags: list, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
     # tweet_list a list of tweet objects (not a list of strings)
     tweet_list = web_scraper.get_tweets(100, False, hashtags)
     print("Done scraping...")
@@ -89,10 +85,16 @@ def do_everything(hashtags: list, file_name, start_date, end_date, plot_type, se
     filtered_data = presentation.get_tweets_in_daterange(analyzed_tweet_data, start_date, end_date)
     print("Done filtering on date...")
 
-    # more filtering if possible
+    # filter for specific hashtag, mention or url
     if (list(search_for.keys())):
         filtered_data = presentation.get_by_key_value(filtered_data, list(search_for.keys())[0], list(search_for.values())[0])
+        print("Done filtering for hashtag, mention or url...")
 
+    # filter sentiment if possible
+    if (remove_sentiment):
+        filtered_data = presentation.remove_sentiment(filtered_data, remove_sentiment)
+        print("Done removing sentiment...")
+    
     # Getting plot data from the get_sentiment function 
     PLOT_ME = presentation.get_sentiment(filtered_data)
     print("Done getting sentiment df for plotting...")
