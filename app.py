@@ -24,11 +24,21 @@ def _restricted_float(val: float):
 
 #########HELPER METHODS#########
 
-class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter):
+class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHelpFormatter):
     """
     Allows us to use two formatters for argparse instead of only the default 1 (hackish)
+    https://stackoverflow.com/a/18462760
     """
-    pass  # https://stackoverflow.com/a/18462760
+
+    def _split_lines(self, text, width):
+        # https://stackoverflow.com/a/29498894
+        # modify super to add newline between arguments
+        lines = super()._split_lines(text, width)
+        if text.endswith('\n'):  # custom newline
+            lines += ['']
+        else:
+            lines += ['']  # also add newline between different arguments
+        return lines
 
 
 def _default_date():
@@ -37,7 +47,8 @@ def _default_date():
     """
     today = datetime.date.today()
     five_days_from_now = today + datetime.timedelta(days=5)
-    return today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')
+    # create readable format, as should be input
+    return ' '.join([today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')]) + ' (next 5 days)'
 #########HELPER METHODS#########
 
 
@@ -91,43 +102,93 @@ def _default_date():
 
 if __name__ == "__main__":
     # train_model_if_necessary()
-    parser = argparse.ArgumentParser(prog='TweetScraper9000',
-                                     description='A program that scrapes twitter for hashtags and performs a sentiment analysis on the results.',
-                                     usage='%(prog)s',
-                                     epilog='Source: https://github.com/Hold-Krykke/PythonExam/')
+    parser = argparse.ArgumentParser(
+        prog='TweetScraper9000',
+        formatter_class=CustomFormatter,
+        description="""
+        A program that scrapes Twitter for hashtags and performs a sentiment analysis on the results. 
+        Presents results in a chosen chart format.
+        """,
+        usage='%(prog)s',
+        epilog='Source: https://github.com/Hold-Krykke/PythonExam\nCreated by: Camilla, Malte, Asger, Rúni')
     parser.add_argument(
-        '-t', '--hashtags', help="The hashtags to scrape. EXAMPLE: 'trump biden' -REQUIRED-", nargs='+', required=True, type=str, dest='hashtags')
+        '-t', '--hashtags',
+        help="The hashtags to scrape.\nEXAMPLE: 'trump biden'\n-REQUIRED-",
+        nargs='+',
+        required=True,
+        type=str,
+        dest='hashtags')
 
     # TODO add newline support for examples https://stackoverflow.com/a/22157136
     # add theese advanced arguments at the end TODO
     # TODO make da
     # TODO check and convert (date) arguments then call main method
     # TODO Check hashtag format before calling
-    # TODO Default dates
+    # TODO Custom date types
     # Check sentiment types
-    # TODO mark what is REQUIRED w/ text/metavar
+    # TODO warn user that plt.show() is blocking
     # check plot type, .lower()
-    # ^^^^ parser.error
     parser.add_argument(
-        '-p', '--plot', help="Plot chart type, choose one. VALUES=[bar, line, pie] DEFAULT: bar", type=str, default='bar', dest='plot_type')
+        '-p', '--plot',
+        help="Plot chart type, choose one. VALUES=[bar, line, pie]\n",
+        type=str,
+        default='bar',
+        dest='plot_type')
     parser.add_argument(
-        '-l', '--local', help="Pass to attempt scraping from local files. DEFAULT: NO", action='store_true', dest='fresh_search', default=False)
+        '-l', '--local',
+        help="Pass to attempt scraping from local files.\n",
+        action='store_true',
+        dest='fresh_search',
+        default=False)
     parser.add_argument(
-        '-c', '--count', help="The amount of tweets to search for. DEFAULT: 300", type=int, default=300, dest='tweet_count')
+        '-c', '--count',
+        help="The amount of tweets to search for.\n",
+        type=int,
+        default=300,
+        dest='tweet_count')
     parser.add_argument(
-        '-d', '--date', help="The date range (yyyy-mm-dd) to search for. EXAMPLE: '2020-05-01 2020-05-05'", nargs=2, type=str, required=True, dest='date')
+        '-d', '--date',
+        help="The date range (yyyy-mm-dd) to search for. \nEXAMPLE: '2020-05-01 2020-05-05'.\n",
+        nargs=2,
+        type=str,
+        default=_default_date(),
+        dest='date')
     parser.add_argument(
-        '-f', '--filename', help="The filename to store plots in (if omitted will show plots instead)", type=str, dest='filename')
+        '-f', '--filename',
+        help="The filename to store plots in (if omitted will show plots instead)\n",
+        type=str,
+        dest='filename')
     parser.add_argument(
-        '-s', '--sentiment', help="Ignore specific sentiment. VALUES=[Positive, Negative, Uncertain]", type=str, dest='remove_sentiment')
+        '-s', '--sentiment',
+        help="Ignore specific sentiment.\nVALUES=[Positive, Negative, Uncertain]\n",
+        type=str,
+        dest='remove_sentiment')
     parser.add_argument(
-        '-sh', help="Filter result data by specific hashtags. EXAMPLE: '#Trump #Biden'", type=str, nargs='+', dest='search_hashtags')
+        '-sh',
+        help="Filter result data by specific hashtags.\nEXAMPLE: '#Trump #Biden'\n",
+        type=str,
+        nargs='+',
+        dest='search_hashtags')
     parser.add_argument(
-        '-sm', help="Filter result data by specific mentions. EXAMPLE: '@JoeBiden @folketinget'", type=str, nargs='+', dest='search_mentions')
+        '-sm',
+        help="Filter result data by specific mentions.\nEXAMPLE: '@JoeBiden @folketinget'\n",
+        type=str,
+        nargs='+',
+        dest='search_mentions')
     parser.add_argument(
-        '-cl', help="The lower float value for determining if a sentiment is deemed uncertain. EXAMPLE: 0.15. DEFAULT: 0.25. VALUES: [0.00-1.00]", type=_restricted_float, default=0.25, metavar='ADVANCED: certainty low', dest='certainty_low')
+        '-cl',
+        help="The lower float value for determining if a sentiment is deemed uncertain.\nEXAMPLE: 0.15.\nVALUES: [0.00-1.00]",
+        type=_restricted_float,
+        default=0.25,
+        metavar='ADVANCED: certainty low',
+        dest='certainty_low')
     parser.add_argument(
-        '-ch', help="The higher float value for determining if a sentiment is deemed uncertain. EXAMPLE: 0.65. DEFAULT: 0.75. VALUES: [0.00-1.00]", type=_restricted_float, default=0.75, metavar='ADVANCED: certainty high', dest='certainty_high')
+        '-ch',
+        help="The higher float value for determining if a sentiment is deemed uncertain.\nEXAMPLE: 0.65.\nVALUES: [0.00-1.00]",
+        type=_restricted_float,
+        default=0.75,
+        metavar='ADVANCED: certainty high',
+        dest='certainty_high')
     print(parser.parse_args())
     args_dict = vars(parser.parse_args())
     print(args_dict)
