@@ -5,34 +5,7 @@ import modules.presentation as presentation
 import argparse
 
 
-# def do_everything(hashtags: list, file_name, start_date, end_date, plot_type):
-#     # tweet_list a list of tweet objects (not a list of strings)
-#     print(f'Scraping hashtags: {", ". join(hashtags)}...')
-#     tweet_list = get_tweets(100, False, hashtags)
 
-#     print("Preprocessing...")
-#     tweet_data, hashtag_stats, mentions_stats = get_tweet_data(tweet_list)
-
-#     # analyzed_tweet_data is a list of tweet dicts with the new data from the SA
-#     print('Performing sentiment analysis...')
-#     analyzed_tweet_data = analyze_many_tweets(tweet_data)
-
-#     # filtering data to get only data between the two specified dates
-#     print("Filtering data by dates")
-#     filtered_data = presentation.get_tweets_in_daterange(
-#         analyzed_tweet_data, start_date, end_date)
-
-#     # Getting plot data from the get_sentiment function
-#     print("Filtering data by their sentiment")
-#     PLOT_ME = presentation.get_sentiment(filtered_data)
-
-#     # Create plot and save so the endpoint can send the .png file
-#     if plot_type == "bar":
-#         presentation.bar_plot(PLOT_ME, file_name, file_name)
-#     if plot_type == "line":
-#         presentation.line_plot(PLOT_ME, file_name, file_name)
-#     if plot_type == "pie":
-#         presentation.pie_chart(PLOT_ME, file_name, file_name)
 
 
 if __name__ == "__main__":
