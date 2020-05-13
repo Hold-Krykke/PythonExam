@@ -76,7 +76,6 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
     # prepare stats_format for
     hashtag_stats = {}
     mention_stats = {}
-
     for tweet in tweets:
         # prepare format
         tweet['hashtags'] = tweet.get('hashtags', [])

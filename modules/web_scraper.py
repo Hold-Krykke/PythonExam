@@ -3,6 +3,7 @@ import requests as req
 import os
 from datetime import date, datetime
 import emoji
+import ast
 
 _base_URL = "https://mobile.twitter.com/search?q="
 _end_URL_part = "&s=typd&x=0&y=0"
@@ -122,7 +123,7 @@ def _get_next_page_link(soup: bs4.BeautifulSoup):
     return url_part + next_page_link
 
 
-def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
+def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
     """
     #### Returns \n
     >>> List of strings. The contents of each string will be structured as a dictionary
@@ -175,9 +176,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
                     for line in f.readlines():
                         if count > tweet_count - 1:
                             break
-                        result.append(line)
+                        result.append(ast.literal_eval(line))
                         count += 1
-
                     return result
 
 
@@ -227,6 +227,6 @@ def get_tweets(tweet_count: int, fresh_search: bool, *hashtags: str):
 
 
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
-# tweets = get_tweets(20, True, "trump")
+# tweets = get_tweets(100, True, ["trump", "biden"])
 # print("Tweets downloaded")
 
