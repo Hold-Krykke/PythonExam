@@ -62,6 +62,23 @@ def _restricted_sentiment(val: str):
     return val
 
 
+def _restricted_plots(val: str):
+    """
+    Only allow given plots
+    """
+    plots = ["bar", "line", "pie"]
+    try:
+        val = str(val).lower()
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
+
+    if val not in plots:
+        raise argparse.ArgumentTypeError(
+            f"{val} is not a valid plot type. Possible values: {', '.join(plots)}")
+    return val
+
+
 #########CUSTOM TYPES#########
 
 #########HELPER METHODS#########
@@ -162,16 +179,16 @@ if __name__ == "__main__":
         type=str)
 
     # add theese advanced arguments at the end TODO
+    # TODO add support for url-search w/ custom type? (filter-method should be 'contains')
     # TODO check and convert (date) arguments then call main method
     # TODO Check hashtag format before calling
     # TODO CHECK DATE RANGE <> OUTSIDE FUNCTION
     # TODO warn user that plt.show() is blocking
-    # TODO check plot type, .lower()
     # TODO region ARGPARSE ARGUMENTS
     parser.add_argument(
         '-p', '--plot',
         help="Plot chart type, choose one. VALUES=[bar, line, pie]\n",
-        type=str,
+        type=_restricted_plots,
         default='bar',
         dest='plot_type')
     parser.add_argument(
