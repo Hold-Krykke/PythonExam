@@ -233,6 +233,12 @@ if __name__ == "__main__":
         nargs='+',
         dest='search_mentions')
     parser.add_argument(
+        '-su',
+        help="Filter result data by specific URLs.\nEXAMPLE: 'https://pic.twitter.com/'\n",
+        type=str,
+        nargs='+',
+        dest='search_urls')
+    parser.add_argument(
         '-cl',
         help="The lower float value for determining if a sentiment is deemed uncertain.\nEXAMPLE: 0.15.\nVALUES: [0.00-1.00]",
         type=_restricted_float,
