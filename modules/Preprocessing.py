@@ -108,11 +108,11 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
                     # clean hashtag
-                    clean_word = re.sub(_REGEX_CHAR_MATCHER_TWEETS, "", word)
+                    clean_word = re.sub(_REGEX_CHAR_MATCHER_TWEETS, "", word).lower()
                     # add to local hashtags
                     tweet['hashtags'].append(clean_word)
                     # add to overall hashtags
-                    hashtag_stats[clean_word.lower()] = hashtag_stats.get(clean_word.lower(), 0) + 1
+                    hashtag_stats[clean_word] = hashtag_stats.get(clean_word, 0) + 1
                     # remove hashtag
                     tweet_text = tweet_text.replace(word, '')
                 if word.startswith('@'):
