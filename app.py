@@ -121,21 +121,21 @@ def _default_date():
 #     tweet_list = web_scraper.get_tweets(tweet_amount, fresh_search, hashtags)
 #     print("Done scraping...")
 
-#     # tweet_data is a tuple with a list and 2 dicts: tweets: list[dict[str, str]], hashtag_stats: dict, mention_stats: dict
-#     tweets, hashtag_stats, mention_stats = Preprocessing.handle_tweet_data(
-#         tweet_list)
+def prepare_data(hashtags: List,
+                 tweet_amount: int,
+                 fresh_search: bool,
 #     print("Done preprocessing...")
 
-#     # analyzed_tweet_data is a list of tweet dicts with the new data from the SA
+                 plot_type: str,
 #     analyzed_tweet_data = Sentiment_Analysis.analyze_many_tweets(tweets)
 #     print("Done analyzing...")
-
-#     # filtering data to get only data between the two specified dates
-#     filtered_data = presentation.get_tweets_in_daterange(
-#         analyzed_tweet_data, start_date, end_date)
-#     print("Done filtering on date...")
-
-#     # filter for specific hashtag, mention or url
+                 search_urls: List,
+                 remove_sentiment: str,
+                 certainty_low: float,
+                 certainty_high: float):
+    tweet_list = get_tweets(tweet_amount, fresh_search, hashtags)
+    print("Done scraping...")
+    print(tweet_list[:5])
 #     if (list(search_for.keys())):
 #         filtered_data = presentation.get_by_key_value(
 #             filtered_data, list(search_for.keys())[0], list(search_for.values())[0])
@@ -252,9 +252,14 @@ if __name__ == "__main__":
         default=0.75,
         metavar='ADVANCED: certainty high',
         dest='certainty_high')
-    print(parser.parse_args())
+    # turn Namespace object into usable dict
     args_dict = vars(parser.parse_args())
     print(args_dict)
     print(args_dict['hashtags'])
-    hashtags = args_dict
-    print(hashtags)
+    from operator import itemgetter
+    # extract items from dict
+    hashtags, plot_type, fresh_search, tweet_count, date, filename, remove_sentiment, search_hashtags, search_mentions, search_urls, certainty_low, certainty_high = itemgetter(
+        'hashtags', 'plot_type', 'fresh_search', 'tweet_count', 'date', 'filename', 'remove_sentiment', 'search_hashtags', 'search_mentions', 'search_urls', 'certainty_low', 'certainty_high')(args_dict)
+    prepare_data(hashtags, tweet_count, fresh_search, filename, date, plot_type, search_mentions,
+                 search_hashtags, search_urls, remove_sentiment, certainty_low, certainty_high)
+    # prepare_data_and_create_plot()
