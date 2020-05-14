@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from modules.web_scraper import get_tweets
 from modules.Preprocessing import handle_tweet_data
 # from modules.Preprocessing import handle_tweet_data
@@ -9,14 +9,56 @@ import argparse
 
 #########CUSTOM TYPES#########
 def _restricted_float(val: float):
+    """
+    Only allow float values within our range [0.00-1.00]
+    """
     try:
         val = float(val)
     except ValueError:
         raise argparse.ArgumentTypeError(
             f"{val} not a floating-point literal")
 
-    if 0.0 < x > 1.0:
+    if 0.0 < val > 1.0:
         raise argparse.ArgumentTypeError(f"{val} not in range [0.0, 1.0]")
+    return val
+
+
+def _restricted_dates(date):
+    """
+    This method is called by argparse on a per-argument basis, meaning it calls it twice
+    Argparse itself validates nargs=2
+    """
+    _dates = list(date)
+    print('_DATES', _dates)
+    print('DATES_HERE', date)
+    try:
+        return_date = datetime.strptime(date, '%Y-%m-%d').date()
+        # end_date = datetime.strptime(dates[1], '%Y-%m-%d').date()
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"Could not parse dates. Did you format them yyyy-mm-dd? Dates received:\n{date}")
+
+    # if start_date > end_date:
+    #     raise argparse.ArgumentTypeError(
+    #         f"Start date {start_date} may not be later than end date {end_date}")
+    # return [start_date, end_date, 55]
+    return return_date
+
+
+def _restricted_sentiment(val: str):
+    """
+    Only allow given sentiments
+    """
+    sentiments = ["Positive", "Negative", "Uncertain"]
+    try:
+        val = str(val).title()
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
+
+    if val not in sentiments:
+        raise argparse.ArgumentTypeError(
+            f"{val} is not a valid sentiment. Possible values: {', '.join(sentiments)}")
     return val
 
 
@@ -45,10 +87,11 @@ def _default_date():
     """
     Generates today and five days from now for use with default values of the date-argument
     """
-    today = datetime.date.today()
-    five_days_from_now = today + datetime.timedelta(days=5)
+    today = datetime.now().date()
+    five_days_from_now = today + timedelta(days=5)
     # create readable format, as should be input
-    return ' '.join([today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')])
+    # return [today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')]
+    return [today, five_days_from_now]
 #########HELPER METHODS#########
 
 
@@ -106,28 +149,25 @@ if __name__ == "__main__":
         prog='TweetScraper9000',
         formatter_class=CustomFormatter,
         description="""
-        A program that scrapes Twitter for hashtags and performs a sentiment analysis on the results. 
+        A program that scrapes Twitter for hashtags and performs a sentiment analysis on the results.
         Presents results in a chosen chart format.
         """,
         usage='%(prog)s',
         epilog='Source: https://github.com/Hold-Krykke/PythonExam\nCreated by: Camilla, Malte, Asger, Rúni')
+
     parser.add_argument(
-        '-t', '--hashtags',
+        'hashtags',
         help="The hashtags to scrape.\nEXAMPLE: 'trump biden'\n-REQUIRED-",
         nargs='+',
-        required=True,
-        type=str,
-        dest='hashtags')
+        type=str)
 
-    # TODO add newline support for examples https://stackoverflow.com/a/22157136
     # add theese advanced arguments at the end TODO
-    # TODO make da
     # TODO check and convert (date) arguments then call main method
     # TODO Check hashtag format before calling
-    # TODO Custom date types
-    # Check sentiment types
+    # TODO CHECK DATE RANGE <> OUTSIDE FUNCTION
     # TODO warn user that plt.show() is blocking
-    # check plot type, .lower()
+    # TODO check plot type, .lower()
+    # TODO region ARGPARSE ARGUMENTS
     parser.add_argument(
         '-p', '--plot',
         help="Plot chart type, choose one. VALUES=[bar, line, pie]\n",
@@ -150,8 +190,8 @@ if __name__ == "__main__":
         '-d', '--date',
         help="The date range (yyyy-mm-dd) to search for. \nEXAMPLE: '2020-05-01 2020-05-05'.\n",
         nargs=2,
-        type=str,
-        default=_default_date(),
+        type=_restricted_dates,
+        default=_default_date(),  # ['2020-05-01', '2020-05-05'],  #
         dest='date')
     parser.add_argument(
         '-f', '--filename',
@@ -161,7 +201,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '-s', '--sentiment',
         help="Ignore specific sentiment.\nVALUES=[Positive, Negative, Uncertain]\n",
-        type=str,
+        type=_restricted_sentiment,
         dest='remove_sentiment')
     parser.add_argument(
         '-sh',
