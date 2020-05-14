@@ -48,7 +48,7 @@ def _default_date():
     today = datetime.date.today()
     five_days_from_now = today + datetime.timedelta(days=5)
     # create readable format, as should be input
-    return ' '.join([today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')]) + ' (next 5 days)'
+    return ' '.join([today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')])
 #########HELPER METHODS#########
 
 
