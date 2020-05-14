@@ -121,7 +121,7 @@ def get_tweet_data(tweets: List[Dict[str, str]]):
                     # add to local mentions
                     tweet['mentions'].append(clean_word)
                     # add to overall mentions
-                    mention_stats[clean_word.lower()] = mention_stats.get(clean_word.lower(), 0) + 1
+                    mention_stats[clean_word] = mention_stats.get(clean_word, 0) + 1
                     # remove mention
                     tweet_text = tweet_text.replace(word, '')
         # handle dates
