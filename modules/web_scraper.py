@@ -1,9 +1,9 @@
 import bs4
 import requests as req
-import os
 from datetime import date, datetime
 import emoji
 import ast
+from pathlib import Path
 
 _base_URL = "https://mobile.twitter.com/search?q="
 _end_URL_part = "&s=typd&x=0&y=0"
@@ -162,23 +162,23 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
             file_name += (hashtag + "_")
     # Adding the end-part of the URL to URL after all search parameters have been added
     URL += _end_URL_part
-
+    # Make tweet directory if not already there
+    Path("./plots").mkdir(parents=True, exist_ok=True)
     # If we don't want to do a fresh search and if the file corresponding to the hashtag(s) exists then return the file content
     if not (fresh_search):
-        if os.path.isfile("./tweets/" + file_name):
-            with open("./tweets/" + file_name, 'r', encoding="utf-8") as f:
-                # The first line in each save file will contain a number which is the amount of tweets in the file
-                # If the user requests more tweets than what has previously been saved in the file then we have to do a fresh search
-                amount_of_tweets_in_file = int(f.readline())
-                if amount_of_tweets_in_file >= tweet_count:  
-                    result = []
-                    count = 0
-                    for line in f.readlines():
-                        if count > tweet_count - 1:
-                            break
-                        result.append(ast.literal_eval(line))
-                        count += 1
-                    return result
+        with open("./tweets/" + file_name, 'r', encoding="utf-8") as f:
+            # The first line in each save file will contain a number which is the amount of tweets in the file
+            # If the user requests more tweets than what has previously been saved in the file then we have to do a fresh search
+            amount_of_tweets_in_file = int(f.readline())
+            if amount_of_tweets_in_file >= tweet_count:  
+                result = []
+                count = 0
+                for line in f.readlines():
+                    if count > tweet_count - 1:
+                        break
+                    result.append(ast.literal_eval(line))
+                    count += 1
+                return result
 
 
     # Result array with all the tweets
