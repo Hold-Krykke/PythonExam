@@ -1,5 +1,6 @@
 import bs4
 import requests as req
+import os
 from datetime import date, datetime
 import emoji
 import ast
@@ -166,19 +167,22 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
     Path("./tweets").mkdir(parents=True, exist_ok=True)
     # If we don't want to do a fresh search and if the file corresponding to the hashtag(s) exists then return the file content
     if not (fresh_search):
-        with open("./tweets/" + file_name, 'r', encoding="utf-8") as f:
-            # The first line in each save file will contain a number which is the amount of tweets in the file
-            # If the user requests more tweets than what has previously been saved in the file then we have to do a fresh search
-            amount_of_tweets_in_file = int(f.readline())
-            if amount_of_tweets_in_file >= tweet_count:  
-                result = []
-                count = 0
-                for line in f.readlines():
-                    if count > tweet_count - 1:
-                        break
-                    result.append(ast.literal_eval(line))
-                    count += 1
-                return result
+        if os.path.isfile("./tweets/" + file_name):
+            with open("./tweets/" + file_name, 'r', encoding="utf-8") as f:
+                # The first line in each save file will contain a number which is the amount of tweets in the file
+                # If the user requests more tweets than what has previously been saved in the file then we have to do a fresh search
+                amount_of_tweets_in_file = int(f.readline())
+                if amount_of_tweets_in_file >= tweet_count:  
+                    result = []
+                    count = 0
+                    for line in f.readlines():
+                        if count > tweet_count - 1:
+                            break
+                        result.append(ast.literal_eval(line))
+                        count += 1
+                    return result
+        else:
+            print(f'Could not find file: {file_name}\nContinuing with fresh search...')
 
 
     # Result array with all the tweets
