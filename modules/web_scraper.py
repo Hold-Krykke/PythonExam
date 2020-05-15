@@ -163,7 +163,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
     # Adding the end-part of the URL to URL after all search parameters have been added
     URL += _end_URL_part
     # Make tweet directory if not already there
-    Path("./plots").mkdir(parents=True, exist_ok=True)
+    Path("./tweets").mkdir(parents=True, exist_ok=True)
     # If we don't want to do a fresh search and if the file corresponding to the hashtag(s) exists then return the file content
     if not (fresh_search):
         with open("./tweets/" + file_name, 'r', encoding="utf-8") as f:
