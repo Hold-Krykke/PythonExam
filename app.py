@@ -150,9 +150,15 @@ def prepare_data(hashtags: List,
                  remove_sentiment: str,
                  certainty_low: float,
                  certainty_high: float):
-    tweet_list = get_tweets(tweet_amount, fresh_search, hashtags)
-    print("Done scraping...")
-    print(tweet_list[:5])
+    # Verify data
+    start_date, end_date = dates
+    if (start_date > end_date):
+        raise ValueError(
+            f'Start date {start_date} may not be later than end date {end_date}')
+
+    #tweet_list = get_tweets(tweet_amount, fresh_search, hashtags)
+    #print("Done scraping...")
+    # print(tweet_list[:5])
 
 
 if __name__ == "__main__":
