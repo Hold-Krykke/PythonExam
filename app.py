@@ -6,9 +6,13 @@ from modules.Preprocessing import handle_tweet_data
 # from modules.Sentiment_Analysis import train_model_if_necessary, analyze_many_tweets
 # import modules.presentation as presentation
 import argparse
+import re
 
+_REGEX_CHAR_MATCHER_HASHTAGS = re.compile('[^A-Za-z0-9]')
 
 #########CUSTOM TYPES#########
+
+
 def _restricted_float(val: float):
     """
     Only allow float values within our range [0.00-1.00]
@@ -80,6 +84,21 @@ def _restricted_plots(val: str):
     return val
 
 
+def _restricted_hashtags(val: str):
+    """
+    Only allow hashtags that follow our standards.
+    Typically we remove #-symbols even if a user passed them.
+    """
+    try:
+        val = str(val).lower()
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
+
+    val = re.sub(_REGEX_CHAR_MATCHER_HASHTAGS, "", val)
+    return val
+
+
 #########CUSTOM TYPES#########
 
 #########HELPER METHODS#########
@@ -113,8 +132,6 @@ def _default_dates():
 #########HELPER METHODS#########
 
 
-# add theese advanced arguments at the end TODO
-# TODO check and convert (date) arguments then call main method
 # TODO Check hashtag format before calling
 # TODO CHECK DATE RANGE <> OUTSIDE FUNCTION
 # TODO warn user that plt.show() is blocking
@@ -140,6 +157,7 @@ def prepare_data(hashtags: List,
 
 if __name__ == "__main__":
     # train_model_if_necessary()
+    # region ARGPARSE
     parser = argparse.ArgumentParser(
         prog='TweetScraper9000',
         formatter_class=CustomFormatter,
@@ -154,7 +172,7 @@ if __name__ == "__main__":
         'hashtags',
         help="The hashtags to scrape.\nEXAMPLE: 'trump biden'\n-REQUIRED-",
         nargs='+',
-        type=str)
+        type=_restricted_hashtags)
     parser.add_argument(
         '-p', '--plot',
         help="Plot chart type, choose one. VALUES=[bar, line, pie]\n",
@@ -222,6 +240,7 @@ if __name__ == "__main__":
         default=0.75,
         metavar='ADVANCED: certainty high',
         dest='certainty_high')
+    # endregion
     # turn Namespace object into usable dict
     args_dict = vars(parser.parse_args())
     print(args_dict)
@@ -230,6 +249,6 @@ if __name__ == "__main__":
     # extract items from dict
     hashtags, plot_type, fresh_search, tweet_count, date, filename, remove_sentiment, search_hashtags, search_mentions, search_urls, certainty_low, certainty_high = itemgetter(
         'hashtags', 'plot_type', 'fresh_search', 'tweet_count', 'date', 'filename', 'remove_sentiment', 'search_hashtags', 'search_mentions', 'search_urls', 'certainty_low', 'certainty_high')(args_dict)
-    prepare_data(hashtags, tweet_count, fresh_search, filename, date, plot_type, search_mentions,
-                 search_hashtags, search_urls, remove_sentiment, certainty_low, certainty_high)
+    # prepare_data(hashtags, tweet_count, fresh_search, filename, date, plot_type, search_mentions,
+    #             search_hashtags, search_urls, remove_sentiment, certainty_low, certainty_high)
     # prepare_data_and_create_plot()
