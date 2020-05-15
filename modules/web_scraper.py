@@ -4,6 +4,7 @@ import os
 from datetime import date, datetime
 import emoji
 import ast
+from pathlib import Path
 
 _base_URL = "https://mobile.twitter.com/search?q="
 _end_URL_part = "&s=typd&x=0&y=0"
@@ -162,7 +163,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
             file_name += (hashtag + "_")
     # Adding the end-part of the URL to URL after all search parameters have been added
     URL += _end_URL_part
-
+    # Make tweet directory if not already there
+    Path("./tweets").mkdir(parents=True, exist_ok=True)
     # If we don't want to do a fresh search and if the file corresponding to the hashtag(s) exists then return the file content
     if not (fresh_search):
         if os.path.isfile("./tweets/" + file_name):
@@ -179,6 +181,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
                         result.append(ast.literal_eval(line))
                         count += 1
                     return result
+        else:
+            print(f'Could not find file: {file_name}\nContinuing with fresh search...')
 
 
     # Result array with all the tweets
