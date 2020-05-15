@@ -132,16 +132,13 @@ def _default_dates():
 #########HELPER METHODS#########
 
 
-# TODO Check hashtag format before calling
-# TODO CHECK DATE RANGE <> OUTSIDE FUNCTION
-# TODO warn user that plt.show() is blocking
 # TODO region ARGPARSE ARGUMENTS
 
 
 def prepare_data(hashtags: List,
                  tweet_amount: int,
                  fresh_search: bool,
-                 file_name: str,
+                 save_plot: bool,
                  dates: List[datetime.date],
                  plot_type: str,
                  search_mentions: List,
@@ -159,6 +156,9 @@ def prepare_data(hashtags: List,
     #tweet_list = get_tweets(tweet_amount, fresh_search, hashtags)
     #print("Done scraping...")
     # print(tweet_list[:5])
+    # Warn user that plt.show() is blocking
+    if not save_plot:
+        print('Showing the plot will block the main thread. Exit it to continue program.')
 
 
 if __name__ == "__main__":
@@ -192,6 +192,12 @@ if __name__ == "__main__":
         dest='fresh_search',
         default=False)
     parser.add_argument(
+        '-s', '--save',
+        help="Pass to save plots locally\n(if omitted will show plots instead)\n",
+        action='store_true',
+        dest='save_plot',
+        default=False)
+    parser.add_argument(
         '-c', '--count',
         help="The amount of tweets to search for.\n",
         type=int,
@@ -205,12 +211,7 @@ if __name__ == "__main__":
         default=_default_dates(),
         dest='date')
     parser.add_argument(
-        '-f', '--filename',
-        help="The filename to store plots in.\n(if omitted will show plots instead)\n",
-        type=str,
-        dest='filename')
-    parser.add_argument(
-        '-s', '--sentiment',
+        '-se', '--sentiment',
         help="Ignore specific sentiment.\nVALUES=[Positive, Negative, Uncertain]\n",
         type=_restricted_sentiment,
         dest='remove_sentiment')
@@ -253,8 +254,8 @@ if __name__ == "__main__":
     print(args_dict['hashtags'])
     from operator import itemgetter
     # extract items from dict
-    hashtags, plot_type, fresh_search, tweet_count, date, filename, remove_sentiment, search_hashtags, search_mentions, search_urls, certainty_low, certainty_high = itemgetter(
-        'hashtags', 'plot_type', 'fresh_search', 'tweet_count', 'date', 'filename', 'remove_sentiment', 'search_hashtags', 'search_mentions', 'search_urls', 'certainty_low', 'certainty_high')(args_dict)
-    # prepare_data(hashtags, tweet_count, fresh_search, filename, date, plot_type, search_mentions,
-    #             search_hashtags, search_urls, remove_sentiment, certainty_low, certainty_high)
+    hashtags, plot_type, fresh_search, tweet_count, date, save_plot, remove_sentiment, search_hashtags, search_mentions, search_urls, certainty_low, certainty_high = itemgetter(
+        'hashtags', 'plot_type', 'fresh_search', 'tweet_count', 'date', 'save_plot', 'remove_sentiment', 'search_hashtags', 'search_mentions', 'search_urls', 'certainty_low', 'certainty_high')(args_dict)
+    prepare_data(hashtags, tweet_count, fresh_search, save_plot, date, plot_type, search_mentions,
+                 search_hashtags, search_urls, remove_sentiment, certainty_low, certainty_high)
     # prepare_data_and_create_plot()
