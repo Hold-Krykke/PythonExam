@@ -165,8 +165,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
 
     # If we don't want to do a fresh search and if the file corresponding to the hashtag(s) exists then return the file content
     if not (fresh_search):
-        if os.path.isfile("../tweets/" + file_name):
-            with open("../tweets/" + file_name, 'r', encoding="utf-8") as f:
+        if os.path.isfile("./tweets/" + file_name):
+            with open("./tweets/" + file_name, 'r', encoding="utf-8") as f:
                 # The first line in each save file will contain a number which is the amount of tweets in the file
                 # If the user requests more tweets than what has previously been saved in the file then we have to do a fresh search
                 amount_of_tweets_in_file = int(f.readline())
@@ -217,7 +217,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
             tweets.append(element)
     
     # Saving tweets in file
-    with open("../tweets/" + file_name, 'w', encoding="utf-8") as f:
+    with open("./tweets/" + file_name, 'w', encoding="utf-8") as f:
         f.write(str(loop_count*20) + "\n")
         for index, element in enumerate(tweets):
             f.write(str(element))
