@@ -1,3 +1,4 @@
+from typing import List
 from datetime import datetime, timedelta
 from modules.web_scraper import get_tweets
 from modules.Preprocessing import handle_tweet_data
@@ -100,7 +101,7 @@ class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHe
         return lines
 
 
-def _default_date():
+def _default_dates():
     """
     Generates today and five days from now for use with default values of the date-argument
     """
@@ -112,23 +113,22 @@ def _default_date():
 #########HELPER METHODS#########
 
 
-# def prepare_data_and_create_plot(hashtags: list, tweet_amount: int, fresh_search: bool, file_name, start_date, end_date, plot_type, search_for: dict, remove_sentiment: str):
-#     """
-#     This is the main method which calls several helper methods
-#     """
+# add theese advanced arguments at the end TODO
+# TODO check and convert (date) arguments then call main method
+# TODO Check hashtag format before calling
+# TODO CHECK DATE RANGE <> OUTSIDE FUNCTION
+# TODO warn user that plt.show() is blocking
+# TODO region ARGPARSE ARGUMENTS
 
-#     # tweet_list a list of tweet objects (not a list of strings)
-#     tweet_list = web_scraper.get_tweets(tweet_amount, fresh_search, hashtags)
-#     print("Done scraping...")
 
 def prepare_data(hashtags: List,
                  tweet_amount: int,
                  fresh_search: bool,
-#     print("Done preprocessing...")
-
+                 file_name: str,
+                 dates: List[datetime.date],
                  plot_type: str,
-#     analyzed_tweet_data = Sentiment_Analysis.analyze_many_tweets(tweets)
-#     print("Done analyzing...")
+                 search_mentions: List,
+                 search_hashtags: List,
                  search_urls: List,
                  remove_sentiment: str,
                  certainty_low: float,
@@ -136,28 +136,6 @@ def prepare_data(hashtags: List,
     tweet_list = get_tweets(tweet_amount, fresh_search, hashtags)
     print("Done scraping...")
     print(tweet_list[:5])
-#     if (list(search_for.keys())):
-#         filtered_data = presentation.get_by_key_value(
-#             filtered_data, list(search_for.keys())[0], list(search_for.values())[0])
-#         print("Done filtering for hashtag, mention or url...")
-
-#     # filter sentiment if possible
-#     if (remove_sentiment):
-#         filtered_data = presentation.remove_sentiment(
-#             filtered_data, remove_sentiment)
-#         print("Done removing sentiment...")
-
-#     # Getting plot data from the get_sentiment function
-#     PLOT_ME = presentation.get_sentiment(filtered_data)
-#     print("Done getting sentiment df for plotting...")
-
-#     # Create plot and save so the endpoint can send the .png file
-#     if plot_type == "bar":
-#         presentation.bar_plot(PLOT_ME, file_name, file_name)
-#     if plot_type == "line":
-#         presentation.line_plot(PLOT_ME, file_name, file_name)
-#     if plot_type == "pie":
-#         presentation.pie_chart(PLOT_ME, file_name, file_name)
 
 
 if __name__ == "__main__":
@@ -177,14 +155,6 @@ if __name__ == "__main__":
         help="The hashtags to scrape.\nEXAMPLE: 'trump biden'\n-REQUIRED-",
         nargs='+',
         type=str)
-
-    # add theese advanced arguments at the end TODO
-    # TODO add support for url-search w/ custom type? (filter-method should be 'contains')
-    # TODO check and convert (date) arguments then call main method
-    # TODO Check hashtag format before calling
-    # TODO CHECK DATE RANGE <> OUTSIDE FUNCTION
-    # TODO warn user that plt.show() is blocking
-    # TODO region ARGPARSE ARGUMENTS
     parser.add_argument(
         '-p', '--plot',
         help="Plot chart type, choose one. VALUES=[bar, line, pie]\n",
@@ -208,11 +178,11 @@ if __name__ == "__main__":
         help="The date range (yyyy-mm-dd) to search for. \nEXAMPLE: '2020-05-01 2020-05-05'.\n",
         nargs=2,
         type=_restricted_dates,
-        default=_default_date(),  # ['2020-05-01', '2020-05-05'],  #
+        default=_default_dates(),
         dest='date')
     parser.add_argument(
         '-f', '--filename',
-        help="The filename to store plots in (if omitted will show plots instead)\n",
+        help="The filename to store plots in.\n(if omitted will show plots instead)\n",
         type=str,
         dest='filename')
     parser.add_argument(
