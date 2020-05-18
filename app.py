@@ -179,7 +179,6 @@ def _filter_search_values(key: str, values: list, collection: list):
 
     >>> list (original collection)
     """
-    print(key, values, collection[:3])
     return_data = []
     for item in collection:
         if any(val in values for val in item[key]):
