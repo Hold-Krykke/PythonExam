@@ -71,27 +71,64 @@ def _restricted_plots(val: str):
     try:
         val = str(val).lower()
     except ValueError:
-        raise argparse.ArgumentTypeError(
-            f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
 
     if val not in plots:
-        raise argparse.ArgumentTypeError(
-            f"{val} is not a valid plot type. Possible values: {', '.join(plots)}")
+        raise argparse.ArgumentTypeError(f"{val} is not a valid plot type. Possible values: {', '.join(plots)}")
     return val
 
 
 def _restricted_hashtags(val: str):
     """
     Only allow hashtags that follow our standards.
-    Typically we remove #-symbols even if a user passed them.
+    Typically we remove #-symbols even if a user added them.
+    Used for hashtags arg
     """
     try:
         val = str(val).lower()
     except ValueError:
-        raise argparse.ArgumentTypeError(
-            f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
 
     val = re.sub(_REGEX_CHAR_MATCHER_HASHTAGS, "", val)
+    return val
+
+
+def _restricted_search_hashtags(val: str):
+    """
+    Only allow hashtags that follow our standards.
+    Typically we add a # even if user forgot them.
+
+    Important to use .lower to match program output.
+
+
+    Used for search_hashtags arg
+    """
+    try:
+        val = str(val).lower()
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
+
+    if not val.startswith('#'):
+        return '#' + val
+    return val
+
+
+def _restricted_search_mentions(val: str):
+    """
+    Only allow mentions that follow our standards.
+    Typically we add @-symbol even if an user forgot them.
+
+    important to keep structure to match program output.
+
+    Used for search_mentions arg
+    """
+    try:
+        val = str(val)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
+
+    if not val.startswith('@'):
+        return '@' + val
     return val
 
 
@@ -125,10 +162,57 @@ def _default_dates():
     # create readable format, as should be input
     # return [today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')]
     return [today, five_days_from_now]
+
+
+def _filter_search_values(key: str, values: list, collection: list):
+    """
+    Filters tweet data by a single key and many values.
+
+    ## Returns a list of items which [key]-collection holds any of the given values
+
+    ### Example: 
+
+    collection holds ['#trump', '#biden', '#uselection'].  
+    values hold ['#trump', '#uselection'].
+
+    This item would be returned as it matches 2 of 3 values.
+
+    >>> list (original collection)
+    """
+    print(key, values, collection[:3])
+    return_data = []
+    for item in collection:
+        if any(val in values for val in item[key]):
+            return_data.append(item)
+    return return_data
+
+
+def _filter_data(analyzed_tweet_data: list, start_date, end_date, hashtags, mentions, urls):
+    """
+    Filters data according to given arguments.
+    Filters by date per default.
+    Other arguments default to None and will not execute unless specifically passed.
+    """
+    # filter by dates
+    filtered_data = get_tweets_in_daterange(
+        analyzed_tweet_data, start_date, end_date)
+    print("Done filtering on date...")
+    if hashtags:
+        filtered_data = _filter_search_values(
+            'hashtags', hashtags, filtered_data)
+        print(f'Done filtering on hashtags: {hashtags}')
+    if mentions:
+        filtered_data = _filter_search_values(
+            'mentions', mentions, filtered_data)
+        print(f'Done filtering on mentions: {mentions}')
+    if urls:
+        filtered_data = _filter_search_values(
+            'tweet_urls', urls, filtered_data)
+        print(f'Done filtering on urls: {urls}')
+
+    return filtered_data
+
 #########HELPER METHODS#########
-
-
-# TODO region ARGPARSE ARGUMENTS
 
 
 def prepare_data(hashtags: List,
@@ -143,22 +227,82 @@ def prepare_data(hashtags: List,
                  remove_sentiment: str,
                  certainty_low: float,
                  certainty_high: float):
+    """
+    Main method that ties all the components together. Takes use of above helper methods.
+    """
+    # prepare model for analysis
+    train_model_if_necessary()
     # Verify data
     start_date, end_date = dates
     if (start_date > end_date):
-        raise ValueError(
-            f'Start date {start_date} may not be later than end date {end_date}')
+        raise ValueError(f'Start date {start_date} may not be later than end date {end_date}')
+    # negate bool as to get meaning worthy of get_tweets
+    # (app asks, "do you want local search?" get_tweets asks, "do you want online search?")
+    fresh_search = not fresh_search
 
-    #tweet_list = get_tweets(tweet_amount, fresh_search, hashtags)
-    #print("Done scraping...")
-    # print(tweet_list[:5])
+    # Scrape data
+    tweet_list = get_tweets(tweet_amount, fresh_search, hashtags)
+    print("Done scraping...")
+
+    # Preprocess data
+    clean_tweets, hashtag_stats, mention_stats = handle_tweet_data(tweet_list)
+    print("Done preprocessing...")
+
+    # analyze the clean data
+    analyzed_tweets = analyze_many_tweets(
+        clean_tweets, certainty_low, certainty_high)
+    print("Done analyzing...")
+
+    # filter data to specifics
+    filtered_data = _filter_data(
+        analyzed_tweets, start_date, end_date, search_hashtags, search_mentions, search_urls)
+    print('Done filtering data...')
+
+    # filter sentiment
+    if (remove_sentiment):
+        filtered_data = remove_sentiment(filtered_data, remove_sentiment)
+        print("Done removing sentiment...")
+
+    # Getting plot data from the get_sentiment function
+    plot_data = get_sentiment(filtered_data)
+    print("Done getting sentiment df for plotting...")
+
     # Warn user that plt.show() is blocking
     if not save_plot:
-        print('Showing the plot will block the main thread. Exit it to continue program.')
+        print('\tNOTICE\n\tShowing the plot will block the main thread.\n\tExit the plot display to continue program.')
+
+    # Create plot
+    file_name = '_'.join(hashtags)
+    if plot_type == "bar":
+        if save_plot:
+            bar_plot(plot_data, file_name, file_name)
+        else:
+            bar_plot(plot_data, file_name)
+    if plot_type == "line":
+        if save_plot:
+            line_plot(plot_data, file_name, file_name)
+        else:
+            line_plot(plot_data, file_name)
+    if plot_type == "pie":
+        if save_plot:
+            pie_chart(plot_data, file_name, file_name)
+        else:
+            pie_chart(plot_data, file_name)
+    # print statistics
+    print('--------------------------------------')
+    print('Printing statistics')
+    print('\tTOP 5 HASHTAGS')
+    pprint(list(hashtag_stats.items())[:5], width=1)
+    print('--------------------------------------')
+    print('\tTOP 5 MENTIONS')
+    pprint(list(mention_stats.items())[:5], width=1)
+    print('--------------------------------------')
+    print('\t EXAMPLE OBJECT')
+    pprint(analyzed_tweets[0], width=1)
+    print('--------------------------------------')
 
 
 if __name__ == "__main__":
-    # train_model_if_necessary()
     # region ARGPARSE
     parser = argparse.ArgumentParser(
         prog='TweetScraper9000',
@@ -214,13 +358,13 @@ if __name__ == "__main__":
     parser.add_argument(
         '-sh',
         help="Filter result data by specific hashtags.\nEXAMPLE: '#Trump #Biden'\n",
-        type=str,
+        type=_restricted_search_hashtags,
         nargs='+',
         dest='search_hashtags')
     parser.add_argument(
         '-sm',
         help="Filter result data by specific mentions.\nEXAMPLE: '@JoeBiden @folketinget'\n",
-        type=str,
+        type=_restricted_search_mentions,
         nargs='+',
         dest='search_mentions')
     parser.add_argument(
