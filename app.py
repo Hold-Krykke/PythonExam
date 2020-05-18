@@ -1,10 +1,11 @@
+from pprint import pprint
+from operator import itemgetter
 from typing import List
 from datetime import datetime, timedelta
 from modules.web_scraper import get_tweets
 from modules.Preprocessing import handle_tweet_data
-# from modules.Preprocessing import handle_tweet_data
-# from modules.Sentiment_Analysis import train_model_if_necessary, analyze_many_tweets
-# import modules.presentation as presentation
+from modules.Sentiment_Analysis import train_model_if_necessary, analyze_many_tweets
+from modules.presentation import get_tweets_in_daterange, get_by_key_value, remove_sentiment, get_sentiment, bar_plot, line_plot, pie_chart
 import argparse
 import re
 
@@ -20,8 +21,7 @@ def _restricted_float(val: float):
     try:
         val = float(val)
     except ValueError:
-        raise argparse.ArgumentTypeError(
-            f"{val} not a floating-point literal")
+        raise argparse.ArgumentTypeError(f"{val} not a floating-point literal")
 
     if 0.0 < val > 1.0:
         raise argparse.ArgumentTypeError(f"{val} not in range [0.0, 1.0]")
@@ -34,8 +34,6 @@ def _restricted_dates(date):
     Argparse itself validates nargs=2
     """
     _dates = list(date)
-    print('_DATES', _dates)
-    print('DATES_HERE', date)
     try:
         return_date = datetime.strptime(date, '%Y-%m-%d').date()
         # end_date = datetime.strptime(dates[1], '%Y-%m-%d').date()
@@ -58,12 +56,10 @@ def _restricted_sentiment(val: str):
     try:
         val = str(val).title()
     except ValueError:
-        raise argparse.ArgumentTypeError(
-            f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
 
     if val not in sentiments:
-        raise argparse.ArgumentTypeError(
-            f"{val} is not a valid sentiment. Possible values: {', '.join(sentiments)}")
+        raise argparse.ArgumentTypeError(f"{val} is not a valid sentiment. Possible values: {', '.join(sentiments)}")
     return val
 
 
@@ -183,7 +179,7 @@ if __name__ == "__main__":
         '-p', '--plot',
         help="Plot chart type, choose one. VALUES=[bar, line, pie]\n",
         type=_restricted_plots,
-        default='bar',
+        default='pie',
         dest='plot_type')
     parser.add_argument(
         '-l', '--local',
@@ -250,12 +246,14 @@ if __name__ == "__main__":
     # endregion
     # turn Namespace object into usable dict
     args_dict = vars(parser.parse_args())
-    print(args_dict)
-    print(args_dict['hashtags'])
-    from operator import itemgetter
+    print('--------------------------------------')
+    print('Received Values:')
+    pprint(args_dict, width=1)
+    print('--------------------------------------')
+
     # extract items from dict
     hashtags, plot_type, fresh_search, tweet_count, date, save_plot, remove_sentiment, search_hashtags, search_mentions, search_urls, certainty_low, certainty_high = itemgetter(
         'hashtags', 'plot_type', 'fresh_search', 'tweet_count', 'date', 'save_plot', 'remove_sentiment', 'search_hashtags', 'search_mentions', 'search_urls', 'certainty_low', 'certainty_high')(args_dict)
+    # call main method
     prepare_data(hashtags, tweet_count, fresh_search, save_plot, date, plot_type, search_mentions,
                  search_hashtags, search_urls, remove_sentiment, certainty_low, certainty_high)
-    # prepare_data_and_create_plot()
