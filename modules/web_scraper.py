@@ -172,7 +172,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
                 # The first line in each save file will contain a number which is the amount of tweets in the file
                 # If the user requests more tweets than what has previously been saved in the file then we have to do a fresh search
                 amount_of_tweets_in_file = int(f.readline())
-                if amount_of_tweets_in_file >= tweet_count:  
+                if amount_of_tweets_in_file >= tweet_count:
                     result = []
                     count = 0
                     for line in f.readlines():
@@ -219,7 +219,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
         # Adding each tweet object to the result array (tweets)
         for element in extractions:
             tweets.append(element)
-    
+
     # Saving tweets in file
     with open("./tweets/" + file_name, 'w', encoding="utf-8") as f:
         f.write(str(loop_count*20) + "\n")

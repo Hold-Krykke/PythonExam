@@ -3,7 +3,7 @@ import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
-from Preprocessing import remove_noise
+from modules.Preprocessing import remove_noise
 
 """
 These are the only methods that should be called from other modules:
