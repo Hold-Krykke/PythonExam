@@ -35,10 +35,10 @@ Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af fø
 ## Using the program 
 1. Clone the repo and follow the instructions in `setup.ipynb`
 
-## Using the program through Flask
+### Using the program through Flask
 1. Insert here
 
-## Using the program through CLI
+### Using the program through CLI
 1. In the root folder, run `python app.py -h` to print the **help** output:  
 
 <img src="https://i.imgur.com/wCrfTY0.png" height=850 width=750/>  
@@ -55,8 +55,7 @@ This would run the program using the following values:
  'date': [datetime.date(2020, 5, 22),
           datetime.date(2020, 5, 27)],
  'fresh_search': False,
- 'hashtags': ['trump',
-              'biden'],
+ 'hashtags': ['trump', 'biden'],
  'plot_type': 'pie',
  'remove_sentiment': None,
  'save_plot': False,
