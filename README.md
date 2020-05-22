@@ -32,6 +32,40 @@ Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af fø
 * __Presentation (grafphs/plots)__
   * Teknologier:
     * matplotlib
+## Using the program 
+1. Clone the repo and follow the instructions in `setup.ipynb`
+
+## Using the program through Flask
+1. Insert here
+
+## Using the program through CLI
+1. In the root folder, run `python app.py -h` to print the **help** output:  
+
+<img src="https://i.imgur.com/wCrfTY0.png" height=850 width=750/>  
+
+A lot of the arguments have default values.  
+The program can run using all default values by simply passing the hashtags you want to gather info from.  
+
+For example, to search for the hashtags `#trump` and `#biden`:  
+`python app.py trump biden`  
+This would run the program using the following values:
+```py
+{'certainty_high': 0.75,
+ 'certainty_low': 0.25,
+ 'date': [datetime.date(2020, 5, 22),
+          datetime.date(2020, 5, 27)],
+ 'fresh_search': False,
+ 'hashtags': ['trump',
+              'biden'],
+ 'plot_type': 'pie',
+ 'remove_sentiment': None,
+ 'save_plot': False,
+ 'search_hashtags': None,
+ 'search_mentions': None,
+ 'search_urls': None,
+ 'tweet_count': 300}
+ ```
+ *Date by default is set to current day + 5 days*
 
 
 ### Links til tutorials, libraries og lignende:
