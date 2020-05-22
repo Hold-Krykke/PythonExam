@@ -5,7 +5,7 @@
   - [Technologies](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#technologies)
 - [Using the program](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program)
   - [Using the program with Flask](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-flask)
-  - [Using the program with CLI](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-flask)
+  - [Using the program with CLI](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-cli)
 
 #### Made by:
 * Cph-mh748 - Malte Hviid-Magnussen 
