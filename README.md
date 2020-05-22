@@ -2,7 +2,7 @@
 
 #### Table of contents
 - [Purpose of the program](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#purpose-of-the-program)
-  - [Technologies]()
+  - [Technologies](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#technologies)
 - [Using the program](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program)
   - [Using the program with Flask](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-flask)
   - [Using the program with CLI](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-flask)
@@ -49,7 +49,7 @@ Example tweets to perform *sentiment analysis* on could be:
 
 ### Things that we didn't implement but would have liked to: 
 - Other types of text/topic analysis
-- More technologies, such as utilizing `sklearn`
+- More technologies, such as `sklearn`
 - Utilize Twitters advanced search functions, such as sorting by popularity, with/without pictures, etc.
 
 ## Using the program 
