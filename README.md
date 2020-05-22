@@ -1,12 +1,12 @@
 # 4. Semester Python Exam
 
 #### Table of contents
-- [Purpose of the program](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#purpose-of-the-program)
-  - [Technologies](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#technologies)
+- [Purpose of the program](https://github.com/Hold-Krykke/PythonExam#purpose-of-the-program)
+  - [Technologies](https://github.com/Hold-Krykke/PythonExam#technologies)
   - [Things that we would have liked to implement](https://github.com/Hold-Krykke/PythonExam#things-that-we-didnt-implement-but-would-have-liked-to)
-- [Using the program](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program)
-  - [Using the program with Flask](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-flask)
-  - [Using the program with CLI](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-cli)
+- [Using the program](https://github.com/Hold-Krykke/PythonExam#using-the-program)
+  - [Using the program with Flask](https://github.com/Hold-Krykke/PythonExam#using-the-program-with-flask)
+  - [Using the program with CLI](https://github.com/Hold-Krykke/PythonExam#using-the-program-with-cli)
 
 #### Made by:
 * Cph-mh748 - Malte Hviid-Magnussen 
