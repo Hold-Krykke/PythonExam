@@ -1,42 +1,59 @@
-# 4. Semester Python Eksamens Projekt
-#### Lavet af:
+# 4. Semester Python Exam
+
+#### Table of contents
+- [Purpose of the program]()
+- [Using the program]()
+  - [Using the program with Flask]()
+  - [Using the program with CLI]()
+
+#### Made by:
 * Cph-mh748 - Malte Hviid-Magnussen 
 * Cph-rn118 - Rúni Vedel Niclasen 
 * Cph-ab363 - Asger Bjarup 
 * Cph-cs340 - Camilla Staunstrup 
 
+## Purpose of the program
+We would like to delve deeper into text analysis and web scraping.  
 
-### Følgende er det vi overordnet har indtil videre (skal nok udvides med teknologier og grundigere beskrivelser):
-Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af følgende tweets med hashtags er overvejende positive eller negative:
+We scrape data from Twitter, based on hashtag searches, and use different techniques to clean, analyze and present the data.
+
+Example tweets to perform *sentiment analysis* on could be:  
 * __#Trump, #Trump2020__
 * __#Biden, #Biden2020__
 * __#Election2020__  
 
-
-### 
-* __Web scraping af Twitter, baseret på hashtag.__
-  * Forhindringer:
-    * Hvordan håndterer Twitter web scrapers? Skal vi gøre brug af API? Rate limits?
-  * Teknologier:
-    * Web scraping med BeautifulSoup4, evt. Scrapy
-  * Kan evt. udvides til at kunne tilbyde som service med en Flask server. 
-    * Hertil kunne man gøre brug af Twitters avancerede søgefunktioner, som at sortere efter popularitet, seneste, med/uden billeder. Eller søgning med/uden diverse ord, engagement, timeframes mm.
-* __Preprocessing af Twitter-dataen (clean-up, fjerne stop words)__
-  * Teknologier:
+* __Web scraping of Twitter, based on hashtags__
+  * Technologies:
+    * Web scraping with [BeautifulSoup4](https://pypi.org/project/beautifulsoup4/)
+    * Cleaning data with the [emoji](https://pypi.org/project/emoji/) package.
+    * File handling with `os`, `Path` modules.
+* __Preprocessing of Twitter data (clean-up, removing stop words)__
+  * Technologies:
     * Regex
-    * Natural Language Toolkit (NLTK) 
+    * Natural Language Toolkit [(NLTK)](http://www.nltk.org/) 
 * __Sentiment analysis__
-  * Teknologier:
-    * Natural Language Toolkit (NLTK)
-    * evt sklearn
-* __Presentation (grafphs/plots)__
-  * Teknologier:
+  * Technologies:
+    * Natural Language Toolkit [(NLTK)](http://www.nltk.org/) 
+* __Presentation (graphs/plots)__
+  * Technologies:
     * matplotlib
+    * pandas
+    * File handling with the `Path` module.
+* __Availability (To the user)__
+  * Technologies:
+    * Flask
+    * Argparse for the CLI
+
+### Things that we didn't implement but would have liked to: 
+- Other types of text/topic analysis
+- More technologies, such as utilizing `sklearn`
+- Utilize Twitters advanced search functions, such as sorting by popularity, with/without pictures, etc.
+
 ## Using the program 
 1. Clone the repo and follow the instructions in `setup.ipynb`  
 Note: Not all plots work with all data
 
-### Using the program through Flask
+### Using the program with Flask
 
 __Starting the server__
 * Open terminal in root directory
@@ -154,7 +171,9 @@ JSON: `{
     "tweet_amount": 300
 }`
 
-### Using the program through CLI
+---
+
+### Using the program with CLI
 1. In the root folder, run `python app.py -h` to print the **help** output:  
 
 <img src="https://i.imgur.com/wCrfTY0.png" height=850 width=750/>  
@@ -191,15 +210,3 @@ This would run the program using the following values:
  **Search for a specific amount of tweets (1000) and save the generated plots locally**  
  `python app.py -s -c 1000` or  
  `python app.py --save --count 1000`
-
-
-### Links til tutorials, libraries og lignende:
-* [Scrapy](https://scrapy.org/)
-* [Removing stop words with NLTK](https://www.geeksforgeeks.org/removing-stop-words-nltk-python/)
-* [Sentiment Dictionary](https://provalisresearch.com/products/content-analysis-software/wordstat-dictionary/sentiment-dictionaries/)
-* [Twitter api](https://developer.twitter.com/en/docs)
-* [Sentiment Analysis with Scikit-Learn](https://stackabuse.com/python-for-nlp-sentiment-analysis-with-scikit-learn//)
-* [Sentiment Analysis with NLTK](https://www.digitalocean.com/community/tutorials/how-to-perform-sentiment-analysis-in-python-3-using-the-natural-language-toolkit-nltk)
-* [Web Scraping & Sentiment Analysis Youtube Tutorial](https://www.youtube.com/watch?v=e6xZAISu-5E) and [Reporitory](https://github.com/jg-fisher/redditSentiment)
-* [Video om Natural Language Processing fra Slack](https://www.youtube.com/watch?v=xvqsFTUsOmc)
-* [Plotting](https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.show.html)
