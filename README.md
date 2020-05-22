@@ -33,7 +33,8 @@ Vores grundlag for projektet er at vi gerne vil undersøge om hovedparten af fø
   * Teknologier:
     * matplotlib
 ## Using the program 
-1. Clone the repo and follow the instructions in `setup.ipynb`
+1. Clone the repo and follow the instructions in `setup.ipynb`  
+Note: Not all plots work with all data
 
 ### Using the program through Flask
 1. Insert here
