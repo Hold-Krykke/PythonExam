@@ -44,10 +44,12 @@ Note: Not all plots work with all data
 
 <img src="https://i.imgur.com/wCrfTY0.png" height=850 width=750/>  
 
-A lot of the arguments have default values.  
-The program can run using all default values by simply passing the hashtags you want to gather info from.  
-
-For example, to search for the hashtags `#trump` and `#biden`:  
+#### Default values
+All the optional arguments have default values.  
+The program can run using all default values by simply passing the hashtags you want to gather info from.
+ 
+ #### Examples
+**Utilizing default values** to search for the hashtags `#trump` and `#biden`:  
 `python app.py trump biden`  
 This would run the program using the following values:
 ```py
@@ -66,6 +68,14 @@ This would run the program using the following values:
  'tweet_count': 300}
  ```
  *Date by default is set to current day + 5 days*
+ 
+ **Changing `plot type` and filtering on dates**  
+ `python app.py -p bar -d 2020-06-01 2020-06-02` or  
+ `python app.py --plot bar --date 2020-06-01 2020-06-02`
+ 
+ **Search for a specific amount of tweets (1000) and save the generated plots locally**  
+ `python app.py -s -c 1000` or  
+ `python app.py --save --count 1000`
 
 
 ### Links til tutorials, libraries og lignende:
