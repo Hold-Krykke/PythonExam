@@ -12,7 +12,7 @@ app = Flask(__name__)
 def get_sentiment():
     # Check there is a body in request
     if not request.json:
-        abort(400, 'Please provide search data. Example: {"hashtags": ["trump","biden"],"start_date": "2020-5-8","end_date": "2020-5-12","plot_type": "line","remove_sentiment": "Uncertain","search_for": {"mentions": "@JoeBiden"},"tweet_count": 300,"fresh_search": false}')
+        abort(400, 'Please provide search data. Example: {"hashtags": ["trump","biden"],"start_date": "2020-5-8","end_date": "2020-5-12","plot_type": "line","remove_sentiment": "Uncertain","search_for": {"mentions": "@JoeBiden"},"tweet_amount": 300,"fresh_search": false}')
     
 
     hashtags, tweet_amount, fresh_search = get_web_scrape_data(request)
