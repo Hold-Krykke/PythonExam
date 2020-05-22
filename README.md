@@ -1,10 +1,11 @@
 # 4. Semester Python Exam
 
 #### Table of contents
-- [Purpose of the program]()
-- [Using the program]()
-  - [Using the program with Flask]()
-  - [Using the program with CLI]()
+- [Purpose of the program](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#purpose-of-the-program)
+  - [Technologies]()
+- [Using the program](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program)
+  - [Using the program with Flask](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-flask)
+  - [Using the program with CLI](https://github.com/Hold-Krykke/PythonExam/blob/master/README.md#using-the-program-with-flask)
 
 #### Made by:
 * Cph-mh748 - Malte Hviid-Magnussen 
@@ -21,6 +22,8 @@ Example tweets to perform *sentiment analysis* on could be:
 * __#Trump, #Trump2020__
 * __#Biden, #Biden2020__
 * __#Election2020__  
+
+### Technologies
 
 * __Web scraping of Twitter, based on hashtags__
   * Technologies:
@@ -50,8 +53,9 @@ Example tweets to perform *sentiment analysis* on could be:
 - Utilize Twitters advanced search functions, such as sorting by popularity, with/without pictures, etc.
 
 ## Using the program 
-1. Clone the repo and follow the instructions in `setup.ipynb`  
-Note: Not all plots work with all data
+1. Clone the repo and follow the instructions in [setup.ipynb](https://github.com/Hold-Krykke/PythonExam/blob/master/setup.ipynb)  
+
+Note: Not all plots work with all data. A few cases might result in bad output.
 
 ### Using the program with Flask
 
