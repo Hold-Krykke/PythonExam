@@ -180,7 +180,9 @@ JSON: `{
 ### Using the program with CLI
 1. In the root folder, run `python app.py -h` to print the **help** output:  
 
+<p align="center">
 <img src="https://i.imgur.com/wCrfTY0.png" height=850 width=750/>  
+</p>
 
 #### Default values
 All the optional arguments have default values.  
