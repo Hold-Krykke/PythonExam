@@ -210,10 +210,10 @@ This would run the program using the following values:
  ```
  *Date by default is set to current day + 5 days*
  
- **Changing `plot type` and filtering on dates**  
+ **Changing `plot type` and filtering on dates** (hashtags omitted for brevity)  
  `python app.py -p bar -d 2020-06-01 2020-06-02` or  
  `python app.py --plot bar --date 2020-06-01 2020-06-02`
  
- **Search for a specific amount of tweets (1000) and save the generated plots locally**  
+ **Search for a specific amount of tweets (1000) and save the generated plots locally** (hashtags omitted for brevity)    
  `python app.py -s -c 1000` or  
  `python app.py --save --count 1000`
