@@ -218,7 +218,7 @@ def line_plot(df, title, save=None):
     """
     plt.clf()
     ax = df.plot(kind="line", rot=17, title=title)
-    ax.locator_params(integer=True)
+    # ax.locator_params(integer=True)
     ax.set_xticks(df.index)
     ax.set_ylabel("Tweets")
     plt.gca().set_ylim(bottom=0)

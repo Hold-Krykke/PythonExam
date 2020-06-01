@@ -165,10 +165,10 @@ def _default_dates():
     Generates today and five days from now for use with default values of the date-argument
     """
     today = datetime.now().date()
-    five_days_from_now = today + timedelta(days=5)
+    five_days_from_now = today - timedelta(days=5)
     # create readable format, as should be input
     # return [today.strftime('%Y-%m-%d'), five_days_from_now.strftime('%Y-%m-%d')]
-    return [today, five_days_from_now]
+    return [five_days_from_now, today]
 
 
 def _filter_search_values(key: str, values: list, collection: list):
