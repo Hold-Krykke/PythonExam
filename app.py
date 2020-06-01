@@ -56,10 +56,12 @@ def _restricted_sentiment(val: str):
     try:
         val = str(val).title()
     except ValueError:
-        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
 
     if val not in sentiments:
-        raise argparse.ArgumentTypeError(f"{val} is not a valid sentiment. Possible values: {', '.join(sentiments)}")
+        raise argparse.ArgumentTypeError(
+            f"{val} is not a valid sentiment. Possible values: {', '.join(sentiments)}")
     return val
 
 
@@ -71,10 +73,12 @@ def _restricted_plots(val: str):
     try:
         val = str(val).lower()
     except ValueError:
-        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
 
     if val not in plots:
-        raise argparse.ArgumentTypeError(f"{val} is not a valid plot type. Possible values: {', '.join(plots)}")
+        raise argparse.ArgumentTypeError(
+            f"{val} is not a valid plot type. Possible values: {', '.join(plots)}")
     return val
 
 
@@ -87,7 +91,8 @@ def _restricted_hashtags(val: str):
     try:
         val = str(val).lower()
     except ValueError:
-        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
 
     val = re.sub(_REGEX_CHAR_MATCHER_HASHTAGS, "", val)
     return val
@@ -106,7 +111,8 @@ def _restricted_search_hashtags(val: str):
     try:
         val = str(val).lower()
     except ValueError:
-        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
 
     if not val.startswith('#'):
         return '#' + val
@@ -125,7 +131,8 @@ def _restricted_search_mentions(val: str):
     try:
         val = str(val)
     except ValueError:
-        raise argparse.ArgumentTypeError(f"{val} could not be parsed to a string")
+        raise argparse.ArgumentTypeError(
+            f"{val} could not be parsed to a string")
 
     if not val.startswith('@'):
         return '@' + val
@@ -223,7 +230,7 @@ def prepare_data(hashtags: List,
                  search_mentions: List,
                  search_hashtags: List,
                  search_urls: List,
-                 remove_sentiment: str,
+                 _remove_sentiment: str,
                  certainty_low: float,
                  certainty_high: float):
     """
@@ -234,7 +241,8 @@ def prepare_data(hashtags: List,
     # Verify data
     start_date, end_date = dates
     if (start_date > end_date):
-        raise ValueError(f'Start date {start_date} may not be later than end date {end_date}')
+        raise ValueError(
+            f'Start date {start_date} may not be later than end date {end_date}')
     # negate bool as to get meaning worthy of get_tweets
     # (app asks, "do you want local search?" get_tweets asks, "do you want online search?")
     fresh_search = not fresh_search
@@ -258,8 +266,8 @@ def prepare_data(hashtags: List,
     print('Done filtering data...')
 
     # filter sentiment
-    if (remove_sentiment):
-        filtered_data = remove_sentiment(filtered_data, remove_sentiment)
+    if (_remove_sentiment):
+        filtered_data = remove_sentiment(filtered_data, _remove_sentiment)
         print("Done removing sentiment...")
 
     # Getting plot data from the get_sentiment function
