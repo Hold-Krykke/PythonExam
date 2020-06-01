@@ -11,7 +11,8 @@ from nltk.tokenize import word_tokenize
 # lazy load stopwords
 _stopwords = stopwords.words('english')
 _stopwords.extend(['twitter', 'nt'])
-_REGEX_URL_MATCHER = re.compile('(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)')
+_REGEX_URL_MATCHER = re.compile(
+    '(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)')
 _REGEX_CHAR_MATCHER = re.compile('[^A-Za-z]')
 # allows hashtags, mentions with letters & numbers
 _REGEX_CHAR_MATCHER_TWEETS = re.compile('[^A-Za-z0-9#@]')
@@ -108,20 +109,24 @@ def handle_tweet_data(tweets: List[Dict[str, str]]):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
                     # clean hashtag
-                    clean_word = re.sub(_REGEX_CHAR_MATCHER_TWEETS, "", word).lower()
+                    clean_word = re.sub(
+                        _REGEX_CHAR_MATCHER_TWEETS, "", word).lower()
                     # add to local hashtags
                     tweet['hashtags'].append(clean_word)
                     # add to overall hashtags
-                    hashtag_stats[clean_word] = hashtag_stats.get(clean_word, 0) + 1
+                    hashtag_stats[clean_word] = hashtag_stats.get(
+                        clean_word, 0) + 1
                     # remove hashtag
                     tweet_text = tweet_text.replace(word, '')
                 if word.startswith('@'):
                     # clean mention
-                    clean_word = re.sub(_REGEX_CHAR_MATCHER_TWEETS, "", word)
+                    clean_word = re.sub(
+                        _REGEX_CHAR_MATCHER_TWEETS, "", word).lower()
                     # add to local mentions
                     tweet['mentions'].append(clean_word)
                     # add to overall mentions
-                    mention_stats[clean_word] = mention_stats.get(clean_word, 0) + 1
+                    mention_stats[clean_word] = mention_stats.get(
+                        clean_word, 0) + 1
                     # remove mention
                     tweet_text = tweet_text.replace(word, '')
         # handle dates
