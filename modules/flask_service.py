@@ -39,6 +39,7 @@ def get_sentiment():
     except:
         return jsonify({"Message": "All data has been filtered away - unable to create plot"})
 
+    # return send_file("C:\Users\Malte\Documents\GitHub\PythonExam" + file_name + ".png"), 200
     return send_from_directory("C:\\Users\\Malte\\Documents\\GitHub\\PythonExam\\plots", file_name + ".png")
 
 

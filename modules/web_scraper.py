@@ -100,9 +100,14 @@ def _get_tweet_date(tweet_element):
     if "min" in timestamp or timestamp[-1] == "m" or timestamp[-1] == "s" or "h" in timestamp or "now" in timestamp:
         return "{},{},{}".format(datetime.now().date().year, datetime.now().date().month, datetime.now().date().day)
     # Extract date to ensure proper formatting
-    # None of the tweet dates contain a year so we add 2020 to the date to be able to create a proper date object using strptime()
-    tweet_date = datetime.strptime(timestamp + " 2020", "%b %d %Y")
-    # The weird looking return statement is made to make it easier for other parts of the program to read the date (2020,5,6)
+    try:
+        # None of the tweet dates contain a year so we add 2020 to the date to be able to create a proper date object using strptime()
+        tweet_date = datetime.strptime(timestamp + " 2020", "%b %d %Y")
+        # The weird looking return statement is made to make it easier for other parts of the program to read the date (2020,5,6)
+        return "{},{},{}".format(tweet_date.date().year, tweet_date.date().month, tweet_date.date().day)
+    except:
+        pass
+    tweet_date = datetime.strptime(timestamp, "%d %b %y")
     return "{},{},{}".format(tweet_date.date().year, tweet_date.date().month, tweet_date.date().day)
 
 
