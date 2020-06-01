@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify, abort, request, send_file
+from flask import Flask, jsonify, abort, request, send_file, send_from_directory
 import presentation
 import web_scraper
 import Preprocessing
@@ -39,7 +39,7 @@ def get_sentiment():
     except:
         return jsonify({"Message": "All data has been filtered away - unable to create plot"})
 
-    return send_file("C:\Users\Malte\Documents\GitHub\PythonExam" + file_name + ".png"), 200
+    return send_from_directory("C:\\Users\\Malte\\Documents\\GitHub\\PythonExam\\plots", file_name + ".png")
 
 
 def get_web_scrape_data(request: request):

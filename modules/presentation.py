@@ -168,6 +168,7 @@ def pie_chart(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
+    plt.clf()
     sentiment = {}
     for column in sentiments:
         if column in df.columns:
@@ -192,6 +193,7 @@ def bar_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
+    plt.clf()
     ax = df.plot(kind="bar", rot=17, title=title)
     # There is a bit of repeat settings here, and in line_plot.
     # Maybe a "plt_settings" function could be an idea?
@@ -214,6 +216,7 @@ def line_plot(df, title, save=None):
         title = String
         save = If set, save with this file_name
     """
+    plt.clf()
     ax = df.plot(kind="line", rot=17, title=title)
     ax.locator_params(integer=True)
     ax.set_xticks(df.index)

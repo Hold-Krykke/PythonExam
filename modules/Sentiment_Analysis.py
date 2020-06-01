@@ -3,7 +3,11 @@ import random
 from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
-from modules.Preprocessing import remove_noise
+
+# FLASK
+from Preprocessing import remove_noise
+# CLI
+# from modules.Preprocessing import remove_noise
 
 """
 These are the only methods that should be called from other modules:
@@ -12,6 +16,8 @@ These are the only methods that should be called from other modules:
 """
 
 ####################### Prepare the Data ########################
+
+
 def _prepare_training_data_for_model():
     """
     This function gathers the training data sets from nltk corpus twitter_samples, calls the preprocessing functions and then
@@ -32,11 +38,15 @@ def _prepare_training_data_for_model():
     for tweet in negative_tweets:
         negative_preprocessed_tokens.append(remove_noise(tweet))
 
-    positive_formatted_tokens = _get_tweets_for_model(positive_preprocessed_tokens)
-    negative_formatted_tokens = _get_tweets_for_model(negative_preprocessed_tokens)
+    positive_formatted_tokens = _get_tweets_for_model(
+        positive_preprocessed_tokens)
+    negative_formatted_tokens = _get_tweets_for_model(
+        negative_preprocessed_tokens)
 
-    positive_dataset = [(tweet_dict, "Positive") for tweet_dict in positive_formatted_tokens]
-    negative_dataset = [(tweet_dict, "Negative") for tweet_dict in negative_formatted_tokens]
+    positive_dataset = [(tweet_dict, "Positive")
+                        for tweet_dict in positive_formatted_tokens]
+    negative_dataset = [(tweet_dict, "Negative")
+                        for tweet_dict in negative_formatted_tokens]
 
     dataset = positive_dataset + negative_dataset
     random.shuffle(dataset)
@@ -81,12 +91,15 @@ def _analyze_tweet(tweet, uncertain_low: float, uncertain_high: float):
     >>> return result
     """
     train_model_if_necessary()
-    probability_distrubution = _classifier.prob_classify(dict([token, True] for token in tweet))
+    probability_distrubution = _classifier.prob_classify(
+        dict([token, True] for token in tweet))
 
     result = {}
     result["verdict"] = probability_distrubution.max()
-    result["positive_procent"] = round(probability_distrubution.prob("Positive"), 2)
-    result["negative_procent"] = round(probability_distrubution.prob("Negative"), 2)
+    result["positive_procent"] = round(
+        probability_distrubution.prob("Positive"), 2)
+    result["negative_procent"] = round(
+        probability_distrubution.prob("Negative"), 2)
     if (result.get("positive_procent") < uncertain_high and result.get("positive_procent") > uncertain_low):
         result["verdict"] = "Uncertain"
 
@@ -116,6 +129,7 @@ def train_model_if_necessary():
         print("Accuracy is:", accuracy)
         return accuracy
 ####################### Analyze the Data ########################
+
 
 ######################## Global variables ########################
 _training_dataset, _testing_dataset = _prepare_training_data_for_model()
