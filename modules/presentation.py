@@ -53,6 +53,7 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
 
     if start_date > end_date:
         raise Exception("Start_date was before end_date.")
+
     return list(
         filter(
             lambda tweet: tweet["date"] <= end_date and tweet["date"] >= start_date,
@@ -81,6 +82,7 @@ def get_by_key_value(tweets, key, value):
     """
     if key not in ["hashtags", "mentions", "tweet_urls"]:
         raise Exception('key has to be "hashtags", "mentions", "tweet_urls"')
+
     return list(filter(lambda tweet: value in tweet[key], tweets))
 
 
@@ -146,9 +148,17 @@ def get_sentiment(tweets):
     # Makes a transposed dataframe sorted by index(date in this case)
     return pd.DataFrame(tweets_dict).T.fillna(value=0).sort_index()
 
+#     Positive | Negative | Uncertain
+# date    70          30          0
+# date    40          20          10
+# date
+# date
+# date
 
 # 3. PLOT
 # PLOTTING START
+
+
 def pie_chart(df, title, save=None):
     """
     Make a Pie Chart about Sentiments for given dataframe

@@ -6,8 +6,10 @@ import emoji
 import ast
 from pathlib import Path
 
+# Legacy twitter, uden infinite scrolling. Så man kan webscrape.
 _base_URL = "https://mobile.twitter.com/search?q="
 _end_URL_part = "&s=typd&x=0&y=0"
+
 
 def _get_soup(URL: str):
     """
@@ -27,7 +29,8 @@ def _create_tweet_object(tweet_element, hashtags):
     tweet_urls = _extract_data_urls(tweet_element)
     tweet_object["tweet_urls"] = tweet_urls
     # Creating emojis property which is a list of strings
-    tweet_emoji_descriptions = _emoji_description_extractor(tweet_object["raw_text"])
+    tweet_emoji_descriptions = _emoji_description_extractor(
+        tweet_object["raw_text"])
     tweet_object["emojis"] = tweet_emoji_descriptions
     # Creating the date property
     tweet_date = _get_tweet_date(tweet_element)
@@ -76,7 +79,7 @@ def _extract_data_urls(tweet_element):
             data_url = element["data-url"]
             data_urls.append(data_url)
         except:
-            # Do nothing if we can't find a data-url. 
+            # Do nothing if we can't find a data-url.
             pass
     # Return all found URLs as a list of strings
     return data_urls
@@ -108,7 +111,8 @@ def _emoji_description_extractor(text: str):
     Used to extract the decription of emojis used in the given text.
     """
     emoji_list = emoji.emoji_lis(text)
-    emoji_descriptions = [str.strip(emoji.demojize(vars.get("emoji")).replace("_", " ").replace(":", "")) for vars in emoji_list]
+    emoji_descriptions = [str.strip(emoji.demojize(vars.get("emoji")).replace(
+        "_", " ").replace(":", "")) for vars in emoji_list]
     return emoji_descriptions
 
 
@@ -150,7 +154,7 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
     file_name = ""
     # This list is used to add the hashtags searched for to the tweet objects
     hashtag_list = []
-    # Creating file name and updating initial URL 
+    # Creating file name and updating initial URL
     for index, hashtag in enumerate(hashtags):
         # %23 is URL language for #. Adding + between each search parameter because whitespace is converted to + in the URL
         URL += ("%23" + hashtag + "+")
@@ -182,8 +186,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
                         count += 1
                     return result
         else:
-            print(f'Could not find file: {file_name}\nContinuing with fresh search...')
-
+            print(
+                f'Could not find file: {file_name}\nContinuing with fresh search...')
 
     # Result array with all the tweets
     tweets = []
@@ -208,8 +212,8 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
             URL = _get_next_page_link(soup)
         except:
             print("No more tweets available")
-            print("Tried to find {} tweets".format(str( tweet_count )))
-            print("Number of tweets found: ~{}".format(str( len(soups) * 20 )))
+            print("Tried to find {} tweets".format(str(tweet_count)))
+            print("Number of tweets found: ~{}".format(str(len(soups) * 20)))
             break
 
     # Going through twitter pages and collecting tweets
@@ -233,4 +237,3 @@ def get_tweets(tweet_count: int, fresh_search: bool, hashtags: list):
 # Usage example: 20: number of tweets, False: fresh search?, anything after this == search parameters (hashtags)
 # tweets = get_tweets(100, True, ["trump", "biden"])
 # print("Tweets downloaded")
-
