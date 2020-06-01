@@ -217,6 +217,7 @@ def line_plot(df, title, save=None):
         save = If set, save with this file_name
     """
     plt.clf()
+    print(df)
     ax = df.plot(kind="line", rot=17, title=title)
     # ax.locator_params(integer=True)
     ax.set_xticks(df.index)
