@@ -197,7 +197,7 @@ def bar_plot(df, title, save=None):
     ax = df.plot(kind="bar", rot=17, title=title)
     # There is a bit of repeat settings here, and in line_plot.
     # Maybe a "plt_settings" function could be an idea?
-    ax.locator_params(integer=True)
+    # ax.locator_params(integer=True)
     ax.set_ylabel("Tweets")
     plt.gca().set_ylim(bottom=0)
 

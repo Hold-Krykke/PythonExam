@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from modules.web_scraper import get_tweets
 from modules.Preprocessing import handle_tweet_data
 from modules.Sentiment_Analysis import train_model_if_necessary, analyze_many_tweets
-from modules.presentation import get_tweets_in_daterange, get_by_key_value, remove_sentiment, get_sentiment, bar_plot, line_plot, pie_chart
+from modules.presentation import get_tweets_in_daterange, get_by_key_value, remove_sentiment as _remove_sentiment, get_sentiment, bar_plot, line_plot, pie_chart
 import argparse
 import re
 
@@ -230,7 +230,7 @@ def prepare_data(hashtags: List,
                  search_mentions: List,
                  search_hashtags: List,
                  search_urls: List,
-                 _remove_sentiment: str,
+                 remove_sentiment: str,
                  certainty_low: float,
                  certainty_high: float):
     """
@@ -266,8 +266,8 @@ def prepare_data(hashtags: List,
     print('Done filtering data...')
 
     # filter sentiment
-    if (_remove_sentiment):
-        filtered_data = remove_sentiment(filtered_data, _remove_sentiment)
+    if (remove_sentiment):
+        filtered_data = _remove_sentiment(filtered_data, remove_sentiment)
         print("Done removing sentiment...")
 
     # Getting plot data from the get_sentiment function
