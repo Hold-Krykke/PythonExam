@@ -81,7 +81,9 @@ def get_optional_filter_values(request: request, hashtags: list):
 
     rm_sentiment = ""
     if 'remove_sentiment' in request.json:
-        rm_sentiment = request.json['remove_sentiment']
+        rm_sentiment = request.json['remove_sentiment'].title()
+        if not rm_sentiment == "Uncertain" or rm_sentiment == "Positive" or rm_sentiment == "Negative":
+            abort(400, '"remove_sentiment" must be either "Uncertain", "Positive" or "Negative" (with the first letter in upper case)')
 
     return file_name, search_for, rm_sentiment
 
