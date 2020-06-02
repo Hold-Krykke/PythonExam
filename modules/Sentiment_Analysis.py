@@ -5,9 +5,9 @@ from nltk import NaiveBayesClassifier
 from nltk.tokenize import word_tokenize
 
 # FLASK
-from Preprocessing import remove_noise
+# from Preprocessing import remove_noise
 # CLI
-# from modules.Preprocessing import remove_noise
+from modules.Preprocessing import remove_noise
 
 """
 These are the only methods that should be called from other modules:

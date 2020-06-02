@@ -54,11 +54,15 @@ def get_tweets_in_daterange(tweets, start_date, end_date):
     if start_date > end_date:
         raise Exception("Start_date was before end_date.")
 
-    return list(
-        filter(
-            lambda tweet: tweet["date"] <= end_date and tweet["date"] >= start_date,
-            tweets,
-        )
+    # return list(
+    #     filter(
+    #         lambda tweet: tweet["date"] <= end_date and tweet["date"] >= start_date,
+    #         tweets,
+    #     )
+    # )
+    return filter(
+        lambda tweet: tweet["date"] <= end_date and tweet["date"] >= start_date,
+        tweets,
     )
 
 
@@ -83,7 +87,8 @@ def get_by_key_value(tweets, key, value):
     if key not in ["hashtags", "mentions", "tweet_urls"]:
         raise Exception('key has to be "hashtags", "mentions", "tweet_urls"')
 
-    return list(filter(lambda tweet: value in tweet[key], tweets))
+    # return list(filter(lambda tweet: value in tweet[key], tweets))
+    return filter(lambda tweet: value in tweet[key], tweets)
 
 
 def get_by_sentiment(tweets, sentiment):
@@ -99,10 +104,13 @@ def get_by_sentiment(tweets, sentiment):
         raise Exception(f"Sentiment has to be in '{sentiments}'")
     # The is keyword is used to test if two variables refer to the same object.
     # Use the == operator to test if two variables are equal.
-    return list(
-        filter(
-            lambda tweet: sentiment == tweet["sentiment_analysis"]["verdict"], tweets
-        )
+    # return list(
+    #     filter(
+    #         lambda tweet: sentiment == tweet["sentiment_analysis"]["verdict"], tweets
+    #     )
+    # )
+    return filter(
+        lambda tweet: sentiment == tweet["sentiment_analysis"]["verdict"], tweets
     )
 
 
@@ -118,10 +126,13 @@ def remove_sentiment(tweets, sentiment):
     if sentiment not in sentiments:
         raise Exception(f"Sentiment has to be in '{sentiments}'")
 
-    return list(
-        filter(
-            lambda tweet: sentiment != tweet["sentiment_analysis"]["verdict"], tweets
-        )
+    # return list(
+    #     filter(
+    #         lambda tweet: sentiment != tweet["sentiment_analysis"]["verdict"], tweets
+    #     )
+    # )
+    return filter(
+        lambda tweet: sentiment != tweet["sentiment_analysis"]["verdict"], tweets
     )
 
 
