@@ -148,7 +148,6 @@ def get_sentiment(tweets):
     # Make a dict, where key is date and value is a list of all sentiments for that date
     tweets_dict = defaultdict(list)
     for tweet in tweets:
-        # The sentiment_analysis apparently has a list with the dict inside instead of just the dict..
         tweets_dict[tweet["date"]].append(
             tweet["sentiment_analysis"]["verdict"])
 
