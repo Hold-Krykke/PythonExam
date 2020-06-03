@@ -108,6 +108,7 @@ def _get_tweet_date(tweet_element):
         return "{},{},{}".format(tweet_date.date().year, tweet_date.date().month, tweet_date.date().day)
     except:
         pass
+    # Turns out, if you go back far enough, they do stick a year on there
     tweet_date = datetime.strptime(timestamp, "%d %b %y")
     return "{},{},{}".format(tweet_date.date().year, tweet_date.date().month, tweet_date.date().day)
 

@@ -36,7 +36,7 @@ def sort_dict(unsorted_dict: dict, descending: bool = True):
     descending: sort descending (True) or ascending (False)
 
     # Returns  
-    Same dict but sorted
+    Same dict but sorted by number 
 
     """
     return {k: v for k, v in sorted(unsorted_dict.items(), key=lambda item: item[1], reverse=descending)}
@@ -110,7 +110,7 @@ def handle_tweet_data(tweets: List[Dict[str, str]]):
                 if word.startswith('#'):
                     # clean hashtag
                     clean_word = re.sub(
-                        _REGEX_CHAR_MATCHER_TWEETS, "", word).lower()
+                        _REGEX_CHAR_MATCHER_TWEETS, "", word).lower()  # .sub = substitute
                     # add to local hashtags
                     tweet['hashtags'].append(clean_word)
                     # add to overall hashtags
