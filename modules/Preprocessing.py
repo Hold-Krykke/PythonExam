@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 
 
 # lazy load stopwords
-_stopwords = stopwords.words('english')
+_stopwords = stopwords.words('english')  # "danish" # and, it, haven't, havent
 _stopwords.extend(['twitter', 'nt'])
 _REGEX_URL_MATCHER = re.compile(
     '(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)')

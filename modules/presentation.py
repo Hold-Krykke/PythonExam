@@ -17,7 +17,7 @@ How to use:
 You have to have an array of tweets.
 1. Sort
 2. Get sentiment
-3. Plot
+3. Plot 
 4. Save plot or show
 
 First, you sort the tweets, using for example get_by_key_value or get_tweets_in_daterange
@@ -224,7 +224,7 @@ def line_plot(df, title, save=None):
 
     Parameters: \n
         df = DataFrame made by get_sentiment
-        title = String
+        title = String 
         save = If set, save with this file_name
     """
     plt.clf()
