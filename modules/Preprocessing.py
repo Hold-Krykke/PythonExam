@@ -108,7 +108,7 @@ def handle_tweet_data(tweets: List[Dict[str, str]]):
         if (any(symbol in tweet_text for symbol in ['#', '@'])):
             for word in tweet_text.split(' '):
                 if word.startswith('#'):
-                    # clean hashtag
+                    # clean hashtag - example #trump... -> trump
                     clean_word = re.sub(
                         _REGEX_CHAR_MATCHER_TWEETS, "", word).lower()  # .sub = substitute
                     # add to local hashtags
